@@ -2,7 +2,7 @@
 
 module People
   class ImportFromNomis
-    NOMIS_OFFENDER_TO_PERSON_MAPPING = {
+    PRISONER_SEARCH_TO_PERSON_MAPPING = {
       cro_number: :criminal_records_office,
       date_of_birth: :date_of_birth,
       first_name: :first_names,
@@ -17,11 +17,12 @@ module People
     end
 
     def call
-      people_from_nomis.each do |nomis_person|
-        prison_number = nomis_person[:prison_number]
-        person = Person.find_or_initialize_by(prison_number:)
+      @prison_numbers.each do |prison_number|
+        prisoner_search_person = PrisonerSearchApiClient::Prisoner.get(prison_number)
+        next unless prisoner_search_person
 
-        attributes = person_attributes(nomis_person)
+        person = Person.find_or_initialize_by(prison_number:)
+        attributes = person_attributes(prisoner_search_person)
         person.assign_attributes(attributes)
         person.save!
       end
@@ -29,34 +30,27 @@ module People
 
   private
 
-    def person_attributes(nomis_person)
-      person_attributes = nomis_person.filter_map do |attribute, value|
-        if NOMIS_OFFENDER_TO_PERSON_MAPPING[attribute]
-          [NOMIS_OFFENDER_TO_PERSON_MAPPING[attribute], value]
+    def person_attributes(prisoner_search_person)
+      person_attributes = prisoner_search_person.filter_map do |attribute, value|
+        if PRISONER_SEARCH_TO_PERSON_MAPPING[attribute]
+          [PRISONER_SEARCH_TO_PERSON_MAPPING[attribute], value]
         end
       end
       person_attributes = person_attributes.to_h
-
       person_attributes.merge(
         nomis_prison_number: person_attributes[:prison_number],
         last_synced_with_nomis: Time.zone.now,
-        gender: gender(nomis_person),
-        ethnicity: ethnicity(nomis_person),
+        gender: gender(prisoner_search_person),
+        ethnicity: ethnicity(prisoner_search_person),
       )
     end
 
-    def people_from_nomis
-      NomisClient::People.get(@prison_numbers).select do |nomis_person|
-        @prison_numbers.include?(nomis_person[:prison_number])
-      end
+    def gender(prisoner_search_person)
+      Gender.find_by(title: prisoner_search_person[:gender])
     end
 
-    def gender(nomis_person)
-      Gender.find_by(nomis_code: nomis_person[:gender])
-    end
-
-    def ethnicity(nomis_person)
-      Ethnicity.find_by(title: nomis_person[:ethnicity])
+    def ethnicity(prisoner_search_person)
+      Ethnicity.find_by(title: prisoner_search_person[:ethnicity])
     end
   end
 end
