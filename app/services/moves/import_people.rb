@@ -5,7 +5,7 @@ module Moves
     attr_accessor :prison_numbers
 
     def initialize(prison_numbers)
-      self.prison_numbers = prison_numbers
+      self.prison_numbers = Array(prison_numbers)
     end
 
     def call
@@ -15,7 +15,6 @@ module Moves
   private
 
     def import_people
-      people = NomisClient::People.get(prison_numbers).index_by { |p| p.fetch(:prison_number) }
       personal_care_needs = NomisClient::PersonalCareNeeds
                             .get(nomis_offender_numbers: prison_numbers)
                             .group_by { |p| p.fetch(:offender_no) }
@@ -23,7 +22,10 @@ module Moves
       new_person_count = 0
       changed_profile_count = 0
 
-      people.each do |prison_number, person_data|
+      prison_numbers.each do |prison_number|
+        person_data = PrisonerSearchApiClient::Prisoner.get(prison_number)
+        next unless person_data
+
         profile = People::BuildPersonAndProfileV1.new(person_data).call
         new_person_count += 1 if profile.new_record?
 
