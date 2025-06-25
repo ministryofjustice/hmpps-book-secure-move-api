@@ -1,5 +1,14 @@
 # Changelog
 
+## [v3.62.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.62.0) (2025-06-25)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.61.0...v3.62.0)
+
+**Merged pull requests:**
+
+- Revert "MAP-2008 Add new cancellation reasons" [\#2605](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2605) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.61.0 [\#2604](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2604) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.61.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.61.0) (2025-06-20)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.60.0...v3.61.0)
@@ -1025,15 +1034,15 @@
 
 ## [v3.29.2c](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2c) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2c)
-
-## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...log-test)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...v3.29.2c)
 
 ## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.29.2b)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2b)
+
+## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...log-test)
 
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
