@@ -25,7 +25,6 @@ class Move < VersionedModel
     recall_date
   ].freeze
 
-  include CancellationReasons
   include StateMachineable
 
   MOVE_STATUS_PROPOSED = 'proposed'
@@ -62,6 +61,16 @@ class Move < VersionedModel
     approved_premises: 'approved_premises',
     extradition: 'extradition',
   }
+
+  CANCELLATION_REASONS = [
+    CANCELLATION_REASON_MADE_IN_ERROR = 'made_in_error',
+    CANCELLATION_REASON_SUPPLIER_DECLINED_TO_MOVE = 'supplier_declined_to_move',
+    CANCELLATION_REASON_CANCELLED_BY_PMU = 'cancelled_by_pmu',
+    CANCELLATION_REASON_REJECTED = 'rejected',
+    CANCELLATION_REASON_DATABASE_CORRECTION = 'database_correction',
+    CANCELLATION_REASON_INCOMPLETE_PER = 'incomplete_per',
+    CANCELLATION_REASON_OTHER = 'other',
+  ].freeze
 
   REJECTION_REASONS = [
     REJECTION_REASON_NO_SPACE = 'no_space_at_receiving_prison',
