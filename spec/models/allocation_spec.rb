@@ -106,7 +106,13 @@ RSpec.describe Allocation do
 
       it {
         expect(allocation).to validate_inclusion_of(:cancellation_reason)
-          .in_array(Allocation::CANCELLATION_REASONS)
+          .in_array(%w[
+            made_in_error
+            supplier_declined_to_move
+            other
+            lack_of_space_at_receiving_establishment
+            sending_establishment_failed_to_fill_allocation
+          ])
       }
     end
   end
