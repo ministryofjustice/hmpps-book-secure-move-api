@@ -49,4 +49,15 @@ RSpec.describe Lodging do
   it 'has state machine' do
     expect(described_class.state_machine_class).to eq(LodgingStateMachine)
   end
+
+  describe 'CANCELLATION_REASONS constant' do
+    it 'includes the CancellationReasons concern' do
+      expect(described_class.included_modules).to include(CancellationReasons)
+    end
+
+    it 'has access to CANCELLATION_REASONS from the concern' do
+      expect(described_class::CANCELLATION_REASONS).to be_an(Array)
+      expect(described_class::CANCELLATION_REASONS).not_to be_empty
+    end
+  end
 end

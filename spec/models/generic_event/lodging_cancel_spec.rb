@@ -36,6 +36,27 @@ RSpec.describe GenericEvent::LodgingCancel do
     it { is_expected.to be_invalid }
   end
 
+  describe 'cancellation reasons' do
+    describe 'backward compatibility' do
+      let(:legacy_lodging_reasons) do
+        %w[
+          made_in_error
+          supplier_declined_to_move
+          cancelled_by_pmu
+          other
+        ]
+      end
+
+      it 'includes all legacy lodging cancellation reasons' do
+        legacy_lodging_reasons.each do |reason|
+          expect(Lodging::CANCELLATION_REASONS).to include(reason),
+                                                   "Legacy lodging reason '#{reason}' is missing from Lodging::CANCELLATION_REASONS. " \
+                                                   'This could break GenericEvent::LodgingCancel validation and API clients.'
+        end
+      end
+    end
+  end
+
   describe '#for_feed' do
     subject(:generic_event) { create(:event_lodging_cancel, details:) }
 
