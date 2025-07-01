@@ -77,7 +77,7 @@ RSpec.describe 'Status', type: :request do
 
     context 'with no working database connection' do
       before do
-        allow(ActiveRecord::Base.connection).to receive(:active?).and_return(false)
+        allow(ActiveRecord::Base).to receive(:with_connection).and_raise(StandardError.new('Database connection failed'))
         get '/health'
       end
 

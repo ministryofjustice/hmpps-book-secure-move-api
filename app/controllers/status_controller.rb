@@ -29,8 +29,10 @@ class StatusController < ApplicationController
 private
 
   def database_connected?
-    ActiveRecord::Base.connection.active?
-  rescue PG::ConnectionBad
+    ActiveRecord::Base.with_connection do |conn|
+      conn.execute('SELECT 1').present?
+    end
+  rescue StandardError
     false
   end
 end
