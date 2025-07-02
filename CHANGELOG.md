@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.63.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.63.0) (2025-07-01)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.62.0...v3.63.0)
+
+**Merged pull requests:**
+
+- Update db connection check in health check [\#2611](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2611) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 4 updates [\#2610](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2610) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump aws-sdk-s3 from 1.190.0 to 1.191.0 in the production-dependencies group [\#2607](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2607) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.62.0 [\#2606](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2606) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.62.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.62.0) (2025-06-25)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.61.0...v3.62.0)
@@ -922,19 +933,19 @@
 
 ## [v3.35.1](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.1) (2023-06-16)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/3.35.0...v3.35.1)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.0...v3.35.1)
 
 **Merged pull requests:**
 
 - \[MAP-26\] Generate swagger docs during container build [\#2100](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2100) ([jimbali](https://github.com/jimbali))
 
-## [3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/3.35.0) (2023-06-16)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.35.0...3.35.0)
-
 ## [v3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.35.0) (2023-06-16)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.1...v3.35.0)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/3.35.0...v3.35.0)
+
+## [3.35.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/3.35.0) (2023-06-16)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.34.1...3.35.0)
 
 **Merged pull requests:**
 
