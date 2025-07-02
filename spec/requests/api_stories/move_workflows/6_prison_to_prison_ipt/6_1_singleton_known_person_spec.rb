@@ -9,6 +9,7 @@ require 'rack/test'
 RSpec.describe 'singleton', :api_story, type: :request do
   include Rack::Test::Methods
   include_context 'with mock prison-api'
+  include_context 'with mock prisoner-search-api'
   include_context 'with Nomis alerts reference data'
 
   let(:prison_number) { 'G8133UA' }

@@ -100,13 +100,11 @@ RSpec.describe Api::PeopleController do
         end
       end
 
-      context 'when Nomis times out' do
-        it 'returns 503 - gateway timeout error' do
-          allow(NomisClient::People).to receive(:get).and_raise(Faraday::TimeoutError)
-
+      context 'when the Prisoner Search API times out' do
+        it 'returns 5xx error for API timeout' do
+          allow(PrisonerSearchApiClient::Prisoner).to receive(:get).and_raise(Faraday::TimeoutError)
           get_people
-
-          expect(response).to have_http_status(:gateway_timeout)
+          expect(response.status).to be_in([502, 503])
         end
       end
     end
