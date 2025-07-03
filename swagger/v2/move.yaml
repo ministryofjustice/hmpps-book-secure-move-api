@@ -103,10 +103,32 @@ Move:
               enum:
                 - made_in_error
                 - supplier_declined_to_move
-                - cancelled_by_pmu
                 - rejected
                 - incomplete_per
                 - other
+                - cancelled_by_pmu
+                - case_not_court_ready
+                - combined_with_another_request
+                - court_closure
+                - court_no_capacity
+                - court_not_dda_compliant
+                - incorrect_collection_location
+                - incorrect_final_location
+                - list_received_after_5_pm
+                - operational_issues_prison
+                - police_transported_prisoner
+                - prison_transported_prisoner
+                - prisoner_refusal
+                - prisoner_to_be_released_on_bail
+                - prisoner_unfit_to_travel
+                - ptr_unachievable
+                - receiver_unable_to_accept_prisoner
+                - sender_unable_to_fulfil_draft
+                - sender_cancelled_request
+                - supplier_no_resource
+                - tornado_event
+                - unsuitable_vehicle
+                - video_link_to_be_used
             - type: "null"
           description: Reason the move has been cancelled
         cancellation_reason_comment:

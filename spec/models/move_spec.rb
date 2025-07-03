@@ -33,15 +33,29 @@ RSpec.describe Move do
 
       it {
         expect(move).to validate_inclusion_of(:cancellation_reason)
-          .in_array(%w[
-            made_in_error
-            supplier_declined_to_move
-            cancelled_by_pmu
-            rejected
-            incomplete_per
-            other
-          ])
+          .in_array(described_class::CANCELLATION_REASONS)
       }
+    end
+
+    describe 'backward compatibility for move cancellation reasons' do
+      let(:legacy_move_reasons) do
+        %w[
+          made_in_error
+          supplier_declined_to_move
+          rejected
+          database_correction
+          incomplete_per
+          other
+        ]
+      end
+
+      it 'includes all legacy move cancellation reasons for API compatibility' do
+        legacy_move_reasons.each do |reason|
+          expect(described_class::CANCELLATION_REASONS).to include(reason),
+                                                           "Legacy move reason '#{reason}' is missing from Move::CANCELLATION_REASONS. " \
+                                                           'This could break API clients using this reason for move cancellations.'
+        end
+      end
     end
   end
 
