@@ -46,7 +46,6 @@ generic-service:
       PRISONER_SEARCH_API_BASE_URL: prisoner_search_api_base_url_key
       SENTRY_DSN: sentry_dsn_key
       CORS_ALLOWED_ORIGINS: cors_allowed_origins_key
-      PER_QUALITY_REPORT_RECIPIENTS: per_quality_report_recipients
       ENCRYPTOR_SALT: encryptor_salt
     rds-instance-hmpps-book-secure-move-api-production:
       DATABASE_URL: url
@@ -109,9 +108,6 @@ cronJobs:
   - name: requeue-unsent-notifications
     schedule: "30 * * * *"
     command: ["bundle", "exec", "rake", "requeue_unsent_notifications"]
-  - name: per-report-job
-    schedule: "0 7 1 1,4,7,10 *"
-    command: ["bundle", "exec", "rake", "reports:person_escort_record_quality"]
   - name: nomis-location-sync-job
     schedule: "0 * * * *"
     command: ["bundle", "exec", "rails", "reference_data:create_locations" ]
