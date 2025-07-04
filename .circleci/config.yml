@@ -168,6 +168,7 @@ aliases:
       branches:
         only:
           - main
+          - MAP-2482-zip-moves-export
   - &only_for_deployment
     filters:
       tags:
@@ -175,6 +176,7 @@ aliases:
       branches:
         only:
           - main
+          - MAP-2482-zip-moves-export
           - dev-auth-from-docs
           - /.*-deploydev/
   - &only_deploy_tags
