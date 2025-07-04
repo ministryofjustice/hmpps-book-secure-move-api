@@ -13,20 +13,13 @@ RSpec.describe ReportMailer, type: :mailer do
     subject(:mail) do
       described_class.with(
         recipient_email: 'user@example.com',
-        moves: instance_double(ActiveRecord::Relation),
+        zip_file_path: '/tmp/test.zip',
+        filename: 'moves_export_2025-06-12_14-30.zip',
       ).moves_export
     end
 
-    let(:csv_tempfile) { instance_double(Tempfile, path: '/tmp/test.csv', closed?: false) }
-
     before do
-      moves_exporter = instance_double(Moves::Exporter, call: csv_tempfile)
-      allow(Moves::Exporter).to receive(:new).and_return(moves_exporter)
-      allow(csv_tempfile).to receive(:rewind)
-      allow(csv_tempfile).to receive(:read).and_return('csv_content')
-      allow(csv_tempfile).to receive(:close)
-      allow(File).to receive(:exist?).and_return(true)
-      allow(File).to receive(:unlink)
+      allow(File).to receive(:read).with('/tmp/test.zip').and_return('zip_content')
       allow(Notifications).to receive(:prepare_upload)
     end
 
@@ -46,14 +39,17 @@ RSpec.describe ReportMailer, type: :mailer do
       end
 
       it { is_expected.to include('report-title': 'Moves Export') }
-      it { is_expected.to include('report-description': 'CSV export generated on 12/06/2025 at 14:30') }
+      it { is_expected.to include('report-description': 'CSV export (zipped) generated on 12/06/2025 at 14:30') }
     end
 
-    describe 'tempfile cleanup' do
-      it 'closes and unlinks the tempfile' do
+    describe 'file handling' do
+      it 'reads the ZIP file and prepares it for upload' do
         mail.to # Force the mail to be built
-        expect(csv_tempfile).to have_received(:close)
-        expect(File).to have_received(:unlink).with('/tmp/test.csv')
+        expect(File).to have_received(:read).with('/tmp/test.zip')
+        expect(Notifications).to have_received(:prepare_upload).with(
+          an_instance_of(StringIO),
+          filename: 'moves_export_2025-06-12_14-30.zip',
+        )
       end
     end
   end

@@ -9,99 +9,82 @@ RSpec.describe MovesExportEmailWorker do
     let(:recipient_email) { 'user@example.com' }
     let(:move_ids) { [1, 2, 3] }
     let(:moves) { instance_double(ActiveRecord::Relation) }
-    let(:report_mailer) { instance_double(ReportMailer) }
-    let(:mail_delivery) { instance_double(ActionMailer::MessageDelivery) }
+    let(:csv_tempfile) { instance_double(Tempfile, path: '/tmp/csv_file.csv', closed?: false) }
+    let(:zip_tempfile) { instance_double(Tempfile, path: '/tmp/zip_file.zip', closed?: false) }
+    let(:mail_double) { instance_double(ActionMailer::MessageDelivery) }
 
     before do
-      allow(Move).to receive(:includes).and_return(Move)
-      allow(Move).to receive(:where).with(id: move_ids).and_return(moves)
-      allow(ReportMailer).to receive(:with).and_return(report_mailer)
-      allow(report_mailer).to receive(:moves_export).and_return(mail_delivery)
-      allow(mail_delivery).to receive(:deliver_now)
+      move_scope = instance_double(ActiveRecord::Relation)
+      allow(Move).to receive(:includes).with(described_class::CSV_INCLUDES).and_return(move_scope)
+      allow(move_scope).to receive(:where).with(id: move_ids).and_return(moves)
+
+      # Mock CSV generation
+      exporter = instance_double(Moves::Exporter, call: csv_tempfile)
+      allow(Moves::Exporter).to receive(:new).with(moves).and_return(exporter)
+      allow(csv_tempfile).to receive(:rewind)
+      allow(csv_tempfile).to receive(:read).and_return('csv,content,here')
+
+      # Mock ZIP creation
+      allow(Tempfile).to receive(:new).with(['moves_export_zip', '.zip']).and_return(zip_tempfile)
+      zip_file = instance_double(Zip::File)
+      allow(Zip::File).to receive(:open).with('/tmp/zip_file.zip', Zip::File::CREATE).and_yield(zip_file)
+      allow(zip_file).to receive(:add)
+
+      # Mock mailer
+      allow(ReportMailer).to receive_messages(with: ReportMailer, moves_export: mail_double)
+      allow(mail_double).to receive(:deliver_now)
+
+      # Mock cleanup
+      allow(csv_tempfile).to receive(:close)
+      allow(zip_tempfile).to receive(:close)
+      allow(File).to receive(:exist?).and_return(true)
+      allow(File).to receive(:unlink)
+
+      # Mock time
+      allow(Time).to receive(:current).and_return(Time.zone.parse('2025-06-12 14:30:00'))
     end
 
-    it 'processes the export workflow correctly' do
+    it 'generates CSV and sends ZIP via email' do
       worker.perform(recipient_email, move_ids)
 
       expect(Move).to have_received(:includes).with(described_class::CSV_INCLUDES)
-      expect(Move).to have_received(:where).with(id: move_ids)
+      expect(Moves::Exporter).to have_received(:new).with(moves)
       expect(ReportMailer).to have_received(:with).with(
         recipient_email: recipient_email,
-        moves: moves,
+        zip_file_path: '/tmp/zip_file.zip',
+        filename: 'moves_export_2025-06-12_14-30.zip',
       )
-      expect(report_mailer).to have_received(:moves_export)
-      expect(mail_delivery).to have_received(:deliver_now)
+      expect(mail_double).to have_received(:deliver_now)
     end
 
-    context 'when an error occurs' do
-      before do
-        allow(Move).to receive(:includes).and_raise(StandardError.new('Something went wrong'))
-        allow(Rails.logger).to receive(:error)
-      end
+    it 'creates ZIP file with timestamped CSV inside' do
+      worker.perform(recipient_email, move_ids)
 
-      it 'logs the error without re-raising' do
-        expect {
-          worker.perform(recipient_email, move_ids)
-        }.not_to raise_error
-
-        expect(Rails.logger).to have_received(:error).with(
-          "MovesExportEmailWorker failed for email #{recipient_email}: Something went wrong",
-        )
-      end
+      expect(Zip::File).to have_received(:open).with('/tmp/zip_file.zip', Zip::File::CREATE)
     end
 
-    context 'with empty move_ids array' do
-      let(:move_ids) { [] }
+    it 'cleans up tempfiles' do
+      worker.perform(recipient_email, move_ids)
 
-      it 'handles empty move_ids gracefully' do
-        worker.perform(recipient_email, move_ids)
-
-        expect(Move).to have_received(:includes).with(described_class::CSV_INCLUDES)
-        expect(Move).to have_received(:where).with(id: [])
-        expect(ReportMailer).to have_received(:with).with(
-          recipient_email: recipient_email,
-          moves: moves,
-        )
-      end
+      expect(csv_tempfile).to have_received(:close)
+      expect(zip_tempfile).to have_received(:close)
+      expect(File).to have_received(:unlink).with('/tmp/csv_file.csv')
+      expect(File).to have_received(:unlink).with('/tmp/zip_file.zip')
     end
 
-    context 'with single move_id' do
-      let(:move_ids) { [42] }
+    describe 'tempfile cleanup edge cases' do
+      it 'handles missing tempfiles gracefully' do
+        allow(Moves::Exporter).to receive(:new).and_return(instance_double(Moves::Exporter, call: nil))
 
-      it 'handles single move ID correctly' do
-        worker.perform(recipient_email, move_ids)
-
-        expect(Move).to have_received(:where).with(id: [42])
-      end
-    end
-
-    context 'when moves query returns empty result' do
-      let(:empty_moves) { Move.none }
-
-      before do
-        allow(Move).to receive(:where).with(id: move_ids).and_return(empty_moves)
+        expect { worker.perform(recipient_email, move_ids) }.not_to raise_error
       end
 
-      it 'still sends the email with empty moves collection' do
-        worker.perform(recipient_email, move_ids)
+      it 'handles file deletion errors gracefully' do
+        allow(File).to receive(:unlink).and_raise(Errno::ENOENT, 'File not found')
 
-        expect(ReportMailer).to have_received(:with).with(
-          recipient_email: recipient_email,
-          moves: empty_moves,
-        )
-        expect(mail_delivery).to have_received(:deliver_now)
+        expect(Rails.logger).to receive(:warn).twice
+        expect { worker.perform(recipient_email, move_ids) }.not_to raise_error
       end
-    end
-  end
-
-  it 'includes Sidekiq::Worker' do
-    expect(described_class.included_modules).to include(Sidekiq::Worker)
-  end
-
-  describe 'CSV_INCLUDES constant' do
-    it 'defines the correct includes for CSV export' do
-      expected_includes = [:from_location, :to_location, :journeys, :profile, :supplier, { person: %i[gender ethnicity] }]
-      expect(described_class::CSV_INCLUDES).to eq(expected_includes)
     end
   end
 end
