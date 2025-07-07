@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.64.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.64.0) (2025-07-07)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.63.0...v3.64.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2616](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2616) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-2566 Remove person\_escort\_record\_quality\_report [\#2615](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2615) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump the production-dependencies group with 2 updates [\#2614](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2614) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group with 2 updates [\#2613](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2613) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.63.0 [\#2612](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2612) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-2008 Update cancellation reasons [\#2609](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2609) ([tobyprivett](https://github.com/tobyprivett))
+- MAP-2301 Enable reasons for move date changes [\#2550](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2550) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.63.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.63.0) (2025-07-01)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.62.0...v3.63.0)
@@ -1045,15 +1059,15 @@
 
 ## [v3.29.2c](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2c) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...v3.29.2c)
-
-## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
-
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2b)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/log-test...v3.29.2c)
 
 ## [log-test](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/log-test) (2023-03-09)
 
-[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...log-test)
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.29.2b...log-test)
+
+## [v3.29.2b](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.29.2b) (2023-03-09)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.30.0...v3.29.2b)
 
 ## [v3.30.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.30.0) (2023-03-09)
 
