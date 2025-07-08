@@ -130,6 +130,11 @@ Allocation:
           format: date
           example: '2020-05-17'
           description: Date on which the allocation is scheduled
+        date_changed_reason:
+          type: string
+          format: date
+          example: 'operational_issues'
+          description: Reason the allocation has been changed
         other_criteria:
           oneOf:
           - type: string
