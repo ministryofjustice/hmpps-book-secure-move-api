@@ -69,6 +69,13 @@ Move:
           description:
             Date on which the move is scheduled (mandatory unless status
             is proposed)
+        date_changed_reason:
+          oneOf:
+            - type: string
+            - type: "null"
+          example: "operational_issues"
+          description:
+            Reason for the date change
         date_from:
           oneOf:
             - type: string

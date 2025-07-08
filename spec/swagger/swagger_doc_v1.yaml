@@ -338,7 +338,10 @@
         - name: body
           in: body
           required: true
-          description: The allocation object to be modified. Only the date will be updated.
+          description: |
+            The allocation object to be modified.
+            The date will be updated.
+            The date_changed_reason will be propogated to the associated moves.
           schema:
             "$ref": "../v1/allocation.yaml#/Allocation"
         - "$ref": "../v1/allocation_include_parameter.yaml#/AllocationIncludeParameter"
