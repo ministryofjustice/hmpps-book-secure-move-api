@@ -47,7 +47,7 @@ module Api
       { attributes: %i[date estate estate_comment prisoner_category sentence_length sentence_length_comment moves_count complete_in_full other_criteria requested_by],
         relationships: {} },
     ].freeze
-    PERMITTED_UPDATE_ALLOCATION_PARAMS = [:type, { attributes: %i[date] }].freeze
+    PERMITTED_UPDATE_ALLOCATION_PARAMS = [:type, { attributes: %i[date date_changed_reason] }].freeze
 
     PERMITTED_COMPLEX_CASE_PARAMS = %i[key title answer allocation_complex_case_id].freeze
 

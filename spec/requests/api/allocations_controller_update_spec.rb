@@ -33,11 +33,12 @@ RSpec.describe Api::AllocationsController do
     let(:headers) { { 'Authorization' => "Bearer #{access_token}", 'CONTENT_TYPE': content_type } }
     let(:existing_date) { Date.new(2023, 1, 1) }
     let(:new_date) { existing_date.tomorrow }
+    let(:date_changed_reason) { 'operational_issues' }
     let(:supplier) { create(:supplier, :serco) }
     let!(:allocation) { create(:allocation, date: existing_date, moves_count:) }
     let!(:moves) { create_list(:move, moves_count, allocation:, date: existing_date, person: create(:person), supplier:) }
 
-    let(:allocation_attributes) { { date: new_date } }
+    let(:allocation_attributes) { { date: new_date, date_changed_reason: } }
 
     let(:data) do
       {
@@ -101,15 +102,25 @@ RSpec.describe Api::AllocationsController do
         expect(response_json).to include_json resource_to_json
       end
 
-      it 'updates the date of all of the moves' do
-        patch_allocations
-        expect(allocation.reload.moves.pluck(:date).uniq).to eq([new_date])
+      describe 'updating the moves' do
+        let(:updated_moves) { allocation.reload.moves }
+
+        it 'updates the date for all of the moves' do
+          patch_allocations
+          expect(updated_moves.pluck(:date).uniq).to eq([new_date])
+        end
+
+        it 'updates the date_changed_reason for all of the moves' do
+          patch_allocations
+          expect(updated_moves.pluck(:date_changed_reason).uniq).to eq(%w[operational_issues])
+        end
       end
 
       it 'creates GenericEvent::MoveDateChanged events' do
         patch_allocations
         expect(GenericEvent.where(type: 'GenericEvent::MoveDateChanged').pluck('details'))
-          .to eq([{ 'date' => '2023-01-02' }, { 'date' => '2023-01-02' }])
+          .to eq([{ 'date' => '2023-01-02', 'date_changed_reason' => 'operational_issues' },
+                  { 'date' => '2023-01-02', 'date_changed_reason' => 'operational_issues' }])
       end
 
       it_behaves_like 'notifications created'

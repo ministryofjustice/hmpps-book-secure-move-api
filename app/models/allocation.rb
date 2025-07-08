@@ -59,6 +59,7 @@ class Allocation < VersionedModel
   validates :cancellation_reason, absence: true, unless: :cancelled?
 
   attribute :complex_cases, Types::Jsonb.new(Allocation::ComplexCaseAnswers)
+  attribute :date_changed_reason, :string
 
   has_state_machine AllocationStateMachine, on: :status
 

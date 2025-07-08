@@ -31,12 +31,13 @@ module Allocations
     def update_move_dates
       allocation.moves.each do |move|
         move.date = allocation.date
+        move.date_changed_reason = allocation.date_changed_reason
         move.save!(context: :update_allocation)
 
         create_automatic_event!(
           eventable: move,
           event_class: GenericEvent::MoveDateChanged,
-          details: { date: move.date.iso8601 },
+          details: { date: move.date.iso8601, date_changed_reason: move.date_changed_reason },
         )
 
         Notifier.prepare_notifications(topic: move, action_name: 'update')
