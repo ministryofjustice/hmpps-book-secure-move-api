@@ -17,7 +17,7 @@ module Allocations
       self.allocation = Allocation.find(allocation_id)
       existing_date = allocation.date
 
-      allocation.assign_attributes(allocation_params[:attributes])
+      allocation.assign_attributes(allocation_params[:attributes] || {})
       allocation.validate!
 
       allocation.transaction do
