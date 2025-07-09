@@ -84,4 +84,22 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
       expect(response).to be_nil
     end
   end
+
+  describe '.facial_image_exists?' do
+    let(:response) { described_class.facial_image_exists?('A1234AA') }
+    let(:response_body) { '{"currentFacialImageId": "12345"}' }
+    let(:response_status) { 200 }
+
+    it 'returns true when image exists' do
+      expect(response).to be true
+    end
+
+    context 'with no image' do
+      let(:response_body) { '{"currentFacialImageId": null}' }
+
+      it 'returns false' do
+        expect(response).to be false
+      end
+    end
+  end
 end
