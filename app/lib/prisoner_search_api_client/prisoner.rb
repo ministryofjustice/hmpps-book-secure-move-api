@@ -11,11 +11,23 @@ module PrisonerSearchApiClient
         nil
       end
 
-      def fetch_response(prison_number)
-        PrisonerSearchApiClient::Base.get("/prisoner/#{prison_number}")
+      def facial_image_exists?(prison_number)
+        return false unless prison_number
+
+        response_data = JSON.parse(fetch_response(prison_number, response_fields: 'currentFacialImageId').body)
+        response_data['currentFacialImageId'].present?
+      rescue OAuth2::Error, JSON::ParserError => e
+        Rails.logger.warn "Failed to fetch image info for #{prison_number}: #{e.message}"
+        false
       end
 
     private
+
+      def fetch_response(prison_number, response_fields: nil)
+        url = "/prisoner/#{prison_number}"
+        url += "?responseFields=#{response_fields}" if response_fields
+        PrisonerSearchApiClient::Base.get(url)
+      end
 
       def attributes_for(person)
         {

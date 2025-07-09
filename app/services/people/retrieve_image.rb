@@ -6,6 +6,9 @@ module People
       return true if person.image.attached? && !force_update
       return false unless person.latest_nomis_booking_id
 
+      # Check if image exists before attempting to retrieve to avoid 404
+      return false unless PrisonerSearchApiClient::Prisoner.facial_image_exists?(person.prison_number)
+
       image_blob = NomisClient::Image.get(person.latest_nomis_booking_id)
 
       if image_blob

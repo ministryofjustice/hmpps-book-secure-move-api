@@ -10,6 +10,10 @@ RSpec.describe Api::PeopleController do
   let(:headers) { { 'CONTENT_TYPE': content_type, 'Authorization': "Bearer #{access_token}" } }
   let(:content_type) { ApiController::CONTENT_TYPE }
 
+  before do
+    allow(PrisonerSearchApiClient::Prisoner).to receive(:facial_image_exists?).and_return(true)
+  end
+
   context 'when person ID is NOT valid' do
     let(:id) { 'non-existent-id' }
 
