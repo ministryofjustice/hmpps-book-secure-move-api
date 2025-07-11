@@ -58,7 +58,6 @@ RSpec.describe Alerts::Importer do
   end
 
   before do
-    allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
     allow(AlertsApiClient::Alerts).to receive(:get).and_return(alerts)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
 
