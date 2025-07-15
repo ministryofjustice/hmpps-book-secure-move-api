@@ -38,9 +38,9 @@ RSpec.describe Moves::ImportPeople do
 
   before do
     allow(NomisClient::People).to receive(:get).and_return(prison_numbers_response)
-    allow(AlertsApiClient::Alerts).to receive(:get).and_return(alerts_response)
+    # Mock individual calls (new behavior) but not batch calls (old behavior)
+    allow(AlertsApiClient::Alerts).to receive(:get).with(nomis_prison_number).and_return(alerts_response)
     allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
-
     create(:assessment_question, :care_needs_fallback)
     create(:assessment_question, :alerts_fallback)
   end
@@ -70,15 +70,18 @@ RSpec.describe Moves::ImportPeople do
 
     it 'populates assessment answers' do
       importer.call
-
       assessment_answers = Person.last.profiles.first.assessment_answers
-
       expect(assessment_answers).to be_present
     end
 
     context 'with no alerts or personal care needs' do
       let(:alerts_response) { [] }
       let(:personal_care_needs_response) { [] }
+
+      before do
+        # Override the mock for empty alerts case
+        allow(AlertsApiClient::Alerts).to receive(:get).with(nomis_prison_number).and_return([])
+      end
 
       it 'creates new `Person` records' do
         expect { importer.call }.to change(Person, :count).by(1)
@@ -90,9 +93,7 @@ RSpec.describe Moves::ImportPeople do
 
       it 'does not populate assessment answers' do
         importer.call
-
         assessment_answers = Person.last.profiles.first.assessment_answers
-
         expect(assessment_answers).to be_empty
       end
     end
