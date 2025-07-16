@@ -1,5 +1,17 @@
 # Changelog
 
+## [v3.65.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.65.0) (2025-07-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.64.0...v3.65.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump json-schema from 5.1.1 to 5.2.1 in the production-dependencies group [\#2621](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2621) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump git from 4.0.1 to 4.0.4 in the production-dependencies group [\#2620](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2620) ([dependabot[bot]](https://github.com/apps/dependabot))
+- MAP-2301 Add date\_changed\_reason to Allocations [\#2619](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2619) ([tobyprivett](https://github.com/tobyprivett))
+- Generated changelog for v3.64.0 [\#2618](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2618) ([tobyprivett](https://github.com/tobyprivett))
+- Fix flaky lodging event test by removing order dependency [\#2617](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2617) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.64.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.64.0) (2025-07-07)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.63.0...v3.64.0)
