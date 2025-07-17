@@ -17,7 +17,6 @@ class Profile < VersionedModel
     aliases
     gender_id
     ethnicity_id
-    nationality_id
     profile_identifiers
     gender_additional_information
     latest_nomis_booking_id
