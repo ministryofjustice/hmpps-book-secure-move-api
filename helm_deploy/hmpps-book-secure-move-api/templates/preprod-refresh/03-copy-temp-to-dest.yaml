@@ -188,16 +188,6 @@ data:
     disabled_at = EXCLUDED.disabled_at;
     --
     
-    INSERT INTO nationalities SELECT * FROM nationalities_temp ON CONFLICT (id) DO UPDATE
-    SET
-    title = EXCLUDED.title,
-    description = EXCLUDED.description,
-    created_at = EXCLUDED.created_at,
-    updated_at = EXCLUDED.updated_at,
-    key = EXCLUDED.key,
-    disabled_at = EXCLUDED.disabled_at;
-    --
-    
     INSERT INTO nomis_alerts SELECT * FROM nomis_alerts_temp ON CONFLICT (id) DO UPDATE
     SET
     type_code = EXCLUDED.type_code,

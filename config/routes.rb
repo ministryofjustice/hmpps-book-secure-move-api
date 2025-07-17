@@ -104,7 +104,6 @@ Rails.application.routes.draw do
       resources :genders, only: :index
       resources :identifier_types, only: :index
       resources :locations, only: %i[index show]
-      resources :nationalities, only: :index
       resources :prison_transfer_reasons, only: %i[index]
       resources :regions, only: %i[index show]
       resources :suppliers, only: %i[index show]

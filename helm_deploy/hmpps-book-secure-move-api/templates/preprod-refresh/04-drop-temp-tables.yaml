@@ -31,7 +31,6 @@ data:
     DROP TABLE IF EXISTS ethnicities_temp CASCADE;
     DROP TABLE IF EXISTS genders_temp CASCADE;
     DROP TABLE IF EXISTS locations_regions_temp CASCADE;
-    DROP TABLE IF EXISTS nationalities_temp CASCADE;
     DROP TABLE IF EXISTS nomis_alerts_temp CASCADE;
     DROP TABLE IF EXISTS notifications_temp CASCADE;
     DROP TABLE IF EXISTS populations_temp CASCADE;

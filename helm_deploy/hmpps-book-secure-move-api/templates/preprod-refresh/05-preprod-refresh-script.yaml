@@ -89,7 +89,6 @@ data:
     temp genders
     
     temp locations_regions
-    temp nationalities
     temp nomis_alerts
     temp notifications
     #temp oauth_access_grants    #Purposefully omitted            

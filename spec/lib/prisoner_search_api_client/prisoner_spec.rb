@@ -32,7 +32,6 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
         cro_number: '29906/12J',
         gender: 'Female',
         ethnicity: 'White: Eng./Welsh/Scot./N.Irish/British',
-        nationalities: 'Egyptian',
       }
     end
 
@@ -59,7 +58,6 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
         cro_number: nil,
         gender: nil,
         ethnicity: nil,
-        nationalities: nil,
       }
       expect(response).to eq(expected_empty_response)
     end

@@ -42,7 +42,6 @@ module PrisonerSearchApiClient
           cro_number: person['croNumber'],
           gender: person['gender'],
           ethnicity: person['ethnicity'],
-          nationalities: person['nationality'], # NOTE: singular in Prisoner Search API
         }
       end
     end
