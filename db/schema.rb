@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_16_133729) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_17_130726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -409,15 +409,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_133729) do
     t.index ["updated_at"], name: "index_moves_on_updated_at"
   end
 
-  create_table "nationalities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title", null: false
-    t.string "description"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.string "key", null: false
-    t.datetime "disabled_at", precision: nil
-  end
-
   create_table "nomis_alerts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "type_code", null: false
     t.string "code", null: false
@@ -580,7 +571,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_133729) do
     t.string "aliases", default: [], array: true
     t.uuid "gender_id"
     t.uuid "ethnicity_id"
-    t.uuid "nationality_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.jsonb "assessment_answers"

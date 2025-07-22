@@ -3,7 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe People::RetrieveImage do
-  let(:person) { create(:person) }
+  let(:person) { create(:person, prison_number: 'A1234AA') }
+
+  before do
+    allow(PrisonerSearchApiClient::Prisoner).to receive(:facial_image_exists?)
+      .with('A1234AA')
+      .and_return(true)
+  end
 
   describe '.call' do
     context 'when latest_nomis_booking_id is empty' do
@@ -40,6 +46,23 @@ RSpec.describe People::RetrieveImage do
 
           expect(person).to have_received(:attach_image)
         end
+      end
+    end
+
+    context 'when facial image does not exist' do
+      before do
+        person.latest_nomis_booking_id = 123
+        allow(PrisonerSearchApiClient::Prisoner).to receive(:facial_image_exists?)
+          .with('A1234AA')
+          .and_return(false)
+        allow(NomisClient::Image).to receive(:get)
+      end
+
+      it 'returns false without calling NomisClient::Image.get' do
+        result = described_class.call(person)
+
+        expect(result).to be(false)
+        expect(NomisClient::Image).not_to have_received(:get)
       end
     end
   end

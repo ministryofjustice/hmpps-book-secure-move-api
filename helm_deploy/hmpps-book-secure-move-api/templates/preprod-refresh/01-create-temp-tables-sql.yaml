@@ -31,7 +31,6 @@ data:
     CREATE TABLE ethnicities_temp (LIKE ethnicities);
     CREATE TABLE genders_temp (LIKE genders);
     CREATE TABLE locations_regions_temp (LIKE locations_regions);
-    CREATE TABLE nationalities_temp (LIKE nationalities);
     CREATE TABLE nomis_alerts_temp (LIKE nomis_alerts);
     CREATE TABLE notifications_temp (LIKE notifications);
     CREATE TABLE populations_temp (LIKE populations);
