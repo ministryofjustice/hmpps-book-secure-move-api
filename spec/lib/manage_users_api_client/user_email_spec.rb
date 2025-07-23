@@ -57,7 +57,6 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
     end
 
     context 'when API returns 204 No Content' do
-      let(:response_body) { '' }
       let(:response_status) { 204 }
 
       it 'returns nil' do
