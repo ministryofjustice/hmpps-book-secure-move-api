@@ -7,7 +7,10 @@ module ManageUsersApiClient
         return nil if username.blank?
         return username if username =~ URI::MailTo::EMAIL_REGEXP
 
-        JSON.parse(fetch_response(username).body)['email']
+        response = fetch_response(username)
+        return nil if response.status == 204 || response.body.blank?
+
+        JSON.parse(response.body)['email']
       rescue OAuth2::Error
         nil
       end
