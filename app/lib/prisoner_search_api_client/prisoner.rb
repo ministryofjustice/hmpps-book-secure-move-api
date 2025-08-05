@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PrisonerSearchApiClient
   class Prisoner < PrisonerSearchApiClient::Base
     class << self
