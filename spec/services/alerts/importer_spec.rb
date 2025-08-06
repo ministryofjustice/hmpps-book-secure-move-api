@@ -59,7 +59,7 @@ RSpec.describe Alerts::Importer do
 
   before do
     allow(AlertsApiClient::Alerts).to receive(:get).and_return(alerts)
-    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
+    allow(PrisonerSearchApiClient::PersonalCareNeeds).to receive(:get).and_return([])
 
     create(:location, nomis_agency_id: 'BXI')
   end

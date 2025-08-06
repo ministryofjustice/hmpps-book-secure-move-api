@@ -32,7 +32,7 @@ RSpec.describe Moves::ImportPeople, :with_hmpps_authentication, :with_prisoner_s
 
   before do
     allow(AlertsApiClient::Alerts).to receive(:get).and_return(alerts_response)
-    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
+    allow(PrisonerSearchApiClient::PersonalCareNeeds).to receive(:get).and_return(personal_care_needs_response)
 
     create(:assessment_question, :care_needs_fallback)
     create(:assessment_question, :alerts_fallback)

@@ -15,9 +15,9 @@ module Moves
   private
 
     def import_people
-      personal_care_needs = NomisClient::PersonalCareNeeds
-                            .get(nomis_offender_numbers: prison_numbers)
-                            .group_by { |p| p.fetch(:offender_no) }
+      personal_care_needs = prison_numbers.index_with do |prison_number|
+        PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number)
+      end
 
       new_person_count = 0
       changed_profile_count = 0
