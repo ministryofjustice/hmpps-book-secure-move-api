@@ -1130,7 +1130,7 @@ RSpec.describe Move do
       let(:location_description) { 'HMP Leeds' }
 
       before do
-        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number).and_return(location_description)
+        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number: prison_number).and_return(location_description)
       end
 
       it 'returns the location description from the API' do
@@ -1140,7 +1140,7 @@ RSpec.describe Move do
 
     context 'when the API returns nil' do
       before do
-        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number).and_return(nil)
+        allow(PrisonerSearchApiClient::LocationDescription).to receive(:get).with(prison_number: prison_number).and_return(nil)
       end
 
       it 'returns nil' do

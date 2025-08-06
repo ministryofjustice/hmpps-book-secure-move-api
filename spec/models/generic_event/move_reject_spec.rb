@@ -82,7 +82,7 @@ RSpec.describe GenericEvent::MoveReject do
 
     context 'when there is a username for the person who proposed the move' do
       before do
-        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(email)
+        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username: username).and_return(email)
         allow(MoveRejectMailer).to receive(:notify).with(email, move, an_instance_of(described_class)).and_return(mailer_double)
       end
 
@@ -94,7 +94,7 @@ RSpec.describe GenericEvent::MoveReject do
 
     context 'when there is no email address for that username' do
       before do
-        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username).and_return(nil)
+        allow(ManageUsersApiClient::UserEmail).to receive(:get).with(username: username).and_return(nil)
       end
 
       it 'does not send a notification email' do

@@ -3,7 +3,7 @@
 module ManageUsersApiClient
   class UserEmail < ManageUsersApiClient::Base
     class << self
-      def get(username)
+      def get(username:)
         return nil if username.blank?
         return username if username =~ URI::MailTo::EMAIL_REGEXP
 
@@ -14,6 +14,8 @@ module ManageUsersApiClient
       rescue OAuth2::Error
         nil
       end
+
+    private
 
       def fetch_response(username)
         ManageUsersApiClient::Base.get("/users/#{username}/email")

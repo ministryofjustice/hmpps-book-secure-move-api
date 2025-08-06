@@ -16,20 +16,20 @@ module Moves
 
     def import_people
       personal_care_needs = prison_numbers.index_with do |prison_number|
-        PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number)
+        PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number: prison_number)
       end
 
       new_person_count = 0
       changed_profile_count = 0
 
       prison_numbers.each do |prison_number|
-        person_data = PrisonerSearchApiClient::Prisoner.get(prison_number)
+        person_data = PrisonerSearchApiClient::Prisoner.get(prison_number: prison_number)
         next unless person_data
 
         profile = People::BuildPersonAndProfileV1.new(person_data).call
         new_person_count += 1 if profile.new_record?
 
-        alerts = AlertsApiClient::Alerts.get(prison_number)
+        alerts = AlertsApiClient::Alerts.get(prison_number: prison_number)
         Alerts::Importer.new(profile:, alerts:).call
 
         PersonalCareNeeds::Importer.new(profile:, personal_care_needs: personal_care_needs.fetch(prison_number, [])).call
