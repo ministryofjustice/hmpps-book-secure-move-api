@@ -49,8 +49,8 @@ gem 'validate_url'
 # Swagger API documentation. We need CORS to enable the Swagger UI to make requests
 # against the API without an Access-Control-Allow-Origin error.
 gem 'rack-cors'
-gem 'rswag-api'
-gem 'rswag-ui'
+gem 'rswag-api', '3.0.0.pre'
+gem 'rswag-ui', '3.0.0.pre'
 
 # Ruby 3.4 introduces a deprecation warning for rswag
 # https://github.com/rswag/rswag/issues/789
@@ -71,7 +71,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec-json_expectations'
   gem 'rspec-rails'
-  gem 'rswag-specs'
+  gem 'rswag-specs', '3.0.0.pre'
   gem 'shoulda-matchers'
   gem 'timecop'
 end
