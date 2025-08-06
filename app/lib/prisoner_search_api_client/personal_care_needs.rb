@@ -3,7 +3,7 @@
 module PrisonerSearchApiClient
   class PersonalCareNeeds < PrisonerSearchApiClient::Base
     class << self
-      def get(prison_number)
+      def get(prison_number:)
         response = JSON.parse(fetch_response(prison_number).body)
         personal_care_needs = response['personalCareNeeds']
         return [] unless personal_care_needs.is_a?(Array)

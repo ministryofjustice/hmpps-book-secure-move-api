@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe AlertsApiClient::Alerts, :with_hmpps_authentication do
   describe '.get' do
     let(:prison_number) { 'G3239GV' }
-    let(:response) { described_class.get(prison_number) }
+    let(:response) { described_class.get(prison_number: prison_number) }
 
     context 'when there are two alerts' do
       let(:client_response) do

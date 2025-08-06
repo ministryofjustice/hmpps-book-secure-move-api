@@ -7,7 +7,7 @@ RSpec.describe People::RetrieveImage do
 
   before do
     allow(PrisonerSearchApiClient::Prisoner).to receive(:facial_image_exists?)
-      .with('A1234AA')
+      .with(prison_number: 'A1234AA')
       .and_return(true)
   end
 
@@ -53,7 +53,7 @@ RSpec.describe People::RetrieveImage do
       before do
         person.latest_nomis_booking_id = 123
         allow(PrisonerSearchApiClient::Prisoner).to receive(:facial_image_exists?)
-          .with('A1234AA')
+          .with(prison_number: 'A1234AA')
           .and_return(false)
         allow(NomisClient::Image).to receive(:get)
       end

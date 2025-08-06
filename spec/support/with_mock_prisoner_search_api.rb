@@ -5,7 +5,7 @@ RSpec.shared_context 'with mock prisoner-search-api' do
     create(:gender, nomis_code: 'M', title: 'Male')
     create(:ethnicity, title: 'White British')
 
-    allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with('G8133UA').and_return({
+    allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: 'G8133UA').and_return({
       prison_number: 'G8133UA',
       first_name: 'John',
       last_name: 'Smith',
@@ -20,6 +20,6 @@ RSpec.shared_context 'with mock prisoner-search-api' do
       middle_names: 'James',
     })
 
-    allow(AlertsApiClient::Alerts).to receive(:get).with('G8133UA').and_return([])
+    allow(AlertsApiClient::Alerts).to receive(:get).with(prison_number: 'G8133UA').and_return([])
   end
 end

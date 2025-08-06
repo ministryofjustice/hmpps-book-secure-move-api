@@ -20,7 +20,7 @@ module Api
       csv_moves = find_moves(active_record_relationships: CSV_INCLUDES)
       if (params[:async] == 'allow') && csv_moves.size > STREAM_CSV_MOVES_THRESHOLD
 
-        recipient_email = ManageUsersApiClient::UserEmail.get(created_by)
+        recipient_email = ManageUsersApiClient::UserEmail.get(username: created_by)
         if recipient_email
           MovesExportEmailWorker.perform_async(
             recipient_email,

@@ -17,7 +17,7 @@ module FrameworkNomisMappings
   private
 
     def imported_personal_care_needs
-      @imported_personal_care_needs ||= PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number).tap do
+      @imported_personal_care_needs ||= PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number: prison_number).tap do
         nomis_sync_status.set_success
       end
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError, OAuth2::Error => e
