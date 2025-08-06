@@ -15,7 +15,7 @@ module Profiles
   private
 
     def personal_care_needs
-      NomisClient::PersonalCareNeeds.get(nomis_offender_numbers: [@prison_number]).group_by { |p| p.fetch(:offender_no) }
+      { @prison_number => PrisonerSearchApiClient::PersonalCareNeeds.get(@prison_number) }
     end
 
     def alerts

@@ -121,7 +121,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(AlertsApiClient::Alerts).to receive(:get).and_return(nomis_alerts)
     allow(NomisClient::Assessments).to receive(:get).and_return(nomis_assessments)
     allow(NomisClient::Contacts).to receive(:get).and_return(nomis_contacts)
-    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return(nomis_personal_care_needs)
+    allow(PrisonerSearchApiClient::PersonalCareNeeds).to receive(:get).and_return(nomis_personal_care_needs)
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return(nomis_reasonable_adjustments)
   end
 
@@ -183,7 +183,7 @@ RSpec.describe FrameworkNomisMappings::Importer do
     allow(AlertsApiClient::Alerts).to receive(:get).and_return([])
     allow(NomisClient::Assessments).to receive(:get).and_return([])
     allow(NomisClient::Contacts).to receive(:get).and_return([])
-    allow(NomisClient::PersonalCareNeeds).to receive(:get).and_return([])
+    allow(PrisonerSearchApiClient::PersonalCareNeeds).to receive(:get).and_return([])
     allow(NomisClient::ReasonableAdjustments).to receive(:get).and_return([])
     person_escort_record = create(:person_escort_record, framework_responses: [framework_response1, framework_response2], profile: person.profiles.first)
 
