@@ -15,11 +15,11 @@ module Profiles
   private
 
     def personal_care_needs
-      { @prison_number => PrisonerSearchApiClient::PersonalCareNeeds.get(@prison_number) }
+      { @prison_number => PrisonerSearchApiClient::PersonalCareNeeds.get(prison_number: @prison_number) }
     end
 
     def alerts
-      AlertsApiClient::Alerts.get(@prison_number).group_by { |p| p.fetch(:prison_number) }
+      AlertsApiClient::Alerts.get(prison_number: @prison_number).group_by { |p| p.fetch(:prison_number) }
     end
   end
 end

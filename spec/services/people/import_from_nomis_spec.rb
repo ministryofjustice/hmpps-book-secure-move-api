@@ -67,8 +67,8 @@ RSpec.describe People::ImportFromNomis do
 
       before do
         # Mock the API to return nil for the failing prison number
-        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(failing_prison_number).and_return(nil)
-        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number).and_call_original
+        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: failing_prison_number).and_return(nil)
+        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: prison_number).and_call_original
       end
 
       it 'creates person for successful call and skips failed call' do
@@ -86,8 +86,8 @@ RSpec.describe People::ImportFromNomis do
 
       before do
         # Mock the second prison number to return nil (not found)
-        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number_2).and_return(nil)
-        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number).and_call_original
+        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: prison_number_2).and_return(nil)
+        allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: prison_number).and_call_original
       end
 
       it 'only creates person for valid prison number' do

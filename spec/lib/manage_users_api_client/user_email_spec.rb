@@ -9,20 +9,20 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
       let(:response_status) { 200 }
 
       it 'makes an API call and returns the expected email' do
-        response = described_class.get('ALICE_APPLE')
+        response = described_class.get(username: 'ALICE_APPLE')
         expect(response).to eq('alice.apple@example.com')
       end
 
       it 'calls fetch_response for username lookup' do
         expect(described_class).to receive(:fetch_response).with('ALICE_APPLE').and_call_original
-        described_class.get('ALICE_APPLE')
+        described_class.get(username: 'ALICE_APPLE')
       end
     end
 
     context 'when username is already an email address' do
       it 'returns the email address directly without making an API call' do
         expect(described_class).not_to receive(:fetch_response)
-        response = described_class.get('alice.apple@example.com')
+        response = described_class.get(username: 'alice.apple@example.com')
         expect(response).to eq('alice.apple@example.com')
       end
 
@@ -36,7 +36,7 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
 
         email_addresses.each do |email|
           expect(described_class).not_to receive(:fetch_response)
-          response = described_class.get(email)
+          response = described_class.get(username: email)
           expect(response).to eq(email)
         end
       end
@@ -45,13 +45,13 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
     context 'when username is nil or empty' do
       it 'returns nil for nil username without making API call' do
         expect(described_class).not_to receive(:fetch_response)
-        response = described_class.get(nil)
+        response = described_class.get(username: nil)
         expect(response).to be_nil
       end
 
       it 'returns nil for empty string without making API call' do
         expect(described_class).not_to receive(:fetch_response)
-        response = described_class.get('')
+        response = described_class.get(username: '')
         expect(response).to be_nil
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
       let(:response_status) { 204 }
 
       it 'returns nil' do
-        response = described_class.get('USER_WITH_NO_EMAIL')
+        response = described_class.get(username: 'USER_WITH_NO_EMAIL')
         expect(response).to be_nil
       end
     end
@@ -70,7 +70,7 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
       let(:response_status) { 404 }
 
       it 'returns nil' do
-        response = described_class.get('UN_KNOWN')
+        response = described_class.get(username: 'UN_KNOWN')
         expect(response).to be_nil
       end
     end
@@ -81,7 +81,7 @@ RSpec.describe ManageUsersApiClient::UserEmail, :with_hmpps_authentication do
       end
 
       it 'returns nil' do
-        response = described_class.get('SOME_USER')
+        response = described_class.get(username: 'SOME_USER')
         expect(response).to be_nil
       end
     end

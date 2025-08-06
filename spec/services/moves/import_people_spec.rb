@@ -97,7 +97,7 @@ RSpec.describe Moves::ImportPeople, :with_hmpps_authentication, :with_prisoner_s
 
   context 'when prisoner search API fails' do
     before do
-      allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number).and_return(nil)
+      allow(PrisonerSearchApiClient::Prisoner).to receive(:get).with(prison_number: prison_number).and_return(nil)
     end
 
     it 'does not create any records' do
@@ -108,7 +108,7 @@ RSpec.describe Moves::ImportPeople, :with_hmpps_authentication, :with_prisoner_s
 
   context 'when alerts API fails' do
     before do
-      allow(AlertsApiClient::Alerts).to receive(:get).with(prison_number).and_raise(StandardError, 'API Error')
+      allow(AlertsApiClient::Alerts).to receive(:get).with(prison_number: prison_number).and_raise(StandardError, 'API Error')
     end
 
     it 'raises an error and does not create any records' do
