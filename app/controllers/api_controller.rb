@@ -45,6 +45,8 @@ class ApiController < ApplicationController
     'Faraday::ConnectionFailed' => :service_unavailable,
     'Faraday::TimeoutError' => :gateway_timeout,
     'OAuth2::Error' => :bad_gateway,
+    'ActiveRecord::RecordInvalid' => :unprocessable_content,
+    'ActiveRecord::RecordNotSaved' => :unprocessable_content,
   }.freeze
 
   def current_user
