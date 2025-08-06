@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'swagger_helper'
+require 'openapi_helper'
 
 RSpec.describe Api::MovesController do
   let!(:application) { Doorkeeper::Application.create(name: 'test', owner: pentonville_supplier) }

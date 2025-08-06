@@ -171,7 +171,7 @@ GEM
       dotenv (= 3.1.8)
       railties (>= 6.1)
     drb (2.2.3)
-    erb (5.0.1)
+    erb (5.0.2)
     erubi (1.13.1)
     factory_bot (6.5.4)
       activesupport (>= 6.1.0)
@@ -226,7 +226,7 @@ GEM
     hashie (5.0.0)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
-    io-console (0.8.0)
+    io-console (0.8.1)
     io-endpoint (0.14.0)
     io-event (1.7.3)
     io-stream (0.6.1)
@@ -352,7 +352,7 @@ GEM
     puma (6.6.1)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.1.16)
+    rack (3.2.0)
     rack-cors (3.0.0)
       logger
       rack (>= 3.0.14)
@@ -403,7 +403,7 @@ GEM
     rb-inotify (0.11.1)
       ffi (~> 1.0)
     rchardet (1.9.0)
-    rdoc (6.14.1)
+    rdoc (6.14.2)
       erb
       psych (>= 4.0.0)
     redis (5.4.1)
@@ -411,7 +411,7 @@ GEM
     redis-client (0.25.1)
       connection_pool
     regexp_parser (2.10.0)
-    reline (0.6.1)
+    reline (0.6.2)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -434,15 +434,15 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.4)
-    rswag-api (2.16.0)
+    rswag-api (3.0.0.pre)
       activesupport (>= 5.2, < 8.1)
       railties (>= 5.2, < 8.1)
-    rswag-specs (2.16.0)
+    rswag-specs (3.0.0.pre)
       activesupport (>= 5.2, < 8.1)
       json-schema (>= 2.2, < 6.0)
       railties (>= 5.2, < 8.1)
-      rspec-core (>= 2.14)
-    rswag-ui (2.16.0)
+      rspec-core (>= 3.12)
+    rswag-ui (3.0.0.pre)
       actionpack (>= 5.2, < 8.1)
       railties (>= 5.2, < 8.1)
     rubocop (1.78.0)
@@ -602,9 +602,9 @@ DEPENDENCIES
   routing-filter!
   rspec-json_expectations
   rspec-rails
-  rswag-api
-  rswag-specs
-  rswag-ui
+  rswag-api (= 3.0.0.pre)
+  rswag-specs (= 3.0.0.pre)
+  rswag-ui (= 3.0.0.pre)
   rubocop-govuk
   sentry-rails
   sentry-ruby
