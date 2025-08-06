@@ -189,14 +189,14 @@ aliases:
 references:
   _save-cache: &save-cache
     save_cache:
-      key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+      key: v3-dependencies-{{ checksum "Gemfile.lock" }}-ruby345
       paths:
         - vendor/bundle
   _restore-cache: &restore-cache
     restore_cache:
       keys:
-        - v2-dependencies-{{ checksum "Gemfile.lock" }}
-        - v2-dependencies-
+        - v3-dependencies-{{ checksum "Gemfile.lock" }}-ruby345
+        - v3-dependencies-
   _install-dependencies: &install-dependencies
     run:
       name: Install dependencies
