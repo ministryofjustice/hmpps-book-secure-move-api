@@ -225,6 +225,11 @@ references:
     run:
       name: Generate API Docs
       command: bundle exec rails rswag:specs:swaggerize
+      environment:
+        # Fix Ruby 3.4.5 Prism parser compatibility with rswag
+        # Ruby 3.4.5 uses Prism as default parser, but rswag has compatibility issues
+        # Force classic parser to avoid swagger generation failures
+        RUBYOPT: "--parser=parse.y"
   _load_wiremock_mappings: &load_wiremock_mappings
     run:
       name: Load mappings into wiremock
