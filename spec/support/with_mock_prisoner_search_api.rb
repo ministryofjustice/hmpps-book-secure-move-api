@@ -21,5 +21,7 @@ RSpec.shared_context 'with mock prisoner-search-api' do
     })
 
     allow(AlertsApiClient::Alerts).to receive(:get).with(prison_number: 'G8133UA').and_return([])
+
+    allow(PrisonerSearchApiClient::PersonalCareNeeds).to receive(:get).with(prison_number: 'G8133UA').and_return([])
   end
 end
