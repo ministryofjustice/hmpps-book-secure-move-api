@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :with_prisoner_search_api do
   describe '.get' do
-    let(:response) { described_class.get('A1234AA') }
+    let(:response) { described_class.get(prison_number: 'A1234AA') }
     let(:response_body) { file_fixture('prisoner_search_api/get_prisoner_200.json').read }
     let(:response_status) { 200 }
 
@@ -41,7 +41,7 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
   end
 
   describe '.get with errors' do
-    let(:response) { described_class.get('UN_KNOWN') }
+    let(:response) { described_class.get(prison_number: 'UN_KNOWN') }
     let(:response_body) { '{}' } # Empty JSON object for 404 response
     let(:response_status) { 404 }
 
@@ -64,7 +64,7 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
   end
 
   describe '.get without a prison_number' do
-    let(:response) { described_class.get(nil) }
+    let(:response) { described_class.get(prison_number: nil) }
 
     it 'returns nil' do
       expect(response).to be_nil
@@ -78,13 +78,13 @@ RSpec.describe PrisonerSearchApiClient::Prisoner, :with_hmpps_authentication, :w
       allow(PrisonerSearchApiClient::Base).to receive(:get).and_raise(OAuth2::Error.new('Unauthorized'))
       expect(Rails.logger).to receive(:warn).with(/Failed to fetch prisoner data for A1234AA/)
 
-      response = described_class.get(prison_number)
+      response = described_class.get(prison_number: prison_number)
       expect(response).to be_nil
     end
   end
 
   describe '.facial_image_exists?' do
-    let(:response) { described_class.facial_image_exists?('A1234AA') }
+    let(:response) { described_class.facial_image_exists?(prison_number: 'A1234AA') }
     let(:response_body) { '{"currentFacialImageId": "12345"}' }
     let(:response_status) { 200 }
 

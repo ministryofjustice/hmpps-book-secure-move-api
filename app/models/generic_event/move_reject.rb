@@ -37,7 +37,7 @@ class GenericEvent
     end
 
     def move_proposed_by_email
-      @move_proposed_by_email ||= ManageUsersApiClient::UserEmail.get(move_proposed_by)
+      @move_proposed_by_email ||= ManageUsersApiClient::UserEmail.get(username: move_proposed_by)
     end
   end
 end
