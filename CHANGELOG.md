@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.68.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.68.0) (2025-08-14)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.67.0...v3.68.0)
+
+**Merged pull requests:**
+
+- Update to Rails 8.0.2.1 [\#2653](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2653) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps\): Bump json-schema from 5.2.1 to 5.2.2 in the production-dependencies group [\#2649](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2649) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps-dev\): Bump the development-dependencies group with 2 updates [\#2648](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2648) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.67.0 [\#2647](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2647) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.67.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.67.0) (2025-08-12)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.66.0...v3.67.0)
