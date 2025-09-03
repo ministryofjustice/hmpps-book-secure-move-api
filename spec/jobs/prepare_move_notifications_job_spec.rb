@@ -435,4 +435,36 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
       expect(notifications).not_to include([move_supplier_subscription.id, 'cross_supplier_move_add'])
     end
   end
+
+  context 'when move supplier is blocked from cross supplier notifications' do
+    let!(:move_supplier) { create(:supplier, :geoamey) }
+    let!(:move_supplier_subscription) { create(:subscription, :no_email_address, supplier: move_supplier) }
+    let(:move) { create(:move, supplier: move_supplier) }
+    let(:job) { described_class.new }
+
+    def attempt_cross_supplier_notification
+      job.send(:build_and_send_notifications,
+               move_supplier_subscription,
+               NotificationType::WEBHOOK,
+               move,
+               'cross_supplier_add',
+               :some_queue_name)
+    end
+
+    context 'when move supplier is not in feature flag' do
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'serco' } }
+
+      it 'prevents move supplier from receiving cross supplier notifications' do
+        expect { attempt_cross_supplier_notification }.not_to change(Notification, :count)
+      end
+    end
+
+    context 'when move supplier is in feature flag' do
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+      it 'prevents move supplier from receiving cross supplier notifications even when enabled by feature flag' do
+        expect { attempt_cross_supplier_notification }.not_to change(Notification, :count)
+      end
+    end
+  end
 end

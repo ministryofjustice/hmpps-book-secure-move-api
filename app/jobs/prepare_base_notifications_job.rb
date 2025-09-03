@@ -55,6 +55,9 @@ private
     type = event_type(action_name, topic, type_id, subscription)
 
     if type.starts_with?('cross_supplier_')
+      # Move's assigned supplier should never get cross-supplier notifications
+      return if subscription.supplier == topic.supplier
+
       enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
       return unless enabled_suppliers.include?(subscription.supplier.key)
     end
