@@ -416,4 +416,55 @@ RSpec.describe PrepareMoveNotificationsJob, type: :job do
     it_behaves_like 'it does not schedule NotifyWebhookJob'
     it_behaves_like 'it does not schedule NotifyEmailJob'
   end
+
+  context 'when move supplier is different from location suppliers' do
+    let!(:move_supplier) { create(:supplier, :geoamey) }
+    let!(:location_supplier) { create(:supplier, :serco) }
+    let!(:move_supplier_subscription) { create(:subscription, :no_email_address, supplier: move_supplier) }
+    let(:from_location) { create(:location, suppliers: [location_supplier]) }
+    let(:to_location) { create(:location, suppliers: [location_supplier]) }
+    let(:move) { create(:move, from_location:, to_location:, supplier: move_supplier) }
+
+    it 'sends create_move notification to the move supplier regardless of location suppliers' do
+      perform
+
+      notifications = Notification.webhooks.pluck(:subscription_id, :event_type)
+
+      # The move's assigned supplier should always get create_move, never cross_supplier_move_add
+      expect(notifications).to include([move_supplier_subscription.id, 'create_move'])
+      expect(notifications).not_to include([move_supplier_subscription.id, 'cross_supplier_move_add'])
+    end
+  end
+
+  context 'when move supplier is blocked from cross supplier notifications' do
+    let!(:move_supplier) { create(:supplier, :geoamey) }
+    let!(:move_supplier_subscription) { create(:subscription, :no_email_address, supplier: move_supplier) }
+    let(:move) { create(:move, supplier: move_supplier) }
+    let(:job) { described_class.new }
+
+    def attempt_cross_supplier_notification
+      job.send(:build_and_send_notifications,
+               move_supplier_subscription,
+               NotificationType::WEBHOOK,
+               move,
+               'cross_supplier_add',
+               :some_queue_name)
+    end
+
+    context 'when move supplier is not in feature flag' do
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'serco' } }
+
+      it 'prevents move supplier from receiving cross supplier notifications' do
+        expect { attempt_cross_supplier_notification }.not_to change(Notification, :count)
+      end
+    end
+
+    context 'when move supplier is in feature flag' do
+      let(:envs) { { FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS: 'geoamey,serco' } }
+
+      it 'prevents move supplier from receiving cross supplier notifications even when enabled by feature flag' do
+        expect { attempt_cross_supplier_notification }.not_to change(Notification, :count)
+      end
+    end
+  end
 end
