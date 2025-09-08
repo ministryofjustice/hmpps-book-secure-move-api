@@ -30,7 +30,7 @@ gem 'kaminari'
 gem 'net-http-persistent'
 gem 'nokogiri'
 gem 'notifications-ruby-client'
-gem 'oauth2', '2.0.9' # 2.0.10 introduces breaking changes. MAP-2438.
+gem 'oauth2'
 gem 'paper_trail'
 gem 'pg'
 gem 'prometheus-client'
