@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.69.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.69.0) (2025-09-10)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.68.0...v3.69.0)
+
+**Merged pull requests:**
+
+- chore\(deps\): Bump puma from 7.0.1 to 7.0.2 in the production-dependencies group [\#2667](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2667) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 4 updates [\#2666](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2666) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Update oauth2 gem to a version that supports Snaky Case [\#2665](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2665) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump factory\_bot\_rails from 6.5.0 to 6.5.1 in the development-dependencies group [\#2664](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2664) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump puma from 7.0.0 to 7.0.1 in the production-dependencies group [\#2663](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2663) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group across 1 directory with 5 updates [\#2662](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2662) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Move supplier always gets create\_move notification [\#2660](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2660) ([tobyprivett](https://github.com/tobyprivett))
+- Update Postgres in response to CVE-2025-8715 [\#2656](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2656) ([tobyprivett](https://github.com/tobyprivett))
+- chore\(deps-dev\): Bump rubocop-govuk from 5.1.19 to 5.1.20 in the development-dependencies group [\#2655](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2655) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.68.0 [\#2654](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2654) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.68.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.68.0) (2025-08-14)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.67.0...v3.68.0)
