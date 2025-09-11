@@ -3,11 +3,13 @@
 module AlertsApiClient
   class Alerts < AlertsApiClient::Base
     class << self
-      def get(prison_number)
+      def get(prison_number:)
         JSON.parse(fetch_response(prison_number).body)['content'].map do |alert|
           attributes_for(alert)
         end
       end
+
+    private
 
       def fetch_response(prison_number)
         AlertsApiClient::Base.get(

@@ -18,7 +18,7 @@ module People
 
     def call
       @prison_numbers.each do |prison_number|
-        prisoner_search_person = PrisonerSearchApiClient::Prisoner.get(prison_number)
+        prisoner_search_person = PrisonerSearchApiClient::Prisoner.get(prison_number: prison_number)
         next unless prisoner_search_person
 
         person = Person.find_or_initialize_by(prison_number:)

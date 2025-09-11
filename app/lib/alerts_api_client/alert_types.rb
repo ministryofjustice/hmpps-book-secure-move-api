@@ -11,6 +11,8 @@ module AlertsApiClient
         }.flatten
       end
 
+    private
+
       def fetch_response
         AlertsApiClient::Base.get(
           'alert-types',

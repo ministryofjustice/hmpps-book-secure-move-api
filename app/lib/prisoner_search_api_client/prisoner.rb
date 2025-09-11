@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module PrisonerSearchApiClient
   class Prisoner < PrisonerSearchApiClient::Base
     class << self
-      def get(prison_number)
+      def get(prison_number:)
         return nil unless prison_number
 
         response_data = JSON.parse(fetch_response(prison_number).body)
@@ -11,7 +13,7 @@ module PrisonerSearchApiClient
         nil
       end
 
-      def facial_image_exists?(prison_number)
+      def facial_image_exists?(prison_number:)
         return false unless prison_number
 
         response_data = JSON.parse(fetch_response(prison_number, response_fields: 'currentFacialImageId').body)
