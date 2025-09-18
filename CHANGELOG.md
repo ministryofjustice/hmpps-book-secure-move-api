@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.70.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.70.0) (2025-09-18)
+
+[Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.69.0...v3.70.0)
+
+**Merged pull requests:**
+
+- chore\(deps-dev\): Bump rexml from 3.3.9 to 3.4.2 [\#2671](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2671) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump oauth2 from 2.0.16 to 2.0.17 in the production-dependencies group [\#2670](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2670) ([dependabot[bot]](https://github.com/apps/dependabot))
+- chore\(deps\): Bump the production-dependencies group with 3 updates [\#2669](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2669) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Generated changelog for v3.69.0 [\#2668](https://github.com/ministryofjustice/hmpps-book-secure-move-api/pull/2668) ([tobyprivett](https://github.com/tobyprivett))
+
 ## [v3.69.0](https://github.com/ministryofjustice/hmpps-book-secure-move-api/tree/v3.69.0) (2025-09-10)
 
 [Full Changelog](https://github.com/ministryofjustice/hmpps-book-secure-move-api/compare/v3.68.0...v3.69.0)
