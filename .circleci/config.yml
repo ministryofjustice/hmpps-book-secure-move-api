@@ -168,6 +168,7 @@ aliases:
       branches:
         only:
           - main
+          - MAP2376-deploydev
   - &only_for_deployment
     filters:
       tags:
