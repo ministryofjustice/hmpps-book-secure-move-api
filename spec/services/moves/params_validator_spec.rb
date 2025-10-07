@@ -80,7 +80,7 @@ RSpec.describe Moves::ParamsValidator do
 
   context 'with multiple correct rejection reasons' do
     let(:filter_params) { { rejection_reason: } }
-    let(:rejection_reason) { 'no_space_at_receiving_prison,no_transport_available' }
+    let(:rejection_reason) { 'no_space_at_receiving_prison,no_transport_available,more_info_required' }
 
     it { is_expected.to be_valid }
   end

@@ -251,11 +251,12 @@ RSpec.describe Api::MovesController do
       let(:filter_params) { { filter: { rejection_reason: } } }
       let(:rejected_no_space_moves) { create_list :move, 1, :rejected_no_space }
       let(:rejected_no_transport_moves) { create_list :move, 1, :rejected_no_transport }
+      let(:rejected_more_info_moves) { create_list :move, 1, :rejected_more_info }
 
       context 'when no_space_at_receiving_prison' do
         let(:rejection_reason) { 'no_space_at_receiving_prison' }
         let(:expected_moves) { rejected_no_space_moves }
-        let(:unexpected_moves) { rejected_no_transport_moves }
+        let(:unexpected_moves) { rejected_no_transport_moves + rejected_more_info_moves }
 
         it_behaves_like 'an api that filters moves correctly'
       end
@@ -263,7 +264,15 @@ RSpec.describe Api::MovesController do
       context 'when no_transport_available' do
         let(:rejection_reason) { 'no_transport_available' }
         let(:expected_moves) { rejected_no_transport_moves }
-        let(:unexpected_moves) { rejected_no_space_moves }
+        let(:unexpected_moves) { rejected_no_space_moves  + rejected_more_info_moves }
+
+        it_behaves_like 'an api that filters moves correctly'
+      end
+
+      context 'when more_info_required' do
+        let(:rejection_reason) { 'more_info_required' }
+        let(:expected_moves) { rejected_more_info_moves }
+        let(:unexpected_moves) { rejected_no_space_moves + rejected_no_transport_moves }
 
         it_behaves_like 'an api that filters moves correctly'
       end

@@ -26,6 +26,8 @@ private
       'no transport is available for this move'
     when 'no_space_at_receiving_prison'
       "there are no spaces at #{move.to_location.title} on the dates you requested"
+    when 'more_info_required'
+      'more information is required'
     end
   end
 end

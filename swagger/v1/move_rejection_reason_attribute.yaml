@@ -4,4 +4,5 @@ MoveRejectionReason:
   enum:
   - no_space_at_receiving_prison
   - no_transport_available
+  - more_info_required
   description: The reason the move has been rejected
