@@ -66,6 +66,7 @@ class Move < VersionedModel
   REJECTION_REASONS = [
     REJECTION_REASON_NO_SPACE = 'no_space_at_receiving_prison',
     REJECTION_REASON_NO_TRANSPORT = 'no_transport_available',
+    REJECTION_REASON_MORE_INFO = 'more_info_required',
   ].freeze
 
   belongs_to :supplier

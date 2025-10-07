@@ -759,6 +759,7 @@
               enum:
                 - no_space_at_receiving_prison
                 - no_transport_available
+                - more_info_required
         - name: filter[supplier_id]
           description: Filters results to only include moves for the given supplier UUIDs
           in: query

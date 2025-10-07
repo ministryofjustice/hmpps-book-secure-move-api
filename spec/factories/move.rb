@@ -125,6 +125,13 @@ FactoryBot.define do
       rejection_reason { 'no_transport_available' }
     end
 
+    trait :rejected_more_info do
+      status { 'cancelled' }
+      cancellation_reason { 'rejected' }
+      cancellation_reason_comment { 'more information required to approve move' }
+      rejection_reason { 'more_info_required' }
+    end
+
     # Other traits
     trait :with_allocation do
       after(:create) do |move|
