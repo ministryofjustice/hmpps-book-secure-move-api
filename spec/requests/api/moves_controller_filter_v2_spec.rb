@@ -264,7 +264,7 @@ RSpec.describe Api::MovesController do
       context 'when no_transport_available' do
         let(:rejection_reason) { 'no_transport_available' }
         let(:expected_moves) { rejected_no_transport_moves }
-        let(:unexpected_moves) { rejected_no_space_moves  + rejected_more_info_moves }
+        let(:unexpected_moves) { rejected_no_space_moves + rejected_more_info_moves }
 
         it_behaves_like 'an api that filters moves correctly'
       end
