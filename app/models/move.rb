@@ -443,5 +443,4 @@ private
       errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
     end
   end
-
 end
