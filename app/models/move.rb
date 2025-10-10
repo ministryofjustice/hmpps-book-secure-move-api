@@ -130,8 +130,6 @@ class Move < VersionedModel
   before_validation :set_reference
   before_validation :set_move_type
 
-  after_update :update_proposed_journey_dates
-
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
@@ -443,24 +441,6 @@ private
   def validate_date_change_allocation
     if date_changed? && allocation
       errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
-    end
-  end
-
-  def update_proposed_journey_dates
-    return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
-
-    if journeys.count == 1
-      journey = journeys.first
-      journey.update!(date: date) if journey.state == 'proposed'
-    else
-      journeys.each do |journey|
-        next if journey.state != 'proposed' || journey.date.blank?
-
-        day_difference = journey.date - date_before_last_save
-
-        journey.date = date + day_difference
-        journey.save!
-      end
     end
   end
 end
