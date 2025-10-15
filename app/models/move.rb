@@ -451,6 +451,5 @@ private
     return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
 
     journeys.select { |j| j.state == 'proposed' && j.date != date }.map(&:cancel!)
-    journeys.save!
   end
 end
