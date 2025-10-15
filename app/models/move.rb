@@ -130,6 +130,8 @@ class Move < VersionedModel
   before_validation :set_reference
   before_validation :set_move_type
 
+  after_update :cancel_proposed_journey
+  
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
@@ -442,5 +444,12 @@ private
     if date_changed? && allocation
       errors.add(:date, :cant_change_allocation, message: 'cannot be changed as move is part of an allocation')
     end
+  end
+
+  # TODO: This should be temporaty until Serco automatically reject journeys on MoveDateChange 
+  def cancel_proposed_journeys
+    return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
+
+    journeys.select { |j| j.state == 'proposed' && j.date != date }.tap(&:cancel)
   end
 end
