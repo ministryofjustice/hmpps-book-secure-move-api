@@ -446,7 +446,7 @@ private
     end
   end
 
-  # TODO: This should be temporaty until Serco automatically reject journeys on MoveDateChange 
+  # TODO: This should be temporaty until Serco automatically reject journeys on MoveDateChange
   def cancel_proposed_journeys
     return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
 
