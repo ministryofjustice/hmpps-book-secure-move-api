@@ -131,7 +131,7 @@ class Move < VersionedModel
   before_validation :set_move_type
 
   after_update :cancel_proposed_journeys
-  
+
   delegate :suppliers, to: :from_location
 
   attr_accessor :version
