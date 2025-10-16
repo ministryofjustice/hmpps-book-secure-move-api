@@ -453,8 +453,8 @@ private
     journeys.each do |journey|
       next if journey.state != 'proposed' || journey.date.blank? || journey.date != date_before_last_save
 
-        journey.date = date
-        journey.save!
+      journey.date = date
+      journey.save!
     end
   end
 end
