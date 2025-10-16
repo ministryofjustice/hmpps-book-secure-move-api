@@ -451,7 +451,7 @@ private
     return if !saved_change_to_date? || date.blank? || date_before_last_save.blank?
 
     journeys.each do |journey|
-        next if journey.state != 'proposed' || journey.date.blank? || journey.date != date_before_last_save
+      next if journey.state != 'proposed' || journey.date.blank? || journey.date != date_before_last_save
 
         journey.date = date
         journey.save!
