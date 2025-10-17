@@ -120,7 +120,7 @@ scripts:
     main:
       enabled: true
       schedule: "0 */4 * * *"
-      dataSince: "6 hours ago"
+      dataSince: "12 hours ago"
     versions:
       enabled: false # disabled: there is no need to migrate audit-trail data to pre-prod
       schedule: "15 7 * * *"
