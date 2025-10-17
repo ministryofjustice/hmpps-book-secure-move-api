@@ -283,7 +283,6 @@ data:
     aliases = EXCLUDED.aliases,
     gender_id = EXCLUDED.gender_id,
     ethnicity_id = EXCLUDED.ethnicity_id,
-    nationality_id = EXCLUDED.nationality_id,
     created_at = EXCLUDED.created_at,
     updated_at = EXCLUDED.updated_at,
     assessment_answers = EXCLUDED.assessment_answers,
