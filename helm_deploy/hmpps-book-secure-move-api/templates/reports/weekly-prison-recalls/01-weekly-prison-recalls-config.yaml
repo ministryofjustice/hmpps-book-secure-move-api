@@ -32,7 +32,10 @@ data:
             WHERE journeys.move_id = moves.id
             AND journeys.billable = true
         ) THEN true ELSE false END AS "Journey billable",
-        suppliers.name AS "Supplier"
+        suppliers.name AS "Supplier",
+        h.occurred_at as "Handover time",
+        b.occurred_at as "Boarded vehicle",
+        js.occurred_at as "Journey start"
     FROM
         moves
     LEFT JOIN
@@ -47,6 +50,14 @@ data:
         genders ON people.gender_id = genders.id
     LEFT JOIN
         suppliers ON moves.supplier_id = suppliers.id
+    LEFT JOIN
+        journeys j ON j.id = (select id from journeys j2 where j2.state <> 'rejected' and j2.move_id = moves.id order by j2.created_at limit 1)
+    LEFT JOIN
+        generic_events h on h.type = 'GenericEvent::JourneyHandoverToSupplier' and h.eventable_type = 'Journey' and h.eventable_id = j.id
+    LEFT JOIN
+        generic_events b on b.type = 'GenericEvent::JourneyPersonBoardsVehicle' and b.eventable_type = 'Journey' and b.eventable_id = j.id
+    LEFT JOIN
+        generic_events js on js.type = 'GenericEvent::JourneyStart' and js.eventable_type = 'Journey' and js.eventable_id = j.id
     WHERE moves.move_type = 'prison_recall'
         AND moves.date BETWEEN '[FROM]' AND '[TO]'
     ORDER BY moves.date, people.last_name, people.prison_number
