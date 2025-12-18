@@ -14,6 +14,7 @@ data:
   confirm_email: "true"
   report_sql: |-
     SELECT
+        moves.reference,
         moves.status AS "Status",
         moves.move_type AS "Move type",
         from_location.title AS "From location name",
@@ -27,20 +28,16 @@ data:
         people.first_names AS "First name",
         TO_CHAR(people.date_of_birth, 'YYYY-MM-DD') AS "Date of birth",
         genders.title AS "Gender",
-        CASE WHEN EXISTS (
-            SELECT 1 FROM journeys
-            WHERE journeys.move_id = moves.id
-            AND journeys.billable = true
-        ) THEN true ELSE false END AS "Journey billable",
+        j.billable as "Journey billable",
         suppliers.name AS "Supplier",
         req.occurred_at AS "Move requested",
-        ac.occurred_at AS "Move booked",
+        accept.occurred_at AS "Move booked",
         handover.occurred_at AS "Handover to supplier",
         jpbv.occurred_at AS "Boarded vehicle",
         jstart.occurred_at AS "Journey start",
-        jaog.occurred_at AS "Arrived at gate",
-        jatog.occurred_at AS "Admitted through gate",
-        jatr.occurred_at AS "Admitted to reception",
+        COALESCE (jaogloc.occurred_at, jaog.occurred_at) AS "Arrived at gate",
+        COALESCE (jatogloc.occurred_at, jatog.occurred_at) AS "Admitted through gate",
+        COALESCE (jatrloc.occurred_at, jatr.occurred_at) AS "Admitted to reception",
         jhtd.occurred_at AS "Handover to destination"
     FROM
         moves
@@ -69,8 +66,13 @@ data:
     LEFT JOIN
         generic_events req ON req.type = 'GenericEvent::MoveRequested' AND req.eventable_type = 'Move' AND req.eventable_id = moves.id
     
-    LEFT JOIN
-        generic_events ac ON ac.type = 'GenericEvent::MoveAccept' AND ac.eventable_type = 'Move' AND ac.eventable_id = moves.id
+      LEFT JOIN LATERAL (
+          SELECT occurred_at FROM generic_events ac
+          WHERE ac.eventable_type = 'Move'
+          AND ac.eventable_id = moves.id
+          AND ac.type = 'GenericEvent::MoveAccept'
+          ORDER BY ac.created_at limit 1
+      ) accept on TRUE
     
     LEFT JOIN LATERAL (
         SELECT occurred_at FROM generic_events h
@@ -79,7 +81,7 @@ data:
         AND h.type = 'GenericEvent::JourneyHandoverToSupplier'
         ORDER BY h.created_at limit 1
     ) handover ON TRUE
-    
+  
     LEFT JOIN LATERAL (
         SELECT occurred_at FROM generic_events b
         WHERE b.eventable_type = 'Journey'
@@ -101,33 +103,58 @@ data:
         WHERE arr.eventable_type = 'Journey'
         AND arr.eventable_id = j.id
         AND arr.type = 'GenericEvent::JourneyArriveAtOuterGate'
-        AND arr.details ->> 'location_id' = to_location.id::text
         ORDER BY arr.created_at limit 1
     ) jaog ON TRUE
-    
+  
+    LEFT JOIN LATERAL (
+        SELECT occurred_at FROM generic_events arr1
+        WHERE arr1.eventable_type = 'Journey'
+        AND arr1.eventable_id = j.id
+        AND arr1.type = 'GenericEvent::JourneyArriveAtOuterGate'
+        AND arr1.details ->> 'location_id' = to_location.id::text
+        ORDER BY arr1.created_at limit 1
+    ) jaogloc ON TRUE
+  
     LEFT JOIN LATERAL (
         SELECT occurred_at FROM generic_events tg
         WHERE tg.eventable_type = 'Journey'
         AND tg.eventable_id = j.id
         AND tg.type = 'GenericEvent::JourneyAdmitThroughOuterGate'
-        AND tg.details ->> 'location_id' = to_location.id::text
         ORDER BY tg.created_at limit 1
     ) jatog ON TRUE
     
+    LEFT JOIN LATERAL (
+        SELECT occurred_at FROM generic_events tg1
+        WHERE tg1.eventable_type = 'Journey'
+        AND tg1.eventable_id = j.id
+        AND tg1.type = 'GenericEvent::JourneyAdmitThroughOuterGate'
+        AND tg1.details ->> 'location_id' = to_location.id::text
+        ORDER BY tg1.created_at limit 1
+    ) jatogloc ON TRUE
+  
     LEFT JOIN LATERAL (
         SELECT occurred_at FROM generic_events rec
         WHERE rec.eventable_type = 'Journey'
         AND rec.eventable_id = j.id
         AND rec.type = 'GenericEvent::JourneyAdmitToReception'
-        AND rec.details ->> 'location_id' = to_location.id::text
         ORDER BY rec.created_at limit 1
     ) jatr ON TRUE
     
+    LEFT JOIN LATERAL (
+        SELECT occurred_at FROM generic_events rec1
+        WHERE rec1.eventable_type = 'Journey'
+        AND rec1.eventable_id = j.id
+        AND rec1.type = 'GenericEvent::JourneyAdmitToReception'
+        AND rec1.details ->> 'location_id' = to_location.id::text
+        ORDER BY rec1.created_at limit 1
+    ) jatrloc ON TRUE
+  
     LEFT JOIN LATERAL (
         SELECT occurred_at FROM generic_events hd
         WHERE hd.eventable_type = 'Journey'
         AND hd.eventable_id = j.id
         AND hd.type = 'GenericEvent::JourneyHandoverToDestination'
+        ORDER BY hd.created_at limit 1
     ) jhtd ON TRUE
   
     WHERE moves.move_type = 'prison_recall'
