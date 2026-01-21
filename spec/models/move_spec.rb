@@ -716,6 +716,7 @@ RSpec.describe Move do
         'reference' => move.reference,
         'rejection_reason' => nil,
         'status' => 'requested',
+        'section_forty_six_pace' => nil,
         'time_due' => be_a(Time),
         'to_location' => 'GUICCT',
         'to_location_type' => 'court',
@@ -1075,14 +1076,6 @@ RSpec.describe Move do
       it 'is not billable' do
         expect(move).to be_billable
       end
-    end
-  end
-
-  describe '#section_forty_six_pace?' do
-    it 'allows section 46 to be null' do
-    expect(build(:move)).not_to(
-      validate_presence_of(:section_forty_six_pace),
-      )
     end
   end
 
