@@ -716,7 +716,7 @@ RSpec.describe Move do
         'reference' => move.reference,
         'rejection_reason' => nil,
         'status' => 'requested',
-        'section_forty_six_pace' => nil,
+        'section_forty_six' => nil,
         'time_due' => be_a(Time),
         'to_location' => 'GUICCT',
         'to_location_type' => 'court',
