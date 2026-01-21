@@ -1079,9 +1079,11 @@ RSpec.describe Move do
   end
 
   describe '#section_forty_six_pace?' do
+    it 'allows section 46 to be null' do
     expect(build(:move)).not_to(
       validate_presence_of(:section_forty_six_pace),
       )
+    end
   end
 
   describe '#prisoner_location_description' do
