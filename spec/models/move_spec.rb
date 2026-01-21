@@ -16,6 +16,7 @@ RSpec.describe Move do
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
   it { is_expected.to have_one(:extradition_flight) }
+  it { is_expected.to have_one(:section_forty_six_pace) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
@@ -1075,6 +1076,12 @@ RSpec.describe Move do
         expect(move).to be_billable
       end
     end
+  end
+
+  describe '#section_forty_six_pace?' do
+    expect(build(:move)).not_to(
+      validate_presence_of(:section_forty_six_pace),
+      )
   end
 
   describe '#prisoner_location_description' do
