@@ -16,7 +16,7 @@ RSpec.describe Move do
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
   it { is_expected.to have_one(:extradition_flight) }
-  it { is_expected.to have_one(:section_forty_six_pace) }
+  it { is_expected.to have_one(:section_forty_six) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
