@@ -152,6 +152,13 @@ Move:
             - type: "null"
           example: "2023-01-02"
           description: Date of return to Police custody (prison recall moves only)
+        section_forty_six:
+          oneOf:
+            - type: boolean
+            - type: "null"
+          description:
+            Whether this move is subject to Section 46 of PACE,
+            requiring a person to be brought before court within 24 hours.
     relationships:
       type: object
       required:
