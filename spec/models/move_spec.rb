@@ -338,12 +338,12 @@ RSpec.describe Move do
 
     it 'defaults to false section_forty_six' do
       move.valid?
-      expect(move.section_forty_six).to eq false
+      expect(move.section_forty_six).to be false
     end
 
     it 'Can have section forty six be true' do
       move = described_class.new(section_forty_six: true)
-      expect(move.section_forty_six).to eq true
+      expect(move.section_forty_six).to be true
     end
   end
 
