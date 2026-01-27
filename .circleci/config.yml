@@ -168,6 +168,7 @@ aliases:
       branches:
         only:
           - main
+          - MAPB-89-section-46
   - &only_for_deployment
     filters:
       tags:
