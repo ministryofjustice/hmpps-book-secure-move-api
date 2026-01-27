@@ -168,7 +168,6 @@ aliases:
       branches:
         only:
           - main
-          - MAPB-89-section-46
   - &only_for_deployment
     filters:
       tags:
@@ -433,7 +432,7 @@ workflows:
             --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
             --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
       - hmpps/deploy_env:
-          <<: *only_main
+          <<: *only_for_deployment
           name: deploy_staging
           env: "staging"
           context:
