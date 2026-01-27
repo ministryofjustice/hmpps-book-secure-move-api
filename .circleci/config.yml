@@ -161,6 +161,7 @@ aliases:
       branches:
         ignore:
           - main
+          - /.*-deploydev/
       tags:
         ignore: /.*/
   - &only_main
