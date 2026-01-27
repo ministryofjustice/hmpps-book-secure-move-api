@@ -16,7 +16,6 @@ RSpec.describe Move do
   it { is_expected.to have_one(:person_escort_record) }
   it { is_expected.to have_one(:youth_risk_assessment) }
   it { is_expected.to have_one(:extradition_flight) }
-  it { is_expected.to have_one(:section_forty_six) }
 
   it { is_expected.to validate_presence_of(:from_location) }
   it { is_expected.to validate_presence_of(:date) }
@@ -331,6 +330,20 @@ RSpec.describe Move do
     it 'does not overwrite an existing reference on validation' do
       move = described_class.new(reference: '12345678')
       expect(move.reference).to eq '12345678'
+    end
+  end
+
+  describe '#section_forty_six' do
+    subject(:move) { described_class.new }
+
+    it 'defaults to false section_forty_six' do
+      move.valid?
+      expect(move.section_forty_six).to eq false
+    end
+
+    it 'Can have section forty six be true' do
+      move = described_class.new(section_forty_six: true)
+      expect(move.section_forty_six).to eq true
     end
   end
 
@@ -716,7 +729,7 @@ RSpec.describe Move do
         'reference' => move.reference,
         'rejection_reason' => nil,
         'status' => 'requested',
-        'section_forty_six' => nil,
+        'section_forty_six' => false,
         'time_due' => be_a(Time),
         'to_location' => 'GUICCT',
         'to_location_type' => 'court',
