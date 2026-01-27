@@ -398,7 +398,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_20_143730) do
     t.boolean "is_lockout", default: false
     t.date "recall_date"
     t.string "date_changed_reason"
-    t.boolean "section_forty_six", default: false
+    t.boolean "section_forty_six", default: nil
     t.index ["allocation_id"], name: "index_moves_on_allocation_id"
     t.index ["created_at"], name: "index_moves_on_created_at"
     t.index ["date"], name: "index_moves_on_date"

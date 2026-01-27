@@ -338,6 +338,11 @@ RSpec.describe Move do
 
     it 'defaults to false section_forty_six' do
       move.valid?
+      expect(move.section_forty_six).to be nil
+    end
+
+    it 'Can have section forty six be false' do
+      move = described_class.new(section_forty_six: false)
       expect(move.section_forty_six).to be false
     end
 
@@ -729,7 +734,7 @@ RSpec.describe Move do
         'reference' => move.reference,
         'rejection_reason' => nil,
         'status' => 'requested',
-        'section_forty_six' => false,
+        'section_forty_six' => nil,
         'time_due' => be_a(Time),
         'to_location' => 'GUICCT',
         'to_location_type' => 'court',
