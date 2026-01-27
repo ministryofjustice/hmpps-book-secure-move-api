@@ -338,7 +338,7 @@ RSpec.describe Move do
 
     it 'defaults to false section_forty_six' do
       move.valid?
-      expect(move.section_forty_six).to be nil
+      expect(move.section_forty_six).to be_nil
     end
 
     it 'Can have section forty six be false' do
