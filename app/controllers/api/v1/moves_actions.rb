@@ -64,7 +64,8 @@ module Api::V1
                        move_agreed
                        move_agreed_by
                        date_from
-                       date_to],
+                       date_to
+                       section_forty_six],
         relationships: {} },
     ].freeze
     PERMITTED_UPDATE_MOVE_PARAMS = [
