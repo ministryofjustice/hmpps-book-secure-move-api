@@ -24,7 +24,8 @@ module V2
                :updated_at,
                :is_lockout,
                :recall_date,
-               :prisoner_location_description
+               :prisoner_location_description,
+               :section_forty_six
 
     belongs_to :from_location,          serializer: LocationSerializer
     belongs_to :prison_transfer_reason, serializer: PrisonTransferReasonSerializer

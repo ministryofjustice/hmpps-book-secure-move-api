@@ -22,7 +22,8 @@ module V2
                 :updated_at,
                 :is_lockout,
                 :recall_date,
-                :prisoner_location_description
+                :prisoner_location_description,
+                :section_forty_six
 
     set_type :moves
 

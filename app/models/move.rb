@@ -10,6 +10,7 @@ class Move < VersionedModel
     reference
     move_type
     additional_information
+    section_forty_six
     time_due
     cancellation_reason
     cancellation_reason_comment

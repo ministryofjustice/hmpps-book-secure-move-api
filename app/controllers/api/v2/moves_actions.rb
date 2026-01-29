@@ -91,6 +91,7 @@ module Api::V2
           date_to
           recall_date
           date_changed_reason
+          section_forty_six
         ],
         relationships: {} },
     ].freeze
