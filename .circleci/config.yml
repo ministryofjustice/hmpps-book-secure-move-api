@@ -161,6 +161,7 @@ aliases:
       branches:
         ignore:
           - main
+          - /.*-deploydev/
       tags:
         ignore: /.*/
   - &only_main
@@ -432,7 +433,7 @@ workflows:
             --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH}
             --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1}
       - hmpps/deploy_env:
-          <<: *only_main
+          <<: *only_for_deployment
           name: deploy_staging
           env: "staging"
           context:
