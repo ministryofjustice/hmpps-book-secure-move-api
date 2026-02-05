@@ -5,7 +5,7 @@ module Api::V2
 
       if (pnc = params.dig(:filter, :police_national_computer)).present?
         people = people.filter_by_pnc_canonical(pnc)
-        else
+      else
         people = V2::People::Finder.new(filter_params).call
       end
 

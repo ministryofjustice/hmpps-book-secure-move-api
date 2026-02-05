@@ -1,5 +1,5 @@
 class PncNormalizer
-  PNC_REGEX = /\A(\d{2}|\d{4})[\s\/.\-]*(\d{1,7})[\s\/.\-]*([A-Z])\z/ix.freeze
+  PNC_REGEX = /\A(\d{2}|\d{4})[\s\/.-]*(\d{1,7})[\s\/.-]*([A-Z])\z/ix
 
   def self.parse(raw)
     return nil if raw.blank?

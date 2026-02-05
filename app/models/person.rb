@@ -47,8 +47,7 @@ class Person < VersionedModel
     SQL
   end
 
-
-validates :last_name, presence: true
+  validates :last_name, presence: true
   validates :first_names, presence: true
   validates :prison_number, prison_number: true
   validate :validate_age
