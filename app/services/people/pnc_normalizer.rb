@@ -2,7 +2,7 @@ class PncNormalizer
   PNC_REGEX = /\A(\d{2}|\d{4})[\s\/.\-]*(\d{1,7})[\s\/.\-]*([A-Z])\z/ix.freeze
 
   def self.parse(raw)
-    return nil unless raw.present?
+    return nil if raw.blank?
 
     up = raw.to_s.strip.upcase
     match = PNC_REGEX.match(up)
