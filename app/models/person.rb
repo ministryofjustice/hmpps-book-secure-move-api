@@ -33,7 +33,22 @@ class Person < VersionedModel
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
   scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
 
-  validates :last_name, presence: true
+  scope :filter_by_pnc_canonical, ->(raw_input) do
+    variants = PncNormalizer.variants(raw_input)
+    return none if variants.empty?
+
+    # Turn variants like "2014/120018R" into "2014120018R"
+    variant_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
+
+    where(<<~SQL.squish, variant_tokens)
+      (
+        regexp_replace(UPPER(people.police_national_computer), '[^0-9A-Z]', '', 'g')
+      ) IN (?)
+    SQL
+  end
+
+
+validates :last_name, presence: true
   validates :first_names, presence: true
   validates :prison_number, prison_number: true
   validate :validate_age
