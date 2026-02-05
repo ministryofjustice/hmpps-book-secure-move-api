@@ -1,11 +1,5 @@
 class PncNormalizer
-  PNC_REGEX = /\A
-    (\d{2}|\d{4})          # year (YY or YYYY)
-    [\s\/\.\-]*            # optional separators including whitespace
-    (\d{1,7})              # unpadded number (1–7 digits)
-    [\s\/\.\-]*            # optional separators including whitespace
-    ([A-Z])                # final letter
-  \z/ix.freeze
+  PNC_REGEX = /\A(\d{2}|\d{4})[\s\/.\-]*(\d{1,7})[\s\/.\-]*([A-Z])\z/ix.freeze
 
   def self.parse(raw)
     return nil unless raw.present?
@@ -19,7 +13,7 @@ class PncNormalizer
     year2 = year_raw[-2..]
     year4 = year_raw.length == 4 ? year_raw : nil
 
-    num7 = num_raw.rjust(7, "0")
+    num7 = num_raw.rjust(7, '0')
 
     { year2: year2, year4: year4, num7: num7, letter: letter }
   end
