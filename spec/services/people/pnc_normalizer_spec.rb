@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe PncNormalizer do
+RSpec.describe People::PncNormalizer do
   it 'handles 2-digit year and unpadded number' do
     variants = described_class.variants('14/12018R')
     expect(variants).to include('14/012018R')
