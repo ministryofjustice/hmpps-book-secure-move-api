@@ -3,10 +3,10 @@ module Api::V2
     def index_and_render
       ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
 
-      if (pnc = params.dig(:filter, :police_national_computer)).present?
-        people = people.filter_by_pnc_canonical(pnc)
+      people = if (pnc = params.dig(:filter, :police_national_computer)).present?
+        people.filter_by_pnc_canonical(pnc)
       else
-        people = V2::People::Finder.new(filter_params).call
+        V2::People::Finder.new(filter_params).call
       end
 
       paginate people, serializer: ::V2::PersonSerializer, include: included_relationships
