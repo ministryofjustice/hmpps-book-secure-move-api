@@ -41,4 +41,4 @@ module People
       variants.uniq
     end
   end
-  end
+end
