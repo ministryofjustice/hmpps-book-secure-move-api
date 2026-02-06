@@ -33,7 +33,7 @@ class Person < VersionedModel
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
   scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
 
-  scope :filter_by_pnc_canonical, ->(raw_input) {
+  scope :filter_by_pnc_canonical, lambda { |raw_input|
     variants = PncNormalizer.variants(raw_input)
     return none if variants.empty?
 
