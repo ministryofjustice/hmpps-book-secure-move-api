@@ -23,8 +23,11 @@ module V2
 
       def apply_filters(scope)
         scope = scope.includes(:profiles, :ethnicity, :gender)
-        %i[police_national_computer criminal_records_office prison_number].each do |param|
+        %i[criminal_records_office prison_number].each do |param|
           scope = apply_filter(param, scope)
+        end
+        %i[police_national_computer].each do |param|
+          scope = PncNormalizer(param, scope)
         end
 
         scope
