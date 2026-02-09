@@ -37,14 +37,56 @@ class Person < VersionedModel
     variants = V2::People::PncNormalizer.variants(raw_input)
     return none if variants.empty?
 
-    # Turn variants like "2014/120018R" into "2014120018R"
-    variant_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
+    canonical_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
 
-    where(<<~SQL.squish, variant_tokens)
+    normalized_db_expr = <<~SQL.squish
       (
-        regexp_replace(UPPER(people.police_national_computer), '[^0-9A-Z]', '', 'g')
-      ) IN (?)
+        WITH src AS (
+          SELECT UPPER(people.police_national_computer) AS val
+        ),
+
+        -- 1. Extract the year BEFORE removing the first separator.
+        year_extracted AS (
+          SELECT
+            val,
+            (regexp_match(val, '^(\\d{2}|\\d{4})[[:space:]/.-]'))[1] AS year
+          FROM src
+        ),
+
+        -- 2. Extract all alphanumeric digits and the final letter.
+        stripped AS (
+          SELECT
+            val,
+            year,
+            regexp_replace(val, '\\D', '', 'g') AS alnums,
+            right(regexp_replace(val, '[^A-Z]', '', 'g'), 1) AS letter
+          FROM year_extracted
+        ),
+
+        -- 3. Remove the year digits from the front of the alnums string.
+        numbers_only AS (
+          SELECT
+            year,
+            letter,
+            regexp_replace(alnums, '^' || year, '') AS number_digits
+          FROM stripped
+        ),
+
+        -- 4. Left‑pad the remaining number to 7 digits.
+        padded AS (
+          SELECT
+            year,
+            letter,
+            lpad(number_digits, 7, '0') AS num7
+          FROM numbers_only
+        )
+
+        -- 5. Reassemble canonical token.
+        SELECT year || num7 || letter FROM padded
+      )
     SQL
+
+    where("#{normalized_db_expr} IN (?)", canonical_tokens)
   }
 
   validates :last_name, presence: true
