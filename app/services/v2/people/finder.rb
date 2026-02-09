@@ -26,8 +26,9 @@ module V2
         %i[criminal_records_office prison_number].each do |param|
           scope = apply_filter(param, scope)
         end
-        %i[police_national_computer].each do |param|
-          scope = People::PncNormalizer(param, scope)
+
+        if filters[:police_national_computer].present?
+          scope = scope.filter_by_pnc_canonical(filters[:police_national_computer])
         end
 
         scope

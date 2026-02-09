@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module V2
   module People
     class PncNormalizer
