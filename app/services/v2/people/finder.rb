@@ -27,7 +27,7 @@ module V2
           scope = apply_filter(param, scope)
         end
         %i[police_national_computer].each do |param|
-          scope = V2::People::PncNormalizer(param, scope)
+          scope = PncNormalizer(param, scope)
         end
 
         scope
