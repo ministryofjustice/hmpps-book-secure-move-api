@@ -14,12 +14,12 @@ RSpec.describe V2::People::PncNormalizer do
   end
 
   it 'matches 2-digit search against 4-digit DB' do
-    db = create(:person, police_national_computer: '2014/120018R')
+    db = create(:person, police_national_computer: '2014/0120018R')
     expect(Person.filter_by_pnc_canonical('14/0120018R')).to include(db)
   end
 
   it 'matches unpadded search against padded DB' do
     db = create(:person, police_national_computer: '2014/0120018R')
-    expect(Person.filter_by_pnc_canonical('2014/0120018R')).to include(db)
+    expect(Person.filter_by_pnc_canonical('2014/120018R')).to include(db)
   end
 end
