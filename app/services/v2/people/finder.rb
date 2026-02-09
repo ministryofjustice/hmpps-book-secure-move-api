@@ -28,7 +28,7 @@ module V2
         end
 
         if filters[:police_national_computer].present?
-          scope = scope.filter_by_pnc_canonical(filters[:police_national_computer])
+          scope = scope.filter_by_pnc_canonical(filter_params[:police_national_computer])
         end
 
         scope
