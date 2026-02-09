@@ -34,7 +34,7 @@ class Person < VersionedModel
   scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
 
   scope :filter_by_pnc_canonical, lambda { |raw_input|
-    variants = PncNormalizer.variants(raw_input)
+    variants = V2::People::PncNormalizer.variants(raw_input)
     return none if variants.empty?
 
     # Turn variants like "2014/120018R" into "2014120018R"
