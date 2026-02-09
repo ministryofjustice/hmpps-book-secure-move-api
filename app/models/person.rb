@@ -49,7 +49,7 @@ class Person < VersionedModel
         year_extracted AS (
           SELECT
             val,
-            (regexp_match(val, '^(\\d{2}|\\d{4})[[:space:]/.-]'))[1] AS year
+            (regexp_match(val, '^(\d{2}|\d{4})[ /.-]'))[1] AS year
           FROM src
         ),
 
@@ -58,7 +58,7 @@ class Person < VersionedModel
           SELECT
             val,
             year,
-            regexp_replace(val, '\\D', '', 'g') AS alnums,
+            regexp_replace(val, '\D', '', 'g') AS alnums,
             right(regexp_replace(val, '[^A-Z]', '', 'g'), 1) AS letter
           FROM year_extracted
         ),
