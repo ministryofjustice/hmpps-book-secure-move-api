@@ -42,7 +42,6 @@ class Person < VersionedModel
     raw_match = arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
 
     normalized_db_expr = <<~SQL.squish
-      (
         WITH src AS (
           SELECT UPPER(people.police_national_computer) AS val
         ),
@@ -85,15 +84,13 @@ class Person < VersionedModel
 
         -- 5. Reassemble canonical token.
         SELECT year || num7 || letter FROM padded
-      )
     SQL
 
-    normalized_match = "#{normalized_db_expr} IN (:canonical_tokens)"
+    normalized_match = where("#{normalized_db_expr} IN (?)", :canonical_tokens)
 
     # ---- Combine RAW and NORMALISED logic using OR ----
-    where(raw_match).or(
-      where(normalized_match, canonical_tokens: canonical_tokens),
-    )
+    where(raw_match).or(normalized_match)
+
   }
 
   validates :last_name, presence: true
