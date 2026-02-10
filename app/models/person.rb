@@ -42,9 +42,8 @@ class Person < VersionedModel
     raw_match =
       arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
 
-    # No leading or trailing parentheses here!
     normalized_db_expr = <<~SQL.squish
-      WITH src AS (
+      (WITH src AS (
         SELECT UPPER(people.police_national_computer) AS val
       ),
       year_extracted AS (
@@ -75,7 +74,7 @@ class Person < VersionedModel
           lpad(number_digits, 7, '0') AS num7
         FROM numbers_only
       )
-      SELECT year || num7 || letter FROM padded
+      SELECT year || num7 || letter FROM padded )
     SQL
 
     # Use exact binding value, NOT a symbol
