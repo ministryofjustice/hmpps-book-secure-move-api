@@ -19,7 +19,7 @@ module V2
 
         num7 = num_raw.rjust(7, '0')
 
-        { year2: year2, year4: year4, num7: num7, letter: letter }
+        { uppercased: up, year2: year2, year4: year4, num7: num7, letter: letter }
       end
 
       def self.variants(raw)
@@ -32,6 +32,7 @@ module V2
         letter = parsed[:letter]
 
         variants = []
+        variants << parsed[:uppercased]
         variants << "#{year2}/#{num7}#{letter}"
 
         if year4
