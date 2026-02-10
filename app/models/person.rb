@@ -39,58 +39,51 @@ class Person < VersionedModel
 
     canonical_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
 
-    raw_match = arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
+    raw_match =
+      arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
 
+    # No leading or trailing parentheses here!
     normalized_db_expr = <<~SQL.squish
-        WITH src AS (
-          SELECT UPPER(people.police_national_computer) AS val
-        ),
-
-        -- 1. Extract the year BEFORE removing the first separator.
-        year_extracted AS (
-          SELECT
-            val,
-            (regexp_match(val, '^(\d{2}|\d{4})[ /.-]'))[1] AS year
-          FROM src
-        ),
-
-        -- 2. Extract all alphanumeric digits and the final letter.
-        stripped AS (
-          SELECT
-            val,
-            year,
-            regexp_replace(val, '\D', '', 'g') AS alnums,
-            right(regexp_replace(val, '[^A-Z]', '', 'g'), 1) AS letter
-          FROM year_extracted
-        ),
-
-        -- 3. Remove the year digits from the front of the alnums string.
-        numbers_only AS (
-          SELECT
-            year,
-            letter,
-            regexp_replace(alnums, '^' || year, '') AS number_digits
-          FROM stripped
-        ),
-
-        -- 4. Left‑pad the remaining number to 7 digits.
-        padded AS (
-          SELECT
-            year,
-            letter,
-            lpad(number_digits, 7, '0') AS num7
-          FROM numbers_only
-        )
-
-        -- 5. Reassemble canonical token.
-        SELECT year || num7 || letter FROM padded
+      WITH src AS (
+        SELECT UPPER(people.police_national_computer) AS val
+      ),
+      year_extracted AS (
+        SELECT
+          val,
+          (regexp_match(val, '^(\\d{2}|\d{4})[ /.-]'))[1] AS year
+        FROM src
+      ),
+      stripped AS (
+        SELECT
+          val,
+          year,
+          regexp_replace(val, '\D', '', 'g') AS alnums,
+          right(regexp_replace(val, '[^A-Z]', '', 'g'), 1) AS letter
+        FROM year_extracted
+      ),
+      numbers_only AS (
+        SELECT
+          year,
+          letter,
+          regexp_replace(alnums, '^' || year, '') AS number_digits
+        FROM stripped
+      ),
+      padded AS (
+        SELECT
+          year,
+          letter,
+          lpad(number_digits, 7, '0') AS num7
+        FROM numbers_only
+      )
+      SELECT year || num7 || letter FROM padded
     SQL
 
-    normalized_match = where("#{normalized_db_expr} IN (?)", :canonical_tokens)
+    # Use exact binding value, NOT a symbol
+    normalized_match =
+      where("#{normalized_db_expr} IN (?)", canonical_tokens)
 
-    # ---- Combine RAW and NORMALISED logic using OR ----
+    # OR logic between raw and canonical
     where(raw_match).or(normalized_match)
-
   }
 
   validates :last_name, presence: true
