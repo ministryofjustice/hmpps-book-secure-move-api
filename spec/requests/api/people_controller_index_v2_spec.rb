@@ -136,7 +136,7 @@ RSpec.describe Api::PeopleController do
         {
           bar: 'bar',
           criminal_records_office: 'CRO0105d',
-          police_national_computer: 'AB/00001d',
+          police_national_computer: '22/0000001d',
           foo: 'foo',
         }
       end
