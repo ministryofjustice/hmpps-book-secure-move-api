@@ -32,7 +32,7 @@ module V2
         letter = parsed[:letter]
 
         variants = []
-        variants << parsed[:uppercased]
+        variants << "#{parsed[:uppercased]}"
         variants << "#{year2}/#{num7}#{letter}"
 
         if year4
