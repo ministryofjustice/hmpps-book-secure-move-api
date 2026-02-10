@@ -15,7 +15,7 @@ RSpec.describe V2::People::PncNormalizer do
 
   it 'matches 2-digit search against 4-digit DB' do
     db = create(:person, police_national_computer: '2014/0120018R')
-    p Person.filter_by_pnc_canonical('14/0120018R')
+    p Person.filter_by_pnc_canonical('14/0120018R').to_sql
     expect(Person.filter_by_pnc_canonical('14/0120018R')).to include(db)
   end
 
