@@ -23,12 +23,12 @@ module V2
 
       def apply_filters(scope)
         scope = scope.includes(:profiles, :ethnicity, :gender)
-        %i[criminal_records_office prison_number].each do |param|
+        %i[police_national_computer criminal_records_office prison_number].each do |param|
           scope = apply_filter(param, scope)
         end
 
-        if filter_params[:police_national_computer].present?
-          scope = scope.filter_by_pnc_canonical(filter_params[:police_national_computer])
+        if filter_params[:fuzzy_pnc].present?
+          scope = scope.filter_by_pnc_canonical(filter_params[:fuzzy_pnc])
         end
 
         scope

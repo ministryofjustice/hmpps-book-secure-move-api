@@ -3,7 +3,7 @@ module Api::V2
     def index_and_render
       ::People::ImportFromNomis.new(prison_numbers).call if prison_numbers.present?
 
-      people = if (pnc = params.dig(:filter, :police_national_computer)).present?
+      people = if (pnc = params.dig(:filter, :fuzzy_pnc)).present?
                  Person.filter_by_pnc_canonical(pnc)
                else
                  V2::People::Finder.new(filter_params).call
