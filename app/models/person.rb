@@ -92,9 +92,8 @@ class Person < VersionedModel
 
     # ---- Combine RAW and NORMALISED logic using OR ----
     where(raw_match).or(
-      where(normalized_match, canonical_tokens: canonical_tokens)
+      where(normalized_match, canonical_tokens: canonical_tokens),
     )
-
   }
 
   validates :last_name, presence: true
