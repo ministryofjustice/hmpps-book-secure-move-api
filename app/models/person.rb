@@ -39,6 +39,8 @@ class Person < VersionedModel
 
     canonical_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
 
+    raw_match = arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
+
     normalized_db_expr = <<~SQL.squish
       (
         WITH src AS (
@@ -86,7 +88,13 @@ class Person < VersionedModel
       )
     SQL
 
-    where("#{normalized_db_expr} IN (?)", canonical_tokens)
+    normalized_match = "#{normalized_db_expr} IN (:canonical_tokens)"
+
+    # ---- Combine RAW and NORMALISED logic using OR ----
+    where(raw_match).or(
+      where(normalized_match, canonical_tokens: canonical_tokens)
+    )
+
   }
 
   validates :last_name, presence: true
