@@ -27,6 +27,10 @@ module V2
           scope = apply_filter(param, scope)
         end
 
+        if filter_params[:fuzzy_pnc].present?
+          scope = scope.filter_by_pnc_canonical(filter_params[:fuzzy_pnc])
+        end
+
         scope
       end
 

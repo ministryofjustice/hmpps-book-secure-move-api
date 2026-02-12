@@ -68,7 +68,7 @@ module Api
 
     PERMITTED_COURT_CASE_FILTER_PARAMS = %i[active].freeze
     PERMITTED_TIMETABLE_FILTER_PARAMS = %i[date_from date_to].freeze
-    PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number].freeze
+    PERMITTED_FILTER_PARAMS = %i[police_national_computer criminal_records_office prison_number fuzzy_pnc].freeze
     OTHER_SUPPORTED_RELATIONSHIPS = %w[location].freeze
 
     def person

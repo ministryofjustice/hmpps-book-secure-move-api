@@ -214,14 +214,10 @@ references:
     run:
       name: Wait for wiremock
       command: dockerize -wait tcp://localhost:8888 -timeout 1m
-  _create-db: &create-db
+  _create-db: &prepare-db
     run:
       name: Database setup
-      command: bundle exec rake db:create
-  _migrate-db: &migrate-db
-    run:
-      name: Database migrations
-      command: bundle exec rake db:migrate RAILS_ENV=test
+      command: bundle exec rake db:prepare RAILS_ENV=test
   _api_docs: &api_docs
     run:
       name: Generate API Docs
@@ -310,8 +306,7 @@ commands:
   seed-database:
     description: "Create and seed the Database"
     steps:
-      - *create-db
-      - *migrate-db
+      - *prepare-db
 
 jobs:
   notify_of_approval:
@@ -343,8 +338,7 @@ jobs:
       - checkout
       - *attach-tmp-workspace
       - build-base
-      - *create-db
-      - *migrate-db
+      - *prepare-db
       - *api_docs
       - persist_to_workspace:
           root: .
@@ -359,8 +353,7 @@ jobs:
     steps:
       - checkout
       - build-base
-      - *create-db
-      - *migrate-db
+      - *prepare-db
       - *wait-for-db
       - *attach-tmp-workspace
       - *wait-for-wiremock
