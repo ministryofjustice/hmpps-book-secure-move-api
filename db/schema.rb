@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_20_143730) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_11_103730) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -499,6 +499,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_20_143730) do
     t.citext "prison_number"
     t.citext "criminal_records_office"
     t.citext "police_national_computer"
+    t.citext "canonical_pnc"
     t.string "first_names"
     t.string "last_name"
     t.date "date_of_birth"
@@ -513,6 +514,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_20_143730) do
     t.index ["gender_id"], name: "index_people_on_gender_id"
     t.index ["nomis_prison_number"], name: "index_people_on_nomis_prison_number"
     t.index ["police_national_computer"], name: "index_people_on_police_national_computer"
+    t.index ["canonical_pnc"], name: "index_people_on_canonical_pnc"
     t.index ["prison_number"], name: "index_people_on_prison_number"
     t.index ["updated_at"], name: "index_people_on_updated_at"
   end
