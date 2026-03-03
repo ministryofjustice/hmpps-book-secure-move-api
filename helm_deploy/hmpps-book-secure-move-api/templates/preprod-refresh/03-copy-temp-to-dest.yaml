@@ -240,7 +240,10 @@ data:
     rejection_reason = EXCLUDED.rejection_reason,
     original_move_id = EXCLUDED.original_move_id,
     supplier_id = EXCLUDED.supplier_id,
-    is_lockout = EXCLUDED.is_lockout;
+    is_lockout = EXCLUDED.is_lockout,
+    recall_date = EXCLUDED.recall_date,
+    date_changed_reason = EXCLUDED.date_changed_reason,
+    section_forty_six = EXCLUDED.section_forty_six;
     --
     
     INSERT INTO journeys SELECT * FROM journeys_temp ON CONFLICT (id) DO UPDATE
