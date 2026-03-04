@@ -259,7 +259,7 @@ data:
     updated_at = EXCLUDED.updated_at,
     date = EXCLUDED.date;
     --
-    INSERT INTO public.people(id, created_at, updated_at, nomis_prison_number, prison_number, criminal_records_office, police_national_computer, first_names, last_name, date_of_birth, gender_additional_information, ethnicity_id, gender_id, last_synced_with_nomis, latest_nomis_booking_id)
+    INSERT INTO people(id, created_at, updated_at, nomis_prison_number, prison_number, criminal_records_office, police_national_computer, first_names, last_name, date_of_birth, gender_additional_information, ethnicity_id, gender_id, last_synced_with_nomis, latest_nomis_booking_id)
     SELECT id, created_at, updated_at, nomis_prison_number, prison_number, criminal_records_office, police_national_computer, first_names, last_name, date_of_birth, gender_additional_information, ethnicity_id, gender_id, last_synced_with_nomis, latest_nomis_booking_id FROM people_temp ON CONFLICT (id) DO UPDATE
     SET
     created_at = EXCLUDED.created_at,
