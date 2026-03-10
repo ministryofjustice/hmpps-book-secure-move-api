@@ -303,7 +303,7 @@ RSpec.describe Api::ProfilesController do
       let(:latest_nomis_booking_id) { 123 }
 
       before do
-        profile.person.update(latest_nomis_booking_id:)
+        profile.person.update!(latest_nomis_booking_id:)
         allow(NomisClient::BookingDetails).to receive(:get).with(latest_nomis_booking_id).and_return({ csra: 'High' })
         allow(Notifier).to receive(:prepare_notifications)
         patch "/api/v1/people/#{profile.person.id}/profiles/#{profile.id}", params: profile_params, headers:, as: :json
