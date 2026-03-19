@@ -45,7 +45,7 @@ private
       if token.valid_token_with_scope?('read')
         render_error("Missing role: #{SAR_ROLE}", 1, 403)
       else
-        render_error(' Valid authorisation token required ', 1, 401)
+        render_error('Valid authorisation token required', 1, 401)
       end
     end
   end
