@@ -20,6 +20,19 @@ class SubjectAccessRequestsController < HmppsAuthApiController
     render json: sar.fetch, status: :ok
   end
 
+  def template
+    file_path = Rails.root.join('public', 'sar_template.mustache')
+
+    unless File.exist?(file_path)
+      return render_error("Template file not found", 2, 404)
+    end
+
+    send_file file_path,
+              filename: "sar_template.mustache",
+              type: "text/plain",
+              disposition: "inline"
+  end
+
 private
 
   PERMITTED_SHOW_PARAMS = %i[
