@@ -21,16 +21,16 @@ class SubjectAccessRequestsController < HmppsAuthApiController
   end
 
   def template
-    file_path = Rails.root.join('public', 'sar_template.mustache')
+    file_path = Rails.root.join('public/sar_template.mustache')
 
     unless File.exist?(file_path)
-      return render_error("Template file not found", 2, 404)
+      render_error('Template file not found', 2, 404)
     end
 
     send_file file_path,
-              filename: "sar_template.mustache",
-              type: "text/plain",
-              disposition: "inline"
+              filename: 'sar_template.mustache',
+              type: 'text/plain',
+              disposition: 'inline'
   end
 
 private
@@ -41,11 +41,11 @@ private
 
   # Overrides parent due to endpoint-specific roles
   def verify_token
-    unless token.valid_token_with_scope?('read', role: SAR_ROLE)
-      if token.valid_token_with_scope?('read')
+    unless token.valid_token_with_scope?(' read ', role: SAR_ROLE)
+      if token.valid_token_with_scope?(' read ')
         render_error("Missing role: #{SAR_ROLE}", 1, 403)
       else
-        render_error('Valid authorisation token required', 1, 401)
+        render_error(' Valid authorisation token required ', 1, 401)
       end
     end
   end
