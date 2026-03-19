@@ -23,15 +23,15 @@ RSpec.describe Moves::Exporter do
   end
 
   it 'has correct number of header columns' do
-    expect(header.count).to eq(55)
+    expect(header.count).to eq(56)
   end
 
   it 'has correct number of body columns' do
-    expect(row.count).to eq(55)
+    expect(row.count).to eq(56)
   end
 
   it 'includes move details' do
-    expect(row).to include(move.status, move.reference, move.move_type, move.additional_information)
+    expect(row).to include(move.status, move.reference, move.move_type, move.prison_transfer_reason, move.additional_information)
   end
 
   it 'includes move timestamps and date' do
@@ -154,11 +154,11 @@ RSpec.describe Moves::Exporter do
     end
 
     it 'has correct number of header columns' do
-      expect(header.count).to eq(57)
+      expect(header.count).to eq(58)
     end
 
     it 'has correct number of body columns' do
-      expect(row.count).to eq(57)
+      expect(row.count).to eq(58)
     end
 
     it 'has the correct rows' do
@@ -172,11 +172,11 @@ RSpec.describe Moves::Exporter do
     end
 
     it 'has correct number of header columns' do
-      expect(header.count).to eq(55)
+      expect(header.count).to eq(56)
     end
 
     it 'has correct number of body columns' do
-      expect(row.count).to eq(55)
+      expect(row.count).to eq(56)
     end
   end
 end

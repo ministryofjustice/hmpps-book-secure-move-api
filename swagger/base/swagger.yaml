@@ -74,11 +74,52 @@ paths:
               schema:
                 "$ref": "../v2/get_subject_access_request_responses.yaml#/204"
         '209':
-          description: unsuppoted parameter
+          description: unsupported parameter
           content:
             application/vnd.api+json:
               schema:
                 "$ref": "../v2/get_subject_access_request_responses.yaml#/209"
+        '400':
+          description: bad request
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/400"
+        '401':
+          description: unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/401"
+        '403':
+          description: forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/403"
+  "/subject-access-request/template":
+    get:
+      summary: Returns the mustache template for SAR reports
+      tags:
+        - SubjectAccessRequest
+      parameters:
+        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
+
+      responses:
+        '200':
+          description: success
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/200"
+        '204':
+          description: no content
+          content:
+            application/vnd.api+json:
+              schema:
+                "$ref": "../v2/get_subject_access_request_responses.yaml#/204"
         '400':
           description: bad request
           content:
