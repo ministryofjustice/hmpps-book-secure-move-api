@@ -16,6 +16,7 @@ module Moves
       'From location code',
       'To location name',
       'To location code',
+      'IPT Reason',
       'Additional information',
       'Date of travel',
       'PACE S46',
@@ -118,6 +119,7 @@ module Moves
         move.from_location&.nomis_agency_id, # From location code
         move.to_location&.title, # To location name
         move.to_location&.nomis_agency_id, # To location code
+        move.prison_transfer_reason, # IPT reason
         move.additional_information, # Additional information
         move.date&.strftime('%Y-%m-%d'), # Date of travel
         move.section_forty_six,
