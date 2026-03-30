@@ -236,19 +236,12 @@
                                                     {{#responses}}
                                                         {{#value}}
                                                             {{^option}}<b>Bag number {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
+                                                            <br>
                                                         {{/value}}
-                                                        <br>
                                                     {{/responses}}
                                                     {{^responses}}
                                                         {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
-                                                        {{^option}}
-                                                            {{#data.attributes.value}}
-                                                                {{^option}}{{.}}<br>{{/option}}
-                                                                {{#option}}
-                                                                    {{.}} - {{details}}<br>
-                                                                {{/option}}
-                                                            {{/data.attributes.value}}
-                                                        {{/option}}
+                                                        {{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}
                                                     {{/responses}}
                                                 {{/data.attributes.value}}
                                             {{/data.attributes.responded}}
