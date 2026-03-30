@@ -374,10 +374,6 @@ workflows:
 
   test-build-deploy:
     jobs:
-      - notify_of_release:
-          context:
-            - hmpps-common-vars
-          <<: *only_deploy_tags
       - setup_test_environment:
           <<: *all_tags
       - api_docs:
