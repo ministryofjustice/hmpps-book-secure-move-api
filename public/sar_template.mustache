@@ -179,8 +179,8 @@
                                         <td class="data-column-50">Status</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ version }}</td>
-                                        <td>{{ status }}</td>
+                                        <td class="data-column-50">{{ version }}</td>
+                                        <td class="data-column-50">{{ status }}</td>
                                     </tr>
                                     <tr>
                                         <td class="data-column-25">Created at</td>
@@ -189,10 +189,10 @@
                                         <td class="data-column-25">Handover occurred at</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ created_at }}</td>
-                                        <td>{{ optionalValue completed_at }}</td>
-                                        <td>{{ optionalValue confirmed_at }}</td>
-                                        <td>{{ optionalValue handover_occurred_at }}</td>
+                                        <td class="data-column-25">{{ formatDate created_at }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate completed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate confirmed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate handover_occurred_at) }}</td>
                                     </tr>
                                 </table>
                                 {{#handover_details}}
@@ -229,8 +229,8 @@
                             <table class="data-table">
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td>{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#responses}}
@@ -310,8 +310,24 @@
                                                     <td class="data-column-75">{{details.court_cell_number}}</td>
                                                 </tr>
                                             {{/details.court_cell_number}}
-
-
+                                            {{#details.stakeholder}}
+                                                <tr>
+                                                    <td class="data-column-25">Stakeholder: </td>
+                                                    <td class="data-column-75">{{details.stakeholder}}</td>
+                                                </tr>
+                                            {{/details.stakeholder}}
+                                            {{#details.summary}}
+                                                <tr>
+                                                    <td class="data-column-25">Summary: </td>
+                                                    <td class="data-column-75">{{details.summary}}</td>
+                                                </tr>
+                                            {{/details.summary}}
+                                            {{#details.further_details}}
+                                                <tr>
+                                                    <td class="data-column-25">Further details: </td>
+                                                    <td class="data-column-75">{{details.further_details}}</td>
+                                                </tr>
+                                            {{/details.further_details}}
                                         </table>
 
                                     {{/attributes}}
@@ -327,8 +343,8 @@
                             <table class="data-table">
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td>{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
