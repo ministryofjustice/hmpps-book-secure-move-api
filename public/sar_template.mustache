@@ -16,6 +16,8 @@
                     <td>{{optionalValue first_names}}</td>
                     <td>{{optionalValue last_name}}</td>
                 </tr>
+            </table>
+            <table class="data-table">
                 <tr>
                     <td class="data-column-100">Identifiers:</td>
                 </tr>
@@ -235,7 +237,7 @@
                                                 {{#data.attributes.value}}
                                                     {{#responses}}
                                                         {{#value}}
-                                                            {{^option}}<b>Bag number {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
+                                                            {{^option}}<b>Response {{(getIndexPlusOne @index)}}: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
                                                             <br>
                                                         {{/value}}
                                                     {{/responses}}
@@ -255,7 +257,7 @@
 
                                 {{#data}}
                                     {{#attributes}}
-                                        <table class="data-table" border-style="solid">
+                                        <table class="data-table">
                                             <tr>
                                                 <td class="data-column-25">Event type</td>
                                                 <td class="data-column-25">Occurred at</td>
