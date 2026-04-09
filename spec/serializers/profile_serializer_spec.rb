@@ -14,7 +14,7 @@ RSpec.describe ProfileSerializer do
       data: {
         id: profile.id,
         type: 'profiles',
-        attributes: { assessment_answers: [], requires_youth_risk_assessment: nil },
+        attributes: { assessment_answers: [], requires_youth_risk_assessment: nil, csra: nil },
         relationships: {
           person: {
             data: { id: profile.person.id, type: 'people' },
@@ -75,7 +75,7 @@ RSpec.describe ProfileSerializer do
         data: {
           id: profile.id,
           type: 'profiles',
-          attributes: { assessment_answers: [] },
+          attributes: { assessment_answers: [], csra: nil },
           relationships: {
             person: {
               data: { id: profile.person.id, type: 'people' },
