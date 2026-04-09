@@ -184,6 +184,8 @@
                                         <td class="data-column-50">{{ version }}</td>
                                         <td class="data-column-50">{{ status }}</td>
                                     </tr>
+                                </table>
+                                <table class="data-table">
                                     <tr>
                                         <td class="data-column-25">Created at</td>
                                         <td class="data-column-25">Completed at</td>
@@ -235,12 +237,7 @@
                                         <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
-                                                    {{#responses}}
-                                                        {{#value}}
-                                                            {{^option}}<b>Response: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
-                                                            <br>
-                                                        {{/value}}
-                                                    {{/responses}}
+                                                    {{#responses}}{{#value}}{{^option}}<b>Response: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}{{/responses}}
                                                     {{^responses}}
                                                         {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
                                                         {{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}
@@ -248,13 +245,11 @@
                                                 {{/data.attributes.value}}
                                             {{/data.attributes.responded}}
                                         </td>
-
                                     </tr>
                                 {{/relationships.framework_responses}}
                             </table>
                             <h4>PER Events</h4>
                             {{#relationships.events}}
-
                                 {{#data}}
                                     {{#attributes}}
                                         <table class="data-table">
