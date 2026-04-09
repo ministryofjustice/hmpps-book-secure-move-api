@@ -231,11 +231,14 @@
                             {{/meta}}
                             <h4>PER Responses</h4>
                             <table class="data-table">
+                                <tr><td class="data-column-40">Question key</td>
+                                    <td class="data-column-60">Response</td>
+                                </tr>
                                 {{#relationships.framework_responses}}
                                     <tr>
                                         <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
                                         {{^data.attributes.responded}}<td class="data-column-60">[Not responded]</td>{{/data.attributes.responded}}
-                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}{{/responses}}{{^responses}}{{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
+                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}{{#value}}{{^option}}{{.}}<br>{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}{{/responses}}{{^responses}}{{#option}}{{.}}<br>{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}<br>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
                                     </tr>
                                 {{/relationships.framework_responses}}
                             </table>
