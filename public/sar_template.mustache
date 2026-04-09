@@ -235,15 +235,7 @@
                                     <tr>
                                         <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
                                         <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
-                                            {{#data.attributes.responded}}
-                                                {{#data.attributes.value}}
-                                                    {{#responses}}{{#value}}{{^option}}<b>Response: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}{{/responses}}
-                                                    {{^responses}}
-                                                        {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
-                                                        {{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}
-                                                    {{/responses}}
-                                                {{/data.attributes.value}}
-                                            {{/data.attributes.responded}}
+                                            {{#data.attributes.responded}}{{#data.attributes.value}}{{#responses}}{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}{{/responses}}{{^responses}}{{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}{{/data.attributes.responded}}
                                         </td>
                                     </tr>
                                 {{/relationships.framework_responses}}
