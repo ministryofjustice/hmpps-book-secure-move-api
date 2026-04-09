@@ -238,7 +238,7 @@
                                     <tr>
                                         <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
                                         {{^data.attributes.responded}}<td class="data-column-60">[Not responded]</td>{{/data.attributes.responded}}
-                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}Response {{getIndexPlusOne @index}}:<br>{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/value}}{{/responses}}{{^responses}}{{#option}}{{.}}<br>{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
+                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}Response:<br>{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/value}}{{/responses}}{{^responses}}{{#option}}{{.}}<br>{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
                                     </tr>
                                 {{/relationships.framework_responses}}
                             </table>
