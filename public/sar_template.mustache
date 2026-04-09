@@ -83,7 +83,7 @@
                                             <td class="data-column-25">Created by</td>
                                         </tr>
                                         <tr>
-                                            <td>{{formatDate event_type}}</td>
+                                            <td>{{event_type}}</td>
                                             <td>{{formatDate occurred_at}}</td>
                                             <td>{{formatDate recorded_at}}</td>
                                             <td>{{created_by}}</td>
@@ -138,10 +138,10 @@
                                                         <td class="data-column-25">Created by</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>{{ event_type }}</td>
-                                                        <td>{{ occurred_at }}</td>
-                                                        <td>{{ recorded_at }}</td>
-                                                        <td>{{ created_by }}</td>
+                                                        <td>{{event_type}}</td>
+                                                        <td>{{formatDate occurred_at}}</td>
+                                                        <td>{{formatDate recorded_at}}</td>
+                                                        <td>{{formatDate created_by}}</td>
                                                     </tr>
                                                 </table>
 
@@ -237,7 +237,7 @@
                                                 {{#data.attributes.value}}
                                                     {{#responses}}
                                                         {{#value}}
-                                                            {{^option}}<b>Response {{(getIndexPlusOne @index)}}: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
+                                                            {{^option}}<b>Response: {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
                                                             <br>
                                                         {{/value}}
                                                     {{/responses}}
@@ -280,43 +280,43 @@
                                             {{#details.subtype}}
                                                 <tr>
                                                     <td class="data-column-25">Subtype: </td>
-                                                    <td class="data-column-75">{{details.subtype}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.subtype}}</td>
                                                 </tr>
                                             {{/details.subtype}}
                                             {{#details.outcome}}
                                                 <tr>
                                                     <td class="data-column-25">Outcome: </td>
-                                                    <td class="data-column-75">{{details.outcome}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.outcome}}</td>
                                                 </tr>
                                             {{/details.outcome}}
                                             {{#details.court_outcome}}
                                                 <tr>
                                                     <td class="data-column-25">Court Outcome: </td>
-                                                    <td class="data-column-75">{{details.court_outcome}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.court_outcome}}</td>
                                                 </tr>
                                             {{/details.court_outcome}}
                                             {{#details.court_cell_number}}
                                                 <tr>
                                                     <td class="data-column-25">Court Cell Number: </td>
-                                                    <td class="data-column-75">{{details.court_cell_number}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.court_cell_number}}</td>
                                                 </tr>
                                             {{/details.court_cell_number}}
                                             {{#details.stakeholder}}
                                                 <tr>
                                                     <td class="data-column-25">Stakeholder: </td>
-                                                    <td class="data-column-75">{{details.stakeholder}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.stakeholder}}</td>
                                                 </tr>
                                             {{/details.stakeholder}}
                                             {{#details.summary}}
                                                 <tr>
                                                     <td class="data-column-25">Summary: </td>
-                                                    <td class="data-column-75">{{details.summary}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.summary}}</td>
                                                 </tr>
                                             {{/details.summary}}
                                             {{#details.further_details}}
                                                 <tr>
                                                     <td class="data-column-25">Further details: </td>
-                                                    <td class="data-column-75">{{details.further_details}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.further_details}}</td>
                                                 </tr>
                                             {{/details.further_details}}
                                         </table>
