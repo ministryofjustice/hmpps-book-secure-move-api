@@ -6,354 +6,350 @@
 
 {{#.}}
     {{#data}}
+        {{#attributes}}
+            <table class="data-table">
+                <tr>
+                    <td class="data-column-50">First names</td>
+                    <td class="data-column-50">Last name</td>
+                </tr>
+                <tr>
+                    <td>{{optionalValue first_names}}</td>
+                    <td>{{optionalValue last_name}}</td>
+                </tr>
+            </table>
+            <table class="data-table">
+                <tr>
+                    <td class="data-column-100">Identifiers:</td>
+                </tr>
+                <tr>
+                    {{#identifiers}}
+                        <td class="data-column-33">{{optionalValue identifier_type}}</td>
+                    {{/identifiers}}
+                </tr>
+                <tr>
+                    {{#identifiers}}
+                        <td class="data-column-33">{{optionalValue value}}</td>
+                    {{/identifiers}}
+                </tr>
+            </table>
+        {{/attributes}}
+
+
         {{#relationships}}
             <h2>Moves</h2>
             {{#moves}}
                 {{#data}}
                     {{#attributes}}
-                        <h3>Move {{ optionalValue (getIndexPlusOne @index) }} {{ optionalValue reference }}</h3>
+                        <h2>Move {{reference}}</h2>
                         <table class="data-table">
                             <tr>
                                 <td class="data-column-25">Date</td>
                                 <td class="data-column-25">Move type</td>
                                 <td class="data-column-25">Status</td>
-                                <td class="data-column-25">Move agreed</td>
+                                <td class="data-column-25">Reference</td>
                             </tr>
                             <tr>
-                                <td>{{ optionalValue (formatDate date) }}</td>
-                                <td>{{ optionalValue move_type }}</td>
-                                <td>{{ optionalValue status }}</td>
-                                <td>{{ convertBoolean move_agreed }}</td>
+                                <td>{{optionalValue (formatDate date)}}</td>
+                                <td>{{move_type}}</td>
+                                <td>{{status}}</td>
+                                <td>{{reference}}</td>
                             </tr>
                         </table>
                         <table class="data-table">
                             <tr>
-                                <td class="data-column-25">Date from</td>
-                                <td class="data-column-25">Date to</td>
-                                <td class="data-column-25">Time due</td>
-                                <td class="data-column-25">Created at</td>
+                                <td class="data-column-50">From location</td>
+                                <td class="data-column-50">To location</td>
                             </tr>
                             <tr>
-                                <td>{{ optionalValue (formatDate date_from) }}</td>
-                                <td>{{ optionalValue (formatDate date_to) }}</td>
-                                <td>{{ optionalValue (formatDate time_due) }}</td>
-                                <td>{{ optionalValue (formatDate created_at) }}</td>
+                                <td>{{relationships.from_location.data.attributes.title}}</td>
+                                <td>{{relationships.to_location.data.attributes.title}}</td>
                             </tr>
                         </table>
-                        <table class="data-table">
-                            <tr>
-                                <td class="data-column-25">Updated at</td>
-                            </tr>
-                            <tr>
-                                <td>{{ optionalValue (formatDate updated_at) }}</td>
-                            </tr>
-                        </table>
-                        <h4>Additional information</H4>
-                        <table class="summary-list">
-                            <tr><td>Additional information</td><td>{{ optionalValue additional_information }}</td></tr>
-                            <tr><td>Rejection reason</td><td>{{ optionalValue rejection_reason }}</td></tr>
-                            <tr><td>Cancellation reason</td><td>{{ optionalValue cancellation_reason }}</td></tr>
-                            <tr><td>Cancellation reason comment</td><td>{{ optionalValue cancellation_reason_comment }}</td></tr>
-                        </table>
+
                     {{/attributes}}
 
                     {{#relationships}}
-                        <h4>From location</h4>
-                        {{#from_location}}
+                        <h3>Profile</h3>
+                        <p>This move uses profile {{optionalValue profile.data.id}}</p>
+                        <h3>Move events</h3>
+                        {{#events}}
                             {{#data}}
                                 {{#attributes}}
                                     <table class="data-table">
                                         <tr>
-                                            <td class="data-column-25">Title</td>
-                                            <td class="data-column-25">Location type</td>
-                                            <td class="data-column-25">Premise</td>
-                                            <td class="data-column-25">Locality</td>
+                                            <td class="data-column-25">Event type</td>
+                                            <td class="data-column-25">Occurred at</td>
+                                            <td class="data-column-25">Recorded at</td>
+                                            <td class="data-column-25">Created by</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ optionalValue title }}</td>
-                                            <td>{{ optionalValue location_type }}</td>
-                                            <td>{{ optionalValue premise }}</td>
-                                            <td>{{ optionalValue locality }}</td>
+                                            <td>{{event_type}}</td>
+                                            <td>{{formatDate occurred_at}}</td>
+                                            <td>{{formatDate recorded_at}}</td>
+                                            <td>{{created_by}}</td>
                                         </tr>
                                     </table>
-                                    <table class="data-table">
+                                    <table class="summary-list">
                                         <tr>
-                                            <td class="data-column-25">City</td>
-                                            <td class="data-column-25">Country</td>
-                                            <td class="data-column-25">Postcode</td>
-                                            <td class="data-column-25">Created at</td>
-                                            <td class="data-column-25">Youth offender institution</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ optionalValue city }}</td>
-                                            <td>{{ optionalValue country }}</td>
-                                            <td>{{ optionalValue postcode }}</td>
-                                            <td>{{ optionalValue (formatDate created_at) }}</td>
-                                            <td>{{ convertBoolean young_offender_institution }}</td>
+                                            <td>Notes</td>
+                                            <td>{{ optionalValue notes }}</td>
                                         </tr>
                                     </table>
                                 {{/attributes}}
                             {{/data}}
-                        {{/from_location}}
-                        {{^from_location}}
-                            <p>No Data Held</p>
-                        {{/from_location}}
+                        {{/events}}
 
-                        <h4>To location</h4>
-                        {{#to_location}}
+                        <h3>Journeys for move {{ attributes.reference }}</h3>
+                        {{#journeys}}
                             {{#data}}
+                                <h4>Journey {{ data.attributes.number }}</h4>
                                 {{#attributes}}
                                     <table class="data-table">
                                         <tr>
-                                            <td class="data-column-25">Title</td>
-                                            <td class="data-column-25">Location type</td>
-                                            <td class="data-column-25">Premise</td>
-                                            <td class="data-column-25">Locality</td>
+                                            <td class="data-column-25">Date</td>
+                                            <td class="data-column-25">State</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ optionalValue title }}</td>
-                                            <td>{{ optionalValue location_type }}</td>
-                                            <td>{{ optionalValue premise }}</td>
-                                            <td>{{ optionalValue locality }}</td>
-                                        </tr>
-                                    </table>
-                                    <table class="data-table">
-                                        <tr>
-                                            <td class="data-column-25">City</td>
-                                            <td class="data-column-25">Country</td>
-                                            <td class="data-column-25">Postcode</td>
-                                            <td class="data-column-25">Created at</td>
-                                            <td class="data-column-25">Youth offender institution</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ optionalValue city }}</td>
-                                            <td>{{ optionalValue country }}</td>
-                                            <td>{{ optionalValue postcode }}</td>
-                                            <td>{{ optionalValue (formatDate created_at) }}</td>
-                                            <td>{{ convertBoolean young_offender_institution }}</td>
+                                            <td>{{ date }}</td>
+                                            <td>{{ state }}</td>
                                         </tr>
                                     </table>
                                 {{/attributes}}
-                            {{/data}}
-                        {{/to_location}}
-                        {{^to_location}}
-                            <p>No Data Held</p>
-                        {{/to_location}}
+                                <table class="data-table">
+                                    <tr>
+                                        <td class="data-column-50">From location</td>
+                                        <td class="data-column-50">To location</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ relationships.from_location.data.attributes.title }}</td>
+                                        <td>{{ relationships.to_location.data.attributes.title }}</td>
+                                    </tr>
+                                </table>
+                                {{#relationships}}
+                                    <h4>Journey {{ data.attributes.number }} Events</h4>
+                                    {{#events}}
+                                        {{#data}}
+                                            {{#attributes}}
+                                                <table class="data-table">
+                                                    <tr>
+                                                        <td class="data-column-25">Event type</td>
+                                                        <td class="data-column-25">Occurred at</td>
+                                                        <td class="data-column-25">Recorded at</td>
+                                                        <td class="data-column-25">Created by</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{event_type}}</td>
+                                                        <td>{{formatDate occurred_at}}</td>
+                                                        <td>{{formatDate recorded_at}}</td>
+                                                        <td>{{formatDate created_by}}</td>
+                                                    </tr>
+                                                </table>
 
-                        <h4>Prison transfer reason</h4>
-                        {{#prison_transfer_reason}}
-                            {{#data}}
-                                {{#attributes}}
-                                    <table class="data-table">
-                                        <tr>
-                                            <td class="data-column-50">Title</td>
-                                            <td class="data-column-50">Disabled at</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{ optionalValue title }}</td>
-                                            <td>{{ optionalValue (formatDate disabled_at) }}</td>
-                                        </tr>
-                                    </table>
-                                {{/attributes}}
+                                            {{/attributes}}
+                                        {{/data}}
+                                    {{/events}}
+                                    {{^events}}
+                                        <p>No events for this journey</p>
+                                    {{/events}}
+
+                                {{/relationships}}
+
                             {{/data}}
-                        {{/prison_transfer_reason}}
-                        {{^prison_transfer_reason}}
-                            <p>No Data Held</p>
-                        {{/prison_transfer_reason}}
+                        {{/journeys}}
+                        {{^journeys}}
+                            <p>No journeys found for this move</p>
+                        {{/journeys}}
                     {{/relationships}}
-
-                    <h3>Journeys</h3>
-                    {{#journeys}}
-                        {{#data}}
-                            <h4>Journey {{ optionalValue (getIndexPlusOne @index) }}</h4>
-                            {{#attributes}}
-                                <table class="data-table">
-                                    <tr>
-                                        <td class="data-column-25">State</td>
-                                        <td class="data-column-25">Billable</td>
-                                        <td class="data-column-25">Date</td>
-                                        <td class="data-column-25">Disabled at</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{ optionalValue state }}</td>
-                                        <td>{{ optionalValue billable }}</td>
-                                        <td>{{ optionalValue (formatDate date) }}</td>
-                                        <td>{{ optionalValue (formatDate disabled_at) }}</td>
-                                    </tr>
-                                </table>
-                                <table class="data-table">
-                                    <tr>
-                                        <td class="data-column-25">Number</td>
-                                        <td class="data-column-25">Timestamp</td>
-                                        {{#vehicle}}
-                                            <td class="data-column-25">Vehicle registration</td>
-                                        {{/vehicle}}
-                                        <td class="data-column-25"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{ optionalValue number }}</td>
-                                        <td>{{ optionalValue timestamp }}</td>
-                                        {{#vehicle}}
-                                            <td>{{ optionalValue registration }}</td>
-                                        {{/vehicle}}
-                                        <td></td>
-                                    </tr>
-                                </table>
-                            {{/attributes}}
-                            {{#relationships}}
-                                <h4>From location</h4>
-                                {{#from_location}}
-                                    {{#data}}
-                                        {{#attributes}}
-                                            <table class="data-table">
-                                                <tr>
-                                                    <td class="data-column-25">Title</td>
-                                                    <td class="data-column-25">Location type</td>
-                                                    <td class="data-column-25">Premise</td>
-                                                    <td class="data-column-25">Locality</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ optionalValue title }}</td>
-                                                    <td>{{ optionalValue location_type }}</td>
-                                                    <td>{{ optionalValue premise }}</td>
-                                                    <td>{{ optionalValue locality }}</td>
-                                                </tr>
-                                            </table>
-                                            <table class="data-table">
-                                                <tr>
-                                                    <td class="data-column-25">City</td>
-                                                    <td class="data-column-25">Country</td>
-                                                    <td class="data-column-25">Postcode</td>
-                                                    <td class="data-column-25">Created at</td>
-                                                    <td class="data-column-25">Youth offender institution</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ optionalValue city }}</td>
-                                                    <td>{{ optionalValue country }}</td>
-                                                    <td>{{ optionalValue postcode }}</td>
-                                                    <td>{{ optionalValue (formatDate created_at) }}</td>
-                                                    <td>{{ convertBoolean young_offender_institution }}</td>
-                                                </tr>
-                                            </table>
-                                        {{/attributes}}
-                                    {{/data}}
-                                {{/from_location}}
-                                {{^from_location}}
-                                    <p>No Data Held</p>
-                                {{/from_location}}
-
-                                <h4>To location</h4>
-                                {{#to_location}}
-                                    {{#data}}
-                                        {{#attibutes}}
-                                            <table class="data-table">
-                                                <tr>
-                                                    <td class="data-column-25">Title</td>
-                                                    <td class="data-column-25">Location type</td>
-                                                    <td class="data-column-25">Premise</td>
-                                                    <td class="data-column-25">Locality</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ optionalValue title }}</td>
-                                                    <td>{{ optionalValue location_type }}</td>
-                                                    <td>{{ optionalValue premise }}</td>
-                                                    <td>{{ optionalValue locality }}</td>
-                                                </tr>
-                                            </table>
-                                            <table class="data-table">
-                                                <tr>
-                                                    <td class="data-column-25">City</td>
-                                                    <td class="data-column-25">Country</td>
-                                                    <td class="data-column-25">Postcode</td>
-                                                    <td class="data-column-25">Created at</td>
-                                                    <td class="data-column-25">Youth offender institution</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ optionalValue city }}</td>
-                                                    <td>{{ optionalValue country }}</td>
-                                                    <td>{{ optionalValue postcode }}</td>
-                                                    <td>{{ optionalValue (formatDate created_at) }}</td>
-                                                    <td>{{ convertBoolean young_offender_institution }}</td>
-                                                </tr>
-                                            </table>
-                                        {{/attibutes}}
-                                    {{/data}}
-                                {{/to_location}}
-                                {{^to_location}}
-                                    <p>No Data Held</p>
-                                {{/to_location}}
-
-                                <h4>Events</h4>
-                                {{#events}}
-                                    {{#data}}
-                                        {{#attributes}}
-                                            <table class="data-table">
-                                                <tr>
-                                                    <td class="data-column-25">Event type</td>
-                                                    <td class="data-column-25">Occurred at</td>
-                                                    <td class="data-column-25">Recorded at</td>
-                                                    <td class="data-column-25">Classification</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ optionalValue event_type }}</td>
-                                                    <td>{{ optionalValue (formatDate occurred_at) }}</td>
-                                                    <td>{{ optionalValue (formatDate recorded_at) }}</td>
-                                                    <td>{{ optionalValue classification }}</td>
-                                                </tr>
-                                            </table>
-                                            <table class="summary-list">
-                                                <tr><td>Notes</td><td>{{ optionalValue notes }}</td></tr>
-                                                {{#details}}
-                                                    <tr><td>Vehicle registration</td><td>{{ optionalValue vehicle_reg }}</td></tr>
-                                                {{/details}}
-                                            </table>
-                                        {{/attributes}}
-                                    {{/data}}
-                                {{/events}}
-                                {{^events}}
-                                    <p>No Data Held</p>
-                                {{/events}}
-
-                            {{/relationships}}
-
-                        {{/data}}
-                    {{/journeys}}
-                    {{^journeys}}
-                        <p>No Data Held</p>
-                    {{/journeys}}
-
-                    {{#events}}
-                        <h4>Event {{ optionalValue (getIndexPlusOne @index) }}</h4>
-                        {{#data}}
-                            {{#attributes}}
-                                <table class="data-table">
-                                    <tr>
-                                        <td class="data-column-25">Event type</td>
-                                        <td class="data-column-25">Occurred at</td>
-                                        <td class="data-column-25">Recorded at</td>
-                                        <td class="data-column-25">Classification</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{ optionalValue event_type }}</td>
-                                        <td>{{ optionalValue (formatDate occurred_at) }}</td>
-                                        <td>{{ optionalValue (formatDate recorded_at) }}</td>
-                                        <td>{{ optionalValue classification }}</td>
-                                    </tr>
-                                </table>
-                                <table class="summary-list">
-                                    <tr><td>Notes</td><td>{{ optionalValue notes }}</td></tr>
-                                    {{#details}}
-                                        <tr><td>Vehicle registration</td><td>{{ optionalValue vehicle_reg }}</td></tr>
-                                    {{/details}}
-                                </table>
-                            {{/attributes}}
-                        {{/data}}
-                    {{/events}}
                 {{/data}}
+
             {{/moves}}
             {{^moves}}
-                <p>No Data Held</p>
+                <p>No moves found</p>
             {{/moves}}
+
+            <h1> Profiles </h1>
+            {{#profiles}}
+                <h3>Profile {{data.id}} </h3>
+                {{#data}}
+                    {{#relationships}}
+                        {{#person_escort_record.data}}
+                            <h4>Person escort record</h4>
+                            {{#attributes}}
+                                <table class="data-table">
+                                    <tr>
+                                        <td class="data-column-50">Framework version</td>
+                                        <td class="data-column-50">Status</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data-column-50">{{ version }}</td>
+                                        <td class="data-column-50">{{ status }}</td>
+                                    </tr>
+                                </table>
+                                <table class="data-table">
+                                    <tr>
+                                        <td class="data-column-25">Created at</td>
+                                        <td class="data-column-25">Completed at</td>
+                                        <td class="data-column-25">Confirmed at</td>
+                                        <td class="data-column-25">Handover occurred at</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data-column-25">{{ formatDate created_at }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate completed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate confirmed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate handover_occurred_at) }}</td>
+                                    </tr>
+                                </table>
+                                {{#handover_details}}
+                                    <h4>Handover details</h4>
+                                    <table class="data-table">
+                                        <tr>
+                                            <td class="data-column-33">Dispatching officer</td>
+                                            <td class="data-column-33">Receiving officer</td>
+                                            <td class="data-column-33">Receiving organisation</td>
+                                        </tr>
+                                        <tr>
+                                            <td>{{ optionalValue dispatching_officer_id }}</td>
+                                            <td>{{ optionalValue receiving_officer_id }}</td>
+                                            <td>{{ optionalValue receiving_organisation }}</td>
+                                        </tr>
+                                    </table>
+                                {{/handover_details}}
+                            {{/attributes}}
+                            {{#meta}}
+                                <table class="data-table">
+                                    <tr>
+                                        {{#section_progress}}
+                                            <td class="data-column-20">{{ key }}</td>
+                                        {{/section_progress}}
+                                    </tr>
+                                    <tr>
+                                        {{#section_progress}}
+                                            <td class="data-column-20">{{ status }}</td>
+                                        {{/section_progress}}
+                                    </tr>
+                                </table>
+                            {{/meta}}
+                            <h4>PER Responses</h4>
+                            <table class="data-table">
+                                <tr><td class="data-column-40">Question key</td>
+                                    <td class="data-column-60">Response(s)</td>
+                                </tr>
+                                {{#relationships.framework_responses}}
+                                    <tr>
+                                        <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        {{^data.attributes.responded}}<td class="data-column-60">[Not responded]</td>{{/data.attributes.responded}}
+                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}<br>{{/responses}}{{^responses}}{{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
+                                    </tr>
+                                {{/relationships.framework_responses}}
+                            </table>
+                            <h4>PER Events</h4>
+                            {{#relationships.events}}
+                                {{#data}}
+                                    {{#attributes}}
+                                        <table class="data-table">
+                                            <tr>
+                                                <td class="data-column-25">Event type</td>
+                                                <td class="data-column-25">Occurred at</td>
+                                                <td class="data-column-25">Recorded at</td>
+                                                <td class="data-column-25">Created by</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ event_type }}</td>
+                                                <td>{{ formatDate occurred_at }}</td>
+                                                <td>{{ formatDate recorded_at }}</td>
+                                                <td>{{ created_by }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="data-column-25">Notes:</td>
+                                                <td class="data-column-75">{{optionalValue notes}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="data-column-100">Details: </td>
+                                            </tr>
+                                            {{#details.subtype}}
+                                                <tr>
+                                                    <td class="data-column-25">Subtype: </td>
+                                                    <td class="data-column-75">{{optionalValue details.subtype}}</td>
+                                                </tr>
+                                            {{/details.subtype}}
+                                            {{#details.outcome}}
+                                                <tr>
+                                                    <td class="data-column-25">Outcome: </td>
+                                                    <td class="data-column-75">{{optionalValue details.outcome}}</td>
+                                                </tr>
+                                            {{/details.outcome}}
+                                            {{#details.court_outcome}}
+                                                <tr>
+                                                    <td class="data-column-25">Court Outcome: </td>
+                                                    <td class="data-column-75">{{optionalValue details.court_outcome}}</td>
+                                                </tr>
+                                            {{/details.court_outcome}}
+                                            {{#details.court_cell_number}}
+                                                <tr>
+                                                    <td class="data-column-25">Court Cell Number: </td>
+                                                    <td class="data-column-75">{{optionalValue details.court_cell_number}}</td>
+                                                </tr>
+                                            {{/details.court_cell_number}}
+                                            {{#details.stakeholder}}
+                                                <tr>
+                                                    <td class="data-column-25">Stakeholder: </td>
+                                                    <td class="data-column-75">{{optionalValue details.stakeholder}}</td>
+                                                </tr>
+                                            {{/details.stakeholder}}
+                                            {{#details.summary}}
+                                                <tr>
+                                                    <td class="data-column-25">Summary: </td>
+                                                    <td class="data-column-75">{{optionalValue details.summary}}</td>
+                                                </tr>
+                                            {{/details.summary}}
+                                            {{#details.further_details}}
+                                                <tr>
+                                                    <td class="data-column-25">Further details: </td>
+                                                    <td class="data-column-75">{{optionalValue details.further_details}}</td>
+                                                </tr>
+                                            {{/details.further_details}}
+                                        </table>
+
+                                    {{/attributes}}
+                                {{/data}}
+
+                            {{/relationships.events}}
+                        {{/person_escort_record.data}}
+                        {{^person_escort_record.data}}
+                            <h4>No person escort record</h4>
+                        {{/person_escort_record.data}}
+                        {{#youth_risk_assessment.data}}
+                            <h4>Youth risk assessment</h4>
+                            <table class="data-table">
+                                {{#relationships.framework_responses}}
+                                    <tr>
+                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                            {{#data.attributes.responded}}
+                                                {{#data.attributes.value}}
+                                                    {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
+                                                    {{^option}}
+                                                        {{#data.attributes.value}}
+                                                            {{^option}}{{.}}<br>{{/option}}
+                                                            {{#option}}
+                                                                {{.}} - {{details}}<br>
+                                                            {{/option}}
+                                                        {{/data.attributes.value}}
+                                                    {{/option}}
+                                                {{/data.attributes.value}}
+                                            {{/data.attributes.responded}}
+                                        </td>
+                                    </tr>
+                                {{/relationships.framework_responses}}
+                            </table>
+                        {{/youth_risk_assessment.data}}
+                    {{/relationships}}
+                    {{^attributes.requires_youth_risk_assessment}}
+                        <h4>No youth risk assessment required</h4>
+                    {{/attributes.requires_youth_risk_assessment}}
+                {{/data}}
+            {{/profiles}}
+
         {{/relationships}}
     {{/data}}
     {{^data}}
