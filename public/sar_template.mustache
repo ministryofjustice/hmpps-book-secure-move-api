@@ -16,6 +16,8 @@
                     <td>{{optionalValue first_names}}</td>
                     <td>{{optionalValue last_name}}</td>
                 </tr>
+            </table>
+            <table class="data-table">
                 <tr>
                     <td class="data-column-100">Identifiers:</td>
                 </tr>
@@ -81,7 +83,7 @@
                                             <td class="data-column-25">Created by</td>
                                         </tr>
                                         <tr>
-                                            <td>{{formatDate event_type}}</td>
+                                            <td>{{event_type}}</td>
                                             <td>{{formatDate occurred_at}}</td>
                                             <td>{{formatDate recorded_at}}</td>
                                             <td>{{created_by}}</td>
@@ -136,10 +138,10 @@
                                                         <td class="data-column-25">Created by</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>{{ event_type }}</td>
-                                                        <td>{{ occurred_at }}</td>
-                                                        <td>{{ recorded_at }}</td>
-                                                        <td>{{ created_by }}</td>
+                                                        <td>{{event_type}}</td>
+                                                        <td>{{formatDate occurred_at}}</td>
+                                                        <td>{{formatDate recorded_at}}</td>
+                                                        <td>{{created_by}}</td>
                                                     </tr>
                                                 </table>
 
@@ -179,9 +181,11 @@
                                         <td class="data-column-50">Status</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ version }}</td>
-                                        <td>{{ status }}</td>
+                                        <td class="data-column-50">{{ version }}</td>
+                                        <td class="data-column-50">{{ status }}</td>
                                     </tr>
+                                </table>
+                                <table class="data-table">
                                     <tr>
                                         <td class="data-column-25">Created at</td>
                                         <td class="data-column-25">Completed at</td>
@@ -189,10 +193,10 @@
                                         <td class="data-column-25">Handover occurred at</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ created_at }}</td>
-                                        <td>{{ optionalValue completed_at }}</td>
-                                        <td>{{ optionalValue confirmed_at }}</td>
-                                        <td>{{ optionalValue handover_occurred_at }}</td>
+                                        <td class="data-column-25">{{ formatDate created_at }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate completed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate confirmed_at) }}</td>
+                                        <td class="data-column-25">{{ optionalValue (formatDate handover_occurred_at) }}</td>
                                     </tr>
                                 </table>
                                 {{#handover_details}}
@@ -227,46 +231,22 @@
                             {{/meta}}
                             <h4>PER Responses</h4>
                             <table class="data-table">
+                                <tr><td class="data-column-40">Question key</td>
+                                    <td class="data-column-60">Response(s)</td>
+                                </tr>
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td>{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
-                                            {{#data.attributes.responded}}
-                                                {{#data.attributes.value}}
-                                                    {{#responses}}
-                                                        {{#value}}
-                                                            {{^option}}<b>Bag number {{.}}:</b>{{/option}}{{#option}}{{.}} - {{details}}{{/option}}
-                                                        {{/value}}
-                                                        <br>
-                                                    {{/responses}}
-                                                    {{^responses}}
-                                                        {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
-                                                        {{^option}}
-                                                            {{#data.attributes.value}}
-                                                                {{^option}}{{.}}<br>{{/option}}
-                                                                {{#option}}
-                                                                    {{.}} - {{details}}<br>
-                                                                {{/option}}
-                                                            {{/data.attributes.value}}
-                                                        {{/option}}
-                                                    {{/responses}}
-                                                {{/data.attributes.value}}
-                                                {{^data.attributes.value.responses}}
-
-
-                                                {{/data.attributes.value.responses}}
-                                            {{/data.attributes.responded}}
-                                        </td>
-
+                                        <td class="data-column-40"><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        {{^data.attributes.responded}}<td class="data-column-60">[Not responded]</td>{{/data.attributes.responded}}
+                                        {{#data.attributes.responded}}<td class="data-column-60">{{#data.attributes.value}}{{#responses}}{{#value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}<br>{{/option}}{{/value}}<br>{{/responses}}{{^responses}}{{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}{{^option}}{{#data.attributes.value}}{{^option}}{{.}}{{/option}}{{#option}}{{.}} - {{details}}{{/option}}{{/data.attributes.value}}{{/option}}{{/responses}}{{/data.attributes.value}}</td>{{/data.attributes.responded}}
                                     </tr>
                                 {{/relationships.framework_responses}}
                             </table>
                             <h4>PER Events</h4>
                             {{#relationships.events}}
-
                                 {{#data}}
                                     {{#attributes}}
-                                        <table class="data-table" border-style="solid">
+                                        <table class="data-table">
                                             <tr>
                                                 <td class="data-column-25">Event type</td>
                                                 <td class="data-column-25">Occurred at</td>
@@ -289,29 +269,45 @@
                                             {{#details.subtype}}
                                                 <tr>
                                                     <td class="data-column-25">Subtype: </td>
-                                                    <td class="data-column-75">{{details.subtype}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.subtype}}</td>
                                                 </tr>
                                             {{/details.subtype}}
                                             {{#details.outcome}}
                                                 <tr>
                                                     <td class="data-column-25">Outcome: </td>
-                                                    <td class="data-column-75">{{details.outcome}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.outcome}}</td>
                                                 </tr>
                                             {{/details.outcome}}
                                             {{#details.court_outcome}}
                                                 <tr>
                                                     <td class="data-column-25">Court Outcome: </td>
-                                                    <td class="data-column-75">{{details.court_outcome}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.court_outcome}}</td>
                                                 </tr>
                                             {{/details.court_outcome}}
                                             {{#details.court_cell_number}}
                                                 <tr>
                                                     <td class="data-column-25">Court Cell Number: </td>
-                                                    <td class="data-column-75">{{details.court_cell_number}}</td>
+                                                    <td class="data-column-75">{{optionalValue details.court_cell_number}}</td>
                                                 </tr>
                                             {{/details.court_cell_number}}
-
-
+                                            {{#details.stakeholder}}
+                                                <tr>
+                                                    <td class="data-column-25">Stakeholder: </td>
+                                                    <td class="data-column-75">{{optionalValue details.stakeholder}}</td>
+                                                </tr>
+                                            {{/details.stakeholder}}
+                                            {{#details.summary}}
+                                                <tr>
+                                                    <td class="data-column-25">Summary: </td>
+                                                    <td class="data-column-75">{{optionalValue details.summary}}</td>
+                                                </tr>
+                                            {{/details.summary}}
+                                            {{#details.further_details}}
+                                                <tr>
+                                                    <td class="data-column-25">Further details: </td>
+                                                    <td class="data-column-75">{{optionalValue details.further_details}}</td>
+                                                </tr>
+                                            {{/details.further_details}}
                                         </table>
 
                                     {{/attributes}}
@@ -327,8 +323,8 @@
                             <table class="data-table">
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td>{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
+                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
@@ -341,13 +337,8 @@
                                                         {{/data.attributes.value}}
                                                     {{/option}}
                                                 {{/data.attributes.value}}
-                                                {{^data.attributes.value.responses}}
-
-
-                                                {{/data.attributes.value.responses}}
                                             {{/data.attributes.responded}}
                                         </td>
-
                                     </tr>
                                 {{/relationships.framework_responses}}
                             </table>
