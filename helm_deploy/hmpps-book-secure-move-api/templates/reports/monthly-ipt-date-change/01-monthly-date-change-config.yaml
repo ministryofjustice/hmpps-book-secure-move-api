@@ -1,4 +1,4 @@
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-config" | trunc 52 }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "monthly-ipt-date-change-config" | trunc 52 }}
 {{- if .Values.scripts.reports.dailyIpt.enabled }}
 apiVersion: v1
 kind: ConfigMap
