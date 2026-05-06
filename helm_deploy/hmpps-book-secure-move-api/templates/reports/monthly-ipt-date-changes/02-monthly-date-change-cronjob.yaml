@@ -1,14 +1,14 @@
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "weekly-cancelled-moves-report" | trunc 52 }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-report" | trunc 52 }}
 {{- $script := printf "%s-%s" (include "generic-service.fullname" $) "automated-reports-scripts" | trunc 52 }}
-{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "weekly-cancelled-moves-config" | trunc 52 }}
-{{- if .Values.scripts.reports.weeklyCanMoves.enabled }}
+{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-config" | trunc 52 }}
+{{- if .Values.scripts.reports.dailyIpt.enabled }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ $fullName }}
 spec:
-  schedule: {{ .Values.scripts.reports.weeklyCanMoves.schedule }}
+  schedule: {{ .Values.scripts.reports.monthlyIptDateChange.schedule }}
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3
@@ -21,7 +21,7 @@ spec:
         spec:
           serviceAccountName: "book-a-secure-move-api"
           containers:
-            - name: weekly-cancelled-moves
+            - name: monthly-ipt-date-change
               image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
               command: ["bash", "/scripts/run-report.sh"]
               volumeMounts:
@@ -35,7 +35,7 @@ spec:
                 - name: DB_INSTANCE
                   valueFrom:
                     secretKeyRef:
-                      name: rds-instance-hmpps-book-secure-move-api-production
+                      name: read-rds-instance-hmpps-book-secure-move-api-production
                       key: url
                 - name: NOTIFY_TOKEN
                   valueFrom:
@@ -76,7 +76,7 @@ spec:
                   valueFrom:
                     secretKeyRef:
                       name: automated-report-recipients
-                      key: weekly-cancelled
+                      key: monthly-ipt-date-change
                 - name: CONFIRM_EMAIL
                   valueFrom:
                     configMapKeyRef:
