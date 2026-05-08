@@ -5,8 +5,8 @@ kind: ConfigMap
 metadata:
   name: {{ $fullName }}
 data:
-  from-date: "1 day ago"
-  to-date: "1 month ago"
+  from-date: "1 month ago"
+  to-date: "1 day ago"
   subject: "BaSM IPT Date Change Report [TODAY_DATE]"
   body: "BaSM IPT date change report for [LAST_MONTH] is available at the link below."
   filename: "basm-ipt-date-change-report-[TODAY_DATE]"
