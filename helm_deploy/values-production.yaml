@@ -130,6 +130,9 @@ scripts:
     dailyIpt:
       enabled: true
       schedule: "30 6 * * *"
+    monthlyIptDateChange:
+      enabled: true
+      schedule: "30 6 1 * *"
     monthlyIncomPer:
       enabled: true
       schedule: "30 6 1 * *"
