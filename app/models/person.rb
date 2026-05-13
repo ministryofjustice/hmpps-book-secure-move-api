@@ -33,6 +33,20 @@ class Person < VersionedModel
   scope :ordered_by_name, ->(direction) { order('last_name' => direction, 'first_names' => direction) }
   scope :search_by_last_name, ->(search) { select(:id).where('last_name ILIKE :search', search: "%#{search}%") }
 
+  scope :filter_by_pnc_canonical, lambda { |raw_input|
+    variants = V2::People::PncNormalizer.variants(raw_input)
+    return none if variants.empty?
+
+    canonical_tokens = variants.map { |v| v.gsub(/[^0-9A-Z]/, '') }
+
+    raw_match = arel_table[:police_national_computer].matches("%#{raw_input}%", nil, true)
+
+    normalized_match = where('people.canonical_pnc IN (?)', canonical_tokens)
+
+    # OR logic between raw and canonical
+    where(raw_match).or(normalized_match)
+  }
+
   validates :last_name, presence: true
   validates :first_names, presence: true
   validates :prison_number, prison_number: true

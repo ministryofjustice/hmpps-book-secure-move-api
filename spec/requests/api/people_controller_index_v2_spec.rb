@@ -128,15 +128,38 @@ RSpec.describe Api::PeopleController do
       end
     end
 
+    describe 'filtering results by fuzzy_pnc' do
+      let!(:person) { create(:person, police_national_computer: '22/0123456D') }
+      let(:filters) do
+        {
+          fuzzy_pnc: '22/123456d',
+        }
+      end
+      let(:params) { { filter: filters } }
+
+      before do
+        person.reload
+        get '/api/people', params:, headers:
+      end
+
+      it 'returns the correct number of people' do
+        expect(response_json['data'].size).to eq(1)
+      end
+
+      it 'returns the person that matches the filter' do
+        expect(response_json).to include_json(data: [{ id: person.id }])
+      end
+    end
+
     describe 'filtering results by multiple filters' do
       let!(:person) do
-        create(:person, criminal_records_office: 'CRO0105d', police_national_computer: 'AB/00001d')
+        create(:person, criminal_records_office: 'CRO0105d', police_national_computer: '22/0000001d')
       end
       let(:filters) do
         {
           bar: 'bar',
           criminal_records_office: 'CRO0105d',
-          police_national_computer: 'AB/00001d',
+          police_national_computer: '22/0000001d',
           foo: 'foo',
         }
       end

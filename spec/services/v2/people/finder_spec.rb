@@ -11,8 +11,8 @@ RSpec.describe V2::People::Finder do
   describe 'filtering' do
     describe 'by police_national_computer' do
       context 'with matching police_national_computer' do
-        let(:filter_params) { { police_national_computer: 'AB/00006' } }
-        let!(:person) { create(:person, police_national_computer: 'AB/00006') }
+        let(:filter_params) { { police_national_computer: '22/0000006A' } }
+        let!(:person) { create(:person, police_national_computer: '22/0000006A') }
 
         it 'returns people matching police_national_computer' do
           expect(finder.call).to contain_exactly(person)

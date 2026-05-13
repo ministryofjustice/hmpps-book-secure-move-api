@@ -333,6 +333,25 @@ RSpec.describe Move do
     end
   end
 
+  describe '#section_forty_six' do
+    subject(:move) { described_class.new }
+
+    it 'defaults to false section_forty_six' do
+      move.valid?
+      expect(move.section_forty_six).to be_nil
+    end
+
+    it 'Can have section forty six be false' do
+      move = described_class.new(section_forty_six: false)
+      expect(move.section_forty_six).to be false
+    end
+
+    it 'Can have section forty six be true' do
+      move = described_class.new(section_forty_six: true)
+      expect(move.section_forty_six).to be true
+    end
+  end
+
   describe '#move_type' do
     subject(:move) { build :move, from_location:, to_location:, move_type:, version: }
 
@@ -715,6 +734,7 @@ RSpec.describe Move do
         'reference' => move.reference,
         'rejection_reason' => nil,
         'status' => 'requested',
+        'section_forty_six' => nil,
         'time_due' => be_a(Time),
         'to_location' => 'GUICCT',
         'to_location_type' => 'court',
