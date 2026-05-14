@@ -16,7 +16,7 @@ gem 'bootsnap', require: false
 gem 'cancancan'
 gem 'csv'
 gem 'discard'
-gem 'doorkeeper', '>= 5.6.6'
+gem 'doorkeeper', '5.9.0'
 gem 'faraday'
 gem 'faraday-net_http_persistent'
 gem 'faraday-retry'
