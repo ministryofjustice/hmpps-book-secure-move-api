@@ -18,6 +18,19 @@ namespace :auth do
     supplier = supplier_key == 'none' ? nil : Supplier.find_by(key: supplier_key)
 
     application.owner = supplier if supplier.present?
+    puts "Which scope(s) is the application permitted?"
+    puts "r - read only"
+    puts "w - read/write"
+    puts "d - read/write and diagnostics"
+    req_scope = $stdin.gets.chomp
+
+    SCOPES = {
+      "r" => "read",
+      "w" => "read,write",
+      "d" => "read,write,diagnostics.pii"
+    }
+
+    application.scopes = SCOPES[req_scope]
     application.save!
 
     puts "Created OAuth2 client with (name: #{application.name})"
@@ -25,5 +38,6 @@ namespace :auth do
     puts "client_secret: #{application.plaintext_secret}"
     puts "supplier: #{supplier_key}"
     puts "supplier_id: #{supplier&.id}"
+    puts "scope: #{application.scopes}"
   end
 end
