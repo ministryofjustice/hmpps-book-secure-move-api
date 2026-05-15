@@ -24,13 +24,13 @@ namespace :auth do
     puts 'd - read/write and diagnostics'
     req_scope = $stdin.gets.chomp
 
-    SCOPES = {
+    app_scopes = {
       'r' => 'read',
       'w' => 'read,write',
-      'd' => 'read,write,diagnostics.pii'
-    }
+      'd' => 'read,write,diagnostics.pii',
+    }.freeze
 
-    application.scopes = SCOPES[req_scope]
+    application.scopes = app_scopes[req_scope]
     application.save!
 
     puts "Created OAuth2 client with (name: #{application.name})"
