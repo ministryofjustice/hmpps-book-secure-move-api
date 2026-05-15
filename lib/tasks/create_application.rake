@@ -26,8 +26,8 @@ namespace :auth do
 
     app_scopes = {
       'r' => 'read',
-      'w' => 'read,write',
-      'd' => 'read,write,diagnostics.pii',
+      'w' => 'read write',
+      'd' => 'read write diagnostics.pii',
     }.freeze
 
     application.scopes = app_scopes[req_scope]
