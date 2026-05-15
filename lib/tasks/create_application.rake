@@ -18,16 +18,16 @@ namespace :auth do
     supplier = supplier_key == 'none' ? nil : Supplier.find_by(key: supplier_key)
 
     application.owner = supplier if supplier.present?
-    puts "Which scope(s) is the application permitted?"
-    puts "r - read only"
-    puts "w - read/write"
-    puts "d - read/write and diagnostics"
+    puts 'Which scope(s) is the application permitted?'
+    puts 'r - read only'
+    puts 'w - read/write'
+    puts 'd - read/write and diagnostics'
     req_scope = $stdin.gets.chomp
 
     SCOPES = {
-      "r" => "read",
-      "w" => "read,write",
-      "d" => "read,write,diagnostics.pii"
+      'r' => 'read',
+      'w' => 'read,write',
+      'd' => 'read,write,diagnostics.pii'
     }
 
     application.scopes = SCOPES[req_scope]
