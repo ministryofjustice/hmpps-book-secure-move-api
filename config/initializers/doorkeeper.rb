@@ -164,7 +164,7 @@ Doorkeeper.configure do
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
   
    default_scopes  :read
-   optional_scopes :write, :diagnostics.pii
+   optional_scopes :write, :'diagnostics.pii'
 
   # Define scopes_by_grant_type to restrict only certain scopes for grant_type
   # By default, all the scopes will be available for all the grant types.
