@@ -669,6 +669,9 @@ FactoryBot.define do
   factory :event_per_self_harm, parent: :per_incident, class: 'GenericEvent::PerSelfHarm' do
   end
 
+  factory :event_per_historic_self_harm, parent: :generic_event, class: 'GenericEvent::PerHistoricSelfHarm' do
+  end
+
   factory :event_per_suicide_and_self_harm, parent: :generic_event, class: 'GenericEvent::PerSuicideAndSelfHarm' do
     eventable { association(:person_escort_record) }
     details do
