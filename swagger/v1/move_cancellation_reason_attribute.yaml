@@ -8,6 +8,7 @@ MoveCancellationReason:
     - incomplete_per
     - other
     - cancelled_by_pmu
+    - allocation_cancelled
     - case_not_court_ready
     - combined_with_another_request
     - court_closure
