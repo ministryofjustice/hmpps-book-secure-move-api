@@ -31,7 +31,7 @@ module Api
     end
 
     def cancel_move_params
-      cancel_params.deep_merge(attributes: { cancellation_reason: Move::CANCELLATION_REASON_ALLOCATION_CANCELLED })
+      cancel_params.deep_merge(attributes: { cancellation_reason: Move::CANCELLATION_REASON_OTHER })
     end
 
     def cancellation_details
