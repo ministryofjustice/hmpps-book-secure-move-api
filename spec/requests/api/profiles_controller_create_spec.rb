@@ -203,5 +203,23 @@ RSpec.describe Api::ProfilesController do
 
       it_behaves_like 'an endpoint that responds with error 404'
     end
+
+    context 'with CSRA from NOMIS' do
+      let(:latest_nomis_booking_id) { 123 }
+      let(:person) { create(:person_without_profiles, prison_number: nil, latest_nomis_booking_id:) }
+
+      before do
+        allow(NomisClient::BookingDetails).to receive(:get).with(latest_nomis_booking_id).and_return({ csra: 'Standard' })
+        post "/api/v1/people/#{person.id}/profiles", params: profile_params, headers:, as: :json
+      end
+
+      it 'persists the CSRA value to the profile' do
+        expect(person.profiles.last.csra).to eq('Standard')
+      end
+
+      it 'includes CSRA in the response' do
+        expect(response_json['data']['attributes']['csra']).to eq('Standard')
+      end
+    end
   end
 end
