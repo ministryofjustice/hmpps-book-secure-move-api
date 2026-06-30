@@ -44,9 +44,9 @@
                 <td class="data-column-33">Ethnicity</td>
             </tr>
             <tr>
-                <td>{{optionalValue relationships.gender.data.attributes.gender_additional_information}}</td>
+                <td>{{optionalValue relationships.gender.data.attributes.title}}</td>
                 <td>{{optionalValue attributes.gender_additional_information}}</td>
-                <td>{{optionalValue relationships.ethnicity.data.attributes.gender_additional_information}}</td>
+                <td>{{optionalValue relationships.ethnicity.data.attributes.title}}</td>
             </tr>
         </table>
 
@@ -82,7 +82,7 @@
                             <tr>
                                 <td>{{relationships.from_location.data.attributes.title}}</td>
                                 <td>{{relationships.from_location.data.attributes.location_type}}</td>
-                                <td>{{relationships.from_location.data.attributes.young_offenders_institution}}</td>
+                                <td>{{relationships.from_location.data.attributes.young_offender_institution}}</td>
                             </tr>
                         </table>
                         <h3>To location</h3>
@@ -200,7 +200,7 @@
 
             <h1> Profiles </h1>
             {{#profiles}}
-                <h3>Profile {{data.id}} </h3>
+                <h3>Profile</h3>
                 {{#data}}
                     {{#relationships}}
                         {{#person_escort_record.data}}
