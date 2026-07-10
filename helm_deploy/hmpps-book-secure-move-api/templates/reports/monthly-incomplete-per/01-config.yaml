@@ -64,7 +64,7 @@ data:
     echo "Querying the database for Duplicates"
     psql $DB_INSTANCE -f /tmp/cmd3.sql
         
-    https -d --ignore-stdin  https://github.com/mentax/csv2xlsx/releases/download/v0.5.1/csv2xlsx_Linux_x86_64.tar.gz -o /tmp/csv2xlsx.tar.gz
+    https -d --ignore-stdin  https://github.com/ministryofjustice/hmpps-book-secure-move-api/raw/refs/heads/main/helm_deploy/hmpps-book-secure-move-api/templates/reports/monthly-incomplete-per/csv2xlsx_Linux_x86_64_v0-5-5.tar.gz -o /tmp/csv2xlsx.tar.gz
   
     mkdir /tmp/csv2xlsx 
     tar -xzf /tmp/csv2xlsx.tar.gz -C /tmp/csv2xlsx 
