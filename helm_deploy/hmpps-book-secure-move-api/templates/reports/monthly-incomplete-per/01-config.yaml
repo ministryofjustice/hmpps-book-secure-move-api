@@ -161,7 +161,7 @@ data:
     getstatus(info.offence) as offence,
     getstatus(info.health) as health,
     getstatus(info.property) as property,
-    getstatus(info.property) as release,
+    getstatus(info.release) as release,
     dupe.dupe as dupe,
     CASE
     WHEN l.location_type = 'court' then 'true'
@@ -186,7 +186,7 @@ data:
     jsonb_path_query(section_progress, '$[*] ? (@.key == "risk-information")') ->> 'status' as risk,
     jsonb_path_query(section_progress, '$[*] ? (@.key == "offence-information")')->> 'status'  as offence,
     jsonb_path_query(section_progress, '$[*] ? (@.key == "health-information")')->> 'status'  as health,
-    jsonb_path_query(section_progress, '$[*] ? (@.key == "property-information")') ->> 'status' as property
+    jsonb_path_query(section_progress, '$[*] ? (@.key == "property-information")') ->> 'status' as property,
     jsonb_path_query(section_progress, '$[*] ? (@.key == "release-information")') ->> 'status' as release
     from person_escort_records
     where profile_id in (
