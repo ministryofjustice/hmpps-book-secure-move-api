@@ -1,14 +1,14 @@
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "weekly-ipt-date-change-report" | trunc 52 }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-date-change-report" | trunc 52 }}
 {{- $script := printf "%s-%s" (include "generic-service.fullname" $) "automated-reports-scripts" | trunc 52 }}
-{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "weekly-ipt-date-change-config" | trunc 52 }}
-{{- if .Values.scripts.reports.weeklyIptDateChange.enabled }}
+{{- $config := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-date-change-config" | trunc 52 }}
+{{- if .Values.scripts.reports.dailyIptDateChange.enabled }}
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ $fullName }}
 spec:
-  schedule: {{ .Values.scripts.reports.weeklyIptDateChange.schedule }}
+  schedule: {{ .Values.scripts.reports.dailyIptDateChange.schedule }}
   concurrencyPolicy: "Forbid"
   successfulJobsHistoryLimit: 5
   failedJobsHistoryLimit: 3
@@ -21,7 +21,7 @@ spec:
         spec:
           serviceAccountName: "book-a-secure-move-api"
           containers:
-            - name: weekly-ipt-date-change
+            - name: daily-ipt-date-change
               image: "ghcr.io/ministryofjustice/hmpps-devops-tools:latest"
               command: ["bash", "/scripts/run-report.sh"]
               volumeMounts:
@@ -76,7 +76,7 @@ spec:
                   valueFrom:
                     secretKeyRef:
                       name: automated-report-recipients
-                      key: weekly-ipt-date-change
+                      key: daily-ipt-date-change
                 - name: CONFIRM_EMAIL
                   valueFrom:
                     configMapKeyRef:
