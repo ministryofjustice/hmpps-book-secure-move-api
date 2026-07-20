@@ -8,6 +8,7 @@ MoveCancellationReason:
     - incomplete_per
     - other
     - cancelled_by_pmu
+    - allocation_cancelled
     - case_not_court_ready
     - combined_with_another_request
     - court_closure
@@ -19,6 +20,7 @@ MoveCancellationReason:
     - operational_issues_prison
     - police_transported_prisoner
     - prison_transported_prisoner
+    - prisoner_no_longer_required
     - prisoner_refusal
     - prisoner_to_be_released_on_bail
     - prisoner_unfit_to_travel

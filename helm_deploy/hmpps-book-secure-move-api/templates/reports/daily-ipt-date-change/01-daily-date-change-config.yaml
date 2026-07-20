@@ -1,14 +1,14 @@
-{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "monthly-ipt-date-change-config" | trunc 52 }}
-{{- if .Values.scripts.reports.dailyIpt.enabled }}
+{{- $fullName := printf "%s-%s" (include "generic-service.fullname" $) "daily-ipt-date-change-config" | trunc 52 }}
+{{- if .Values.scripts.reports.dailyIptDateChange.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $fullName }}
 data:
-  from-date: "1 month ago"
+  from-date: "1 week ago"
   to-date: "1 day ago"
   subject: "BaSM IPT Date Change Report [TODAY_DATE]"
-  body: "BaSM IPT date change report for [LAST_MONTH] is available at the link below."
+  body: "BaSM IPT date change report for last week ([FROM_DATE_FULL] to [TO_DATE_FULL]) is available at the link below."
   filename: "basm-ipt-date-change-report-[TODAY_DATE]"
   retention: "1 week"
   confirm_email: "false"

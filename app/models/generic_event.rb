@@ -80,6 +80,7 @@ class GenericEvent < ApplicationRecord
     PerEscape
     PerGeneric
     PerHandover
+    PerHistoricSelfHarm
     PerMedicalAid
     PerMedicalDrugsAlcohol
     PerMedicalMentalHealth

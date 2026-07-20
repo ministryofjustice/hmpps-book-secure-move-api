@@ -9,12 +9,14 @@
         {{#attributes}}
             <table class="data-table">
                 <tr>
-                    <td class="data-column-50">First names</td>
-                    <td class="data-column-50">Last name</td>
+                    <td class="data-column-33">First names</td>
+                    <td class="data-column-33">Last name</td>
+                    <td class="data-column-33">Date of birth</td>
                 </tr>
                 <tr>
                     <td>{{optionalValue first_names}}</td>
                     <td>{{optionalValue last_name}}</td>
+                    <td>{{optionalValue date_of_birth}}</td>
                 </tr>
             </table>
             <table class="data-table">
@@ -34,6 +36,19 @@
             </table>
         {{/attributes}}
 
+        <h2>Gender / Ethnicity</h2>
+        <table class="data-table">
+            <tr>
+                <td class="data-column-33">Gender</td>
+                <td class="data-column-33">Gender additional information</td>
+                <td class="data-column-33">Ethnicity</td>
+            </tr>
+            <tr>
+                <td>{{optionalValue relationships.gender.data.attributes.title}}</td>
+                <td>{{optionalValue attributes.gender_additional_information}}</td>
+                <td>{{optionalValue relationships.ethnicity.data.attributes.title}}</td>
+            </tr>
+        </table>
 
         {{#relationships}}
             <h2>Moves</h2>
@@ -43,34 +58,50 @@
                         <h2>Move {{reference}}</h2>
                         <table class="data-table">
                             <tr>
-                                <td class="data-column-25">Date</td>
-                                <td class="data-column-25">Move type</td>
-                                <td class="data-column-25">Status</td>
-                                <td class="data-column-25">Reference</td>
+                                <td class="data-column-20">Date</td>
+                                <td class="data-column-20">Move type</td>
+                                <td class="data-column-20">Status</td>
+                                <td class="data-column-20">Reference</td>
+                                <td class="data-column-20">Additional information</td>
                             </tr>
                             <tr>
                                 <td>{{optionalValue (formatDate date)}}</td>
                                 <td>{{move_type}}</td>
                                 <td>{{status}}</td>
                                 <td>{{reference}}</td>
+                                <td>{{optionalValue additional_information}}</td>
                             </tr>
                         </table>
+                        <h3>From location</h3>
                         <table class="data-table">
                             <tr>
-                                <td class="data-column-50">From location</td>
-                                <td class="data-column-50">To location</td>
+                                <td class="data-column-33">Title</td>
+                                <td class="data-column-33">Location type</td>
+                                <td class="data-column-33">Young offenders institution</td>
                             </tr>
                             <tr>
                                 <td>{{relationships.from_location.data.attributes.title}}</td>
+                                <td>{{relationships.from_location.data.attributes.location_type}}</td>
+                                <td>{{relationships.from_location.data.attributes.young_offender_institution}}</td>
+                            </tr>
+                        </table>
+                        <h3>To location</h3>
+                        <table class="data-table">
+                            <tr>
+                                <td class="data-column-33">Title</td>
+                                <td class="data-column-33">Location type</td>
+                                <td class="data-column-33">Young offender institution</td>
+                            </tr>
+                            <tr>
                                 <td>{{relationships.to_location.data.attributes.title}}</td>
+                                <td>{{relationships.to_location.data.attributes.location_type}}</td>
+                                <td>{{relationships.to_location.data.attributes.young_offender_institution}}</td>
                             </tr>
                         </table>
 
                     {{/attributes}}
 
                     {{#relationships}}
-                        <h3>Profile</h3>
-                        <p>This move uses profile {{optionalValue profile.data.id}}</p>
                         <h3>Move events</h3>
                         {{#events}}
                             {{#data}}
@@ -169,7 +200,7 @@
 
             <h1> Profiles </h1>
             {{#profiles}}
-                <h3>Profile {{data.id}} </h3>
+                <h3>Profile</h3>
                 {{#data}}
                     {{#relationships}}
                         {{#person_escort_record.data}}
@@ -203,13 +234,17 @@
                                     <h4>Handover details</h4>
                                     <table class="data-table">
                                         <tr>
-                                            <td class="data-column-33">Dispatching officer</td>
-                                            <td class="data-column-33">Receiving officer</td>
-                                            <td class="data-column-33">Receiving organisation</td>
+                                            <td class="data-column-20">Dispatching officer ID</td>
+                                            <td class="data-column-20">Dispatching officer</td>
+                                            <td class="data-column-20">Receiving officer ID</td>
+                                            <td class="data-column-20">Receiving officer</td>
+                                            <td class="data-column-20">Receiving organisation</td>
                                         </tr>
                                         <tr>
                                             <td>{{ optionalValue dispatching_officer_id }}</td>
+                                            <td>{{ optionalValue dispatching_officer }}</td>
                                             <td>{{ optionalValue receiving_officer_id }}</td>
+                                            <td>{{ optionalValue receiving_officer }}</td>
                                             <td>{{ optionalValue receiving_organisation }}</td>
                                         </tr>
                                     </table>
@@ -248,13 +283,15 @@
                                     {{#attributes}}
                                         <table class="data-table">
                                             <tr>
-                                                <td class="data-column-25">Event type</td>
-                                                <td class="data-column-25">Occurred at</td>
-                                                <td class="data-column-25">Recorded at</td>
-                                                <td class="data-column-25">Created by</td>
+                                                <td class="data-column-20">Event type</td>
+                                                <td class="data-column-20">Classification</td>
+                                                <td class="data-column-20">Occurred at</td>
+                                                <td class="data-column-20">Recorded at</td>
+                                                <td class="data-column-20">Created by</td>
                                             </tr>
                                             <tr>
                                                 <td>{{ event_type }}</td>
+                                                <td>{{ classification }}</td>
                                                 <td>{{ formatDate occurred_at }}</td>
                                                 <td>{{ formatDate recorded_at }}</td>
                                                 <td>{{ created_by }}</td>
