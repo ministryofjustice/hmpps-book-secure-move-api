@@ -27,6 +27,7 @@ module Api
       :type,
       { attributes: [
           :requires_youth_risk_assessment,
+          :csra,
           { assessment_answers: [
             %i[
               key

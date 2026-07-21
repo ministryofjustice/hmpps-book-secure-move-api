@@ -31,6 +31,12 @@ Profile:
           description:
             Collection of court information, risk and alerts that escorts
             need to be aware of for safety, security and other reasons
+        csra:
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: Standard
+          description: The Cell Sharing Risk Assessment (CSRA) level for the person, retrieved from NOMIS
     relationships:
       type: object
       properties:
