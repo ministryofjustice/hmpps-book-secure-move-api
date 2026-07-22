@@ -15,12 +15,12 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  dependencies:
-    name: Build
+  build:
+    name: Build ruby
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
     - name: Setup Ruby and install gems
       uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
       with:
@@ -34,4 +34,29 @@ jobs:
     secrets: inherit
     with:
       environment: ${{ matrix.environments }}
+  test:
+    name: "Run tests"
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16.14-alpine
+        env:
+          POSTGRES_DB: hmpps-book-secure-move-api
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
+        with:
+          bundler-cache: true
+      - name: Setup test database
+        run: bundle exec rake db:prepare RAILS_ENV=test
+      - name: Run rubocop
+        run: bundle exec rubocop
+      - name: Run rspec
+        run: bundle exec rspec
 
