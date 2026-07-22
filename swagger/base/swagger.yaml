@@ -101,12 +101,11 @@ paths:
     get:
       summary: Returns the mustache template for SAR reports
       tags:
-        - SubjectAccessRequest
+      - SubjectAccessRequest
       parameters:
-        - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
-        - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
-        - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
-
+      - "$ref": "../v2/accept_type_parameter.yaml#/Accept"
+      - "$ref": "../v1/content_type_parameter.yaml#/ContentType"
+      - "$ref": "../v2/accept_encoding.yaml#/AcceptEncoding"
       responses:
         '200':
           description: success
