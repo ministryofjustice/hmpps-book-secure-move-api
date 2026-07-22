@@ -19,19 +19,17 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-        - name: install dependencies
-          if: steps.restore-cache.outputs.cache-hit != 'true'
-          shell: bash
-          run: |
-            bundler_version=$(cat Gemfile.lock | tail -1 | tr -d " ")
-            gem install bundler -v $bundler_version
-            bundle config --local path vendor/bundle
-            bundle check || bundle install --jobs=4 --retry=3
+    - name: Checkout code
+      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+    - name: Setup Ruby and install gems
+      uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
+      with:
+        bundler-cache: true
   helm_lint:
     strategy:
       matrix:
         environments: ['staging', 'uat', 'preprod', 'production']
-    name: helm lint
+    name: Helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
