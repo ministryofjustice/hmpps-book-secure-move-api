@@ -160,6 +160,7 @@ aliases:
     filters:
       branches:
         ignore:
+          - MAPB-428
           - main
           - /.*-deploydev/
       tags:

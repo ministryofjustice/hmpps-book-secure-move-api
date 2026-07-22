@@ -1,0 +1,39 @@
+name: Pipeline [test -> build]
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  # if branch is main, append commit sha to the group name, so that other jobs from main don't get cancelled
+  group: ${{ github.workflow }}-${{ github.ref }}${{ (github.ref == 'refs/heads/main') && format('-{0}', github.sha) || '' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  dependencies:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+        - name: install dependencies
+          if: steps.restore-cache.outputs.cache-hit != 'true'
+          shell: bash
+          run: |
+            bundler_version=$(cat Gemfile.lock | tail -1 | tr -d " ")
+            gem install bundler -v $bundler_version
+            bundle config --local path vendor/bundle
+            bundle check || bundle install --jobs=4 --retry=3
+  helm_lint:
+    strategy:
+      matrix:
+        environments: ['staging', 'uat', 'preprod', 'production']
+    name: helm lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: ${{ matrix.environments }}
+
