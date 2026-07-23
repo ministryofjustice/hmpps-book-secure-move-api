@@ -72,7 +72,7 @@ jobs:
         run: bundle exec rubocop
       - name: Run wiremock
         run: |
-          nohup java -jar wiremock.jar --port 9091 &
+          nohup java -jar wiremock.jar --port 8888 &
           sleep 5
       - name: Run rspec
         run: |
