@@ -70,8 +70,11 @@ jobs:
         run: bundle exec rake db:prepare RAILS_ENV=test
       - name: Run rubocop
         run: bundle exec rubocop
-      - name: Run rspec with wiremock
+      - name: Run wiremock
         run: |
           nohup java -jar wiremock.jar --port 9091 &
+          sleep 5
+      - name: Run rspec
+        run: |
           bundle exec rspec
 
