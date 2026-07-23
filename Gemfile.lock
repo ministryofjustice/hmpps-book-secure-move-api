@@ -575,7 +575,7 @@ DEPENDENCIES
   csv
   database_cleaner-active_record
   discard
-  doorkeeper (5.9.0)
+  doorkeeper (= 5.9.0)
   dotenv
   dotenv-rails
   factory_bot_rails
