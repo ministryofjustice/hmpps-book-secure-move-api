@@ -58,6 +58,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Get wiremock
+        shell: bash
+        run: |
+          curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
         with:
@@ -66,6 +70,8 @@ jobs:
         run: bundle exec rake db:prepare RAILS_ENV=test
       - name: Run rubocop
         run: bundle exec rubocop
-      - name: Run rspec
-        run: bundle exec rspec
+      - name: Run rspec with wiremock
+        run: |
+          nohup java -jar wiremock.jar --port 9091 &
+          bundle exec rspec
 
