@@ -68,6 +68,8 @@ jobs:
           bundler-cache: true
       - name: Setup test database
         run: bundle exec rake db:prepare RAILS_ENV=test
+      - name: Install wiremock
+        run: bundle exec rake wiremock:install
       - name: Run rubocop
         run: bundle exec rubocop
 #      - name: Run wiremock
