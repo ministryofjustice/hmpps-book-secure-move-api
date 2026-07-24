@@ -44,7 +44,7 @@ jobs:
       DATABASE_URL: "postgres://postgres:postgres@localhost/hmpps-book-secure-move-api"
       EXTERNAL_URL: mocked_in_tests
       ENCRYPTOR_SALT: "2EREZ8Xub/vt0ya1ZM6YKUwIMN72MbmqeWMq7KS4BV8oSJJc27rDpZYmA6AQGYcS"
-      EXTERNAL_WIREMOCK: "true"
+      EXTERNAL_WIREMOCK: "false"
     services:
       postgres:
         image: postgres:16.14-alpine
@@ -58,10 +58,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-      - name: Get wiremock
-        shell: bash
-        run: |
-          curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
+#      - name: Get wiremock
+#        shell: bash
+#        run: |
+#          curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
       - name: Setup Ruby and install gems
         uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
         with:
@@ -70,10 +70,10 @@ jobs:
         run: bundle exec rake db:prepare RAILS_ENV=test
       - name: Run rubocop
         run: bundle exec rubocop
-      - name: Run wiremock
-        run: |
-          nohup java -jar wiremock.jar --port 8888 &
-          sleep 5
+#      - name: Run wiremock
+#        run: |
+#          nohup java -jar wiremock.jar --port 8888 &
+#          sleep 5
       - name: Run rspec
         run: |
           bundle exec rspec
