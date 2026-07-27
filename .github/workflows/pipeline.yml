@@ -37,6 +37,10 @@ jobs:
   test:
     name: "Run tests"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+       node: [ 0, 1, 2, 3 ] # 4 parallel runners
     env:
       BUNDLER_VERSION: 2.6.9
       RAILS_ENV: test
@@ -82,5 +86,9 @@ jobs:
           echo "Done"
       - name: Run rspec
         run: |
-          bundle exec rspec
+          FILES=$(find spec -name '*_spec.rb' | sort)
+          TESTS=$(echo "$FILES" | awk "NR % 4 == ${{ matrix.node }}")
+          echo "Running:"
+          echo "$TESTS"
+          bundle exec rspec $TESTS
 
