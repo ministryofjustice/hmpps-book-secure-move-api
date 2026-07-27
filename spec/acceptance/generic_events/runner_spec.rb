@@ -96,7 +96,6 @@ RSpec.describe GenericEvents::Runner do
     context 'when event_name=cancel' do
       before do
         create(:event_move_cancel, eventable: move)
-        allow(Allocations::RemoveFromNomis).to receive(:call)
       end
 
       context 'when the move is requested' do
@@ -110,11 +109,6 @@ RSpec.describe GenericEvents::Runner do
 
         it 'updates the move cancellation_reason_comment' do
           expect { runner.call }.to change(move, :cancellation_reason_comment).from(nil).to('It was a mistake')
-        end
-
-        it 'removes prison transfer event from Nomis' do
-          runner.call
-          expect(Allocations::RemoveFromNomis).to have_received(:call).with(move)
         end
 
         it_behaves_like 'it calls the Notifier with an update_status action_name'
@@ -132,11 +126,8 @@ RSpec.describe GenericEvents::Runner do
     end
 
     context 'when event_name=approve' do
-      let(:create_in_nomis) { false }
-
       before do
-        create(:event_move_approve, eventable: move, details: { create_in_nomis:, date: Date.tomorrow })
-        allow(Allocations::CreateInNomis).to receive(:call)
+        create(:event_move_approve, eventable: move, details: { date: Date.tomorrow })
       end
 
       context 'when the move is proposed' do
@@ -150,11 +141,6 @@ RSpec.describe GenericEvents::Runner do
           expect { runner.call }.to change(move, :date).from(Time.zone.today).to(Date.tomorrow)
         end
 
-        it 'does not create a prison transfer event in Nomis' do
-          runner.call
-          expect(Allocations::CreateInNomis).not_to have_received(:call).with(move)
-        end
-
         it_behaves_like 'it calls the Notifier with an update_status action_name'
       end
 
@@ -165,15 +151,6 @@ RSpec.describe GenericEvents::Runner do
 
         it 'does not change the move status' do
           expect { runner.call }.not_to change(move, :status).from('requested')
-        end
-      end
-
-      context 'when creating in nomis is requested' do
-        let(:create_in_nomis) { true }
-
-        it 'creates a prison transfer event in Nomis' do
-          runner.call
-          expect(Allocations::CreateInNomis).to have_received(:call).with(move)
         end
       end
     end
