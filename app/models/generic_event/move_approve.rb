@@ -11,7 +11,7 @@ class GenericEvent
       record.errors.add(attr, 'must be formatted as a valid ISO-8601 date')
     end
 
-    def trigger(*)
+    def trigger(*, dry_run: false)
       eventable.approve(date:)
     end
   end

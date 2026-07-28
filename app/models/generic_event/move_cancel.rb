@@ -5,7 +5,7 @@ class GenericEvent
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
 
-    def trigger(*)
+    def trigger(*, dry_run: false)
       eventable.cancel(cancellation_reason:, cancellation_reason_comment:)
     end
 
