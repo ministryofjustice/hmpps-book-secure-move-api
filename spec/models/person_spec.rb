@@ -185,12 +185,23 @@ RSpec.describe Person do
   end
 
   describe '#csra' do
+    subject(:person) { create(:person, latest_nomis_booking_id: 123) }
+
     before do
-      allow(NomisClient::BookingDetails).to receive(:get).and_return({ csra: 'Standard' })
+      allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ csra: 'Standard' })
     end
 
     it 'returns the value obtained from BookingDetails' do
       expect(person.csra).to eq('Standard')
+    end
+
+    context 'without a NOMIS booking id' do
+      subject(:person) { create(:person, latest_nomis_booking_id: nil) }
+
+      it 'returns nil without calling NOMIS' do
+        expect(NomisClient::BookingDetails).not_to receive(:get)
+        expect(person.csra).to be_nil
+      end
     end
   end
 end

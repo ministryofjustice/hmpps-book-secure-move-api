@@ -198,6 +198,31 @@ RSpec.describe Profile, type: :model do
     end
   end
 
+  describe '#csra' do
+    subject(:profile) { create(:profile) }
+
+    context 'when csra is already persisted on the profile' do
+      before { profile.update_column(:csra, 'Standard') }
+
+      it 'returns the persisted value without calling NOMIS' do
+        expect(NomisClient::BookingDetails).not_to receive(:get)
+        expect(profile.csra).to eq('Standard')
+      end
+    end
+
+    context 'when csra has not been persisted, e.g. on a profile created before this field existed' do
+      before do
+        profile.update_column(:csra, nil)
+        profile.person.update_column(:latest_nomis_booking_id, 123)
+        allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ csra: 'High' })
+      end
+
+      it 'falls back to a live NOMIS lookup via the person' do
+        expect(profile.csra).to eq('High')
+      end
+    end
+  end
+
   describe '.updated_at_range scope' do
     let(:updated_at_from) { Time.zone.yesterday.beginning_of_day }
     let(:updated_at_to) { Time.zone.yesterday.end_of_day }

@@ -117,7 +117,7 @@ module Api
       new_length = Date.parse(update_lodging_attributes[:end_date]) - start_date
       length_difference = new_length - old_length
 
-      move.lodgings.not_cancelled.each do |l|
+      move.lodgings.not_cancelled.default_order.each do |l|
         l_start_date = Date.parse(l.start_date)
         next if start_date >= l_start_date
 
