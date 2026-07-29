@@ -213,7 +213,8 @@ RSpec.describe Profile, type: :model do
     context 'when csra has not been persisted, e.g. on a profile created before this field existed' do
       before do
         profile.update_column(:csra, nil)
-        allow(NomisClient::BookingDetails).to receive(:get).and_return({ csra: 'High' })
+        profile.person.update_column(:latest_nomis_booking_id, 123)
+        allow(NomisClient::BookingDetails).to receive(:get).with(123).and_return({ csra: 'High' })
       end
 
       it 'falls back to a live NOMIS lookup via the person' do
