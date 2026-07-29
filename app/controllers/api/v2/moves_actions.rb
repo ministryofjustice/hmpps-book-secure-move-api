@@ -66,7 +66,6 @@ module Api::V2
 
       move.allocation&.refresh_status_and_moves_count!
 
-      Allocations::CreateInNomis.call(move) if create_in_nomis?
       Notifier.prepare_notifications(topic: move, action_name:)
 
       render_move(move, :ok)
@@ -95,10 +94,6 @@ module Api::V2
         ],
         relationships: {} },
     ].freeze
-
-    def create_in_nomis?
-      move.allocation_id? && params[:create_in_nomis].to_s == 'true'
-    end
 
     def move_params
       @move_params ||= params.require(:data).permit(PERMITTED_MOVE_PARAMS).to_h

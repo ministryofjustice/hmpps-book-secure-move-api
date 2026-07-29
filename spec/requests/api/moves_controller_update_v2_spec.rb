@@ -102,10 +102,6 @@ RSpec.describe Api::MovesController do
         }
       end
 
-      before do
-        allow(Allocations::CreateInNomis).to receive(:call)
-      end
-
       it 'updates the allocation status to unfilled' do
         expect(move.reload.allocation).to be_unfilled
       end
@@ -147,26 +143,6 @@ RSpec.describe Api::MovesController do
           do_patch
 
           expect(move.reload.allocation).to be_unfilled
-        end
-      end
-
-      context 'when create_in_nomis param is true' do
-        let(:patch_params) { { data: move_params, create_in_nomis: true } }
-
-        it 'creates a prison transfer event in Nomis' do
-          do_patch
-
-          expect(Allocations::CreateInNomis).to have_received(:call).with(move)
-        end
-      end
-
-      context 'when create_in_nomis param is false' do
-        let(:patch_params) { { data: move_params, create_in_nomis: false } }
-
-        it 'does not create a prison transfer event in Nomis' do
-          do_patch
-
-          expect(Allocations::CreateInNomis).not_to have_received(:call).with(move)
         end
       end
     end

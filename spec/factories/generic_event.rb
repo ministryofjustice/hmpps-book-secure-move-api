@@ -75,7 +75,6 @@ FactoryBot.define do
     details do
       {
         date: '2020-06-16',
-        create_in_nomis: true,
       }
     end
   end
