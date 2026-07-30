@@ -22,7 +22,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
     - name: Setup Ruby and install gems
-      uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
       with:
         bundler-cache: true
   helm_lint:
@@ -61,13 +61,13 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Get wiremock
         shell: bash
         run: |
           curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
       - name: Setup Ruby and install gems
-        uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 # v1
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
         with:
           bundler-cache: true
       - name: Setup test database
