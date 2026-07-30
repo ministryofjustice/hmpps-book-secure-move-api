@@ -94,5 +94,5 @@ jobs:
           TESTS=$(echo "$FILES" | awk "NR % 4 == ${{ matrix.node }}")
           echo "Running:"
           echo "$TESTS"
-          bundle exec rspec $TESTS
+          RAILS_ENV=test bundle exec rspec $TESTS
 
