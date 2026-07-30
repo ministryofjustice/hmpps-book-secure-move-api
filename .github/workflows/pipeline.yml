@@ -82,12 +82,7 @@ jobs:
         run: |
           echo "Loading wiremock mappings..."
           find spec/wiremock/prison-api/mappings/*.json -exec curl -vv  --request POST --url http://localhost:8888/__admin/mappings --header 'content-type: application/json' --data-binary "@{}" \;
-          curl -vv http://localhost:8888/__admin/mappings 
           echo "Done"
-      - name: Debug auth mapping
-        run: |
-          curl -sS http://localhost:8888/__admin/mappings | jq '.mappings[] | select(.request.urlPath=="/auth/oauth/token") | .id'
-          curl -i -X POST http://localhost:8888/auth/oauth/token -H 'content-type: application/x-www-form-urlencoded' --data 'grant_type=client_credentials'
       - name: Run rspec
         env:
           NOMIS_CLIENT_ID: ${{ secrets.NOMIS_CLIENT_ID }}
