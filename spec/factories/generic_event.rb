@@ -75,7 +75,6 @@ FactoryBot.define do
     details do
       {
         date: '2020-06-16',
-        create_in_nomis: true,
       }
     end
   end
@@ -667,6 +666,9 @@ FactoryBot.define do
   end
 
   factory :event_per_self_harm, parent: :per_incident, class: 'GenericEvent::PerSelfHarm' do
+  end
+
+  factory :event_per_historic_self_harm, parent: :generic_event, class: 'GenericEvent::PerHistoricSelfHarm' do
   end
 
   factory :event_per_suicide_and_self_harm, parent: :generic_event, class: 'GenericEvent::PerSuicideAndSelfHarm' do

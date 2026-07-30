@@ -93,6 +93,10 @@ RSpec.describe V2::PersonWithCategorySerializer do
   describe 'profiles' do
     let(:adapter_options) { { include: %i[profiles] } }
 
+    before do
+      allow(NomisClient::BookingDetails).to receive(:get).with(latest_nomis_booking_id).and_return({ csra: 'Standard' })
+    end
+
     it 'contains a relationship to profiles' do
       expect(result[:data][:relationships]).to include(:profiles)
     end

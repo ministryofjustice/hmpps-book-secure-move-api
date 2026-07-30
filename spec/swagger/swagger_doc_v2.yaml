@@ -425,6 +425,7 @@
                 - operational_issues_prison
                 - police_transported_prisoner
                 - prison_transported_prisoner
+                - prisoner_no_longer_required
                 - prisoner_refusal
                 - prisoner_to_be_released_on_bail
                 - prisoner_unfit_to_travel
@@ -660,13 +661,6 @@
           schema:
             "$ref": "../v2/patch_move.yaml#/Move"
         - "$ref": "../v2/move_include_parameter.yaml#/MoveIncludeParameter"
-        - name: create_in_nomis
-          in: query
-          oneOf:
-            - type: boolean
-            - type: "null"
-          example: "true"
-          description: Indicates if the move should be automatically created in NOMIS
       responses:
         "200":
           description: success

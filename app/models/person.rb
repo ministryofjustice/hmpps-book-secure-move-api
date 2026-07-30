@@ -96,6 +96,8 @@ class Person < VersionedModel
   end
 
   def csra
+    return unless latest_nomis_booking_id
+
     @csra ||= NomisClient::BookingDetails.get(latest_nomis_booking_id)[:csra]
   end
 

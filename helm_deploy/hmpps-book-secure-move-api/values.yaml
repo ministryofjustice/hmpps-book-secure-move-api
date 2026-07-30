@@ -79,6 +79,9 @@ scripts:
     monthlyIncomPer:
       enabled: false
       # schedule: "30 6 1 * *"
+    dailyIptDateChange:
+      enabled: false
+      # schedule: "01 00 * * *"
     weeklyCanMoves:
       enabled: false
       # schedule: "30 6 * * 1"

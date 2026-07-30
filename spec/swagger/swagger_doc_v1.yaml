@@ -737,6 +737,7 @@
                 - operational_issues_prison
                 - police_transported_prisoner
                 - prison_transported_prisoner
+                - prisoner_no_longer_required
                 - prisoner_refusal
                 - prisoner_to_be_released_on_bail
                 - prisoner_unfit_to_travel
