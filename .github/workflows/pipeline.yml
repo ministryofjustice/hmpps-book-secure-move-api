@@ -95,3 +95,15 @@ jobs:
           echo "$TESTS"
           RAILS_ENV=test bundle exec rspec $TESTS
 
+
+  test-build:
+    name: Build docker image from hmpps-github-actions without publishing
+    if: github.ref != 'refs/heads/main'
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
+    needs: [build, test]
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      additional_docker_tag: ${{ inputs.additional_docker_tag }}
+      push: false
+      docker_multiplatform: false
