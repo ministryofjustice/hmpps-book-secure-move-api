@@ -16,6 +16,14 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+  versioning:
+    name: Versioning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checks version file has been incremented
+        if: github.ref != 'refs/heads/main'
+        run: |
+
   build:
     name: Build ruby
     runs-on: ubuntu-latest
@@ -99,9 +107,11 @@ jobs:
 
   test-build:
     name: Build docker image from hmpps-github-actions without publishing
-    if: github.ref != 'refs/heads/main'
+    if: github.ref != 'refs/heads/MAPB-428'
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
-    needs: [build, test]
+    needs:
+      - test
+      - build
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
@@ -125,10 +135,10 @@ jobs:
     name: Deploy to the dev environment
     if: github.ref == 'refs/heads/MAPB-428'
     needs:
-      - build
+      - build-docker
       - helm_lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
       environment: 'staging'
-      app_version: '${{ needs.build.outputs.app_version }}'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
