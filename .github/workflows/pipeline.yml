@@ -116,8 +116,6 @@ jobs:
           echo "Running:"
           echo "$TESTS"
           RAILS_ENV=test bundle exec rspec $TESTS
-
-
   test-build:
     name: Build docker image from hmpps-github-actions without publishing
     if: github.ref != 'refs/heads/MAPB-428'
@@ -138,6 +136,7 @@ jobs:
     needs:
       - test
       - build
+      - versioning
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
@@ -154,4 +153,26 @@ jobs:
     secrets: inherit
     with:
       environment: 'staging'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+  deploy_uat:
+    name: Deploy to UAT
+    if: github.ref == 'refs/heads/MAPB-428'
+    needs:
+      - deploy_staging
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'uat'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+  deploy_preprod:
+    name: Deploy to Preprod
+    if: github.ref == 'refs/heads/MAPB-428'
+    needs:
+      - deploy_staging
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'preprod'
       app_version: '${{ needs.build-docker.outputs.app_version }}'
