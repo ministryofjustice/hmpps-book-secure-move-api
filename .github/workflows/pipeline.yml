@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           git fetch origin main
-          git diff origin/main..HEAD > mydiff
+          git diff --name-only origin/main..HEAD > mydiff
           echo "mydiff = "
           cat mydiff
       - name: print-semver
