@@ -23,10 +23,6 @@ RSpec.describe GenericEvent::MoveCancel do
   end
 
   describe '#trigger' do
-    before do
-      allow(Allocations::RemoveFromNomis).to receive(:call)
-    end
-
     it 'does not persist changes to the eventable' do
       generic_event.trigger
       expect(generic_event.eventable).not_to be_persisted
@@ -42,12 +38,6 @@ RSpec.describe GenericEvent::MoveCancel do
 
     it 'sets the eventable `cancellation_reason_comment`' do
       expect { generic_event.trigger }.to change { generic_event.eventable.cancellation_reason_comment }.from(nil).to('It was a mistake')
-    end
-
-    it 'calls the Allocations::RemoveFromNomis service with the eventable' do
-      generic_event.trigger
-
-      expect(Allocations::RemoveFromNomis).to have_received(:call).with(generic_event.eventable)
     end
   end
 

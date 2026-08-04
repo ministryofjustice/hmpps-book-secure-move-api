@@ -6,17 +6,15 @@ RSpec.describe GenericEvent::MoveApprove do
   let(:details) do
     {
       date:,
-      create_in_nomis:,
     }
   end
 
   let(:eventable) { build(:move, :proposed) }
-  let(:create_in_nomis) { true }
   let(:date) { '2019-01-01' }
 
   it { is_expected.to validate_presence_of(:date) }
 
-  it_behaves_like 'an event with details', :date, :create_in_nomis
+  it_behaves_like 'an event with details', :date
 
   context 'when the date format is not an iso8601 date' do
     let(:date) { '2019/01/01' }
@@ -27,10 +25,6 @@ RSpec.describe GenericEvent::MoveApprove do
   it_behaves_like 'a move event'
 
   describe '#trigger' do
-    before do
-      allow(Allocations::CreateInNomis).to receive(:call)
-    end
-
     it 'does not persist changes to the eventable' do
       generic_event.trigger
 
@@ -43,26 +37,6 @@ RSpec.describe GenericEvent::MoveApprove do
 
     it 'sets the correct date' do
       expect { generic_event.trigger }.to change { generic_event.eventable.date }.from(eventable.date).to(Date.parse(generic_event.date))
-    end
-
-    context 'when the PMU wants the move to be created in Nomis' do
-      let(:created_in_nomis) { true }
-
-      it 'calls the create in Nomis service' do
-        generic_event.trigger
-
-        expect(Allocations::CreateInNomis).to have_received(:call).with(eventable)
-      end
-    end
-
-    context 'when the PMU does NOT want the move to be created in Nomis' do
-      let(:create_in_nomis) { false }
-
-      it 'does NOT call the create in Nomis service' do
-        generic_event.trigger
-
-        expect(Allocations::CreateInNomis).not_to have_received(:call)
-      end
     end
   end
 
@@ -83,7 +57,6 @@ RSpec.describe GenericEvent::MoveApprove do
         'eventable_type' => 'Move',
         'details' => {
           'date' => generic_event.date,
-          'create_in_nomis' => true,
         },
       }
     end

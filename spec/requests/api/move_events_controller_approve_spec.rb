@@ -18,14 +18,12 @@ RSpec.describe Api::MoveEventsController do
           attributes: {
             timestamp: '2020-04-23T18:25:43.511Z',
             date: approved_date,
-            create_in_nomis: 'true',
           },
         },
       }
     end
 
     before do
-      allow(Allocations::CreateInNomis).to receive(:call)
       allow(Notifier).to receive(:prepare_notifications)
       post "/api/v1/moves/#{move_id}/approve", params: approve_params, headers:, as: :json
     end
@@ -39,10 +37,6 @@ RSpec.describe Api::MoveEventsController do
 
       it 'updates the move date' do
         expect(move.reload.date).to eql(approved_date)
-      end
-
-      it 'creates a prison transfer event in Nomis' do
-        expect(Allocations::CreateInNomis).to have_received(:call).with(move)
       end
 
       it 'creates a move approve event' do

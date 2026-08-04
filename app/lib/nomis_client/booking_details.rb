@@ -29,7 +29,8 @@ module NomisClient
       end
 
       def attributes_for(details)
-        no_details.merge(details.slice(*relevant_attributes).transform_keys { |key| key.underscore.to_sym })
+        sliced = details.slice(*relevant_attributes).to_h
+        no_details.merge(sliced.transform_keys { |key| key.underscore.to_sym })
       end
 
       def no_details

@@ -14,7 +14,7 @@ RSpec.describe V2::ProfilesSerializer do
       data: {
         id: profile.id,
         type: 'profiles',
-        attributes: { assessment_answers: [], requires_youth_risk_assessment: false },
+        attributes: { assessment_answers: [], requires_youth_risk_assessment: false, csra: nil },
         relationships: {
           person: {
             data: { id: profile.person.id, type: 'people' },
@@ -57,6 +57,14 @@ RSpec.describe V2::ProfilesSerializer do
       assessment_answers = result[:data][:attributes][:assessment_answers].map { |alert| alert[:title] }
 
       expect(assessment_answers).to match_array [risk_alert_type.title, health_alert_type.title]
+    end
+  end
+
+  context 'with csra' do
+    let(:profile) { create(:profile, csra: 'Standard') }
+
+    it 'contains the `csra` attribute' do
+      expect(result[:data][:attributes][:csra]).to eq('Standard')
     end
   end
 

@@ -60,6 +60,11 @@ class Profile < VersionedModel
     end
   end
 
+  # Falls back to a live NOMIS lookup for profiles created before CSRA was persisted on create/update.
+  def csra
+    super || person&.csra
+  end
+
   def for_feed
     feed_attributes = attributes.slice(*FEED_ATTRIBUTES)
 
