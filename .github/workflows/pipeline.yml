@@ -23,7 +23,23 @@ jobs:
       - name: Checks version file has been incremented
         if: github.ref != 'refs/heads/main'
         run: |
-
+      - name: Checkout pull request HEAD
+        id: checkout_pr_head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: print-diff
+        shell: bash
+        run: |
+          git fetch origin main
+          git diff origin/main..HEAD > mydiff
+          echo "mydiff = "
+          cat mydiff
+      - name: print-semver
+        shell: bash
+        run: |
+          cat .semver
   build:
     name: Build ruby
     runs-on: ubuntu-latest
