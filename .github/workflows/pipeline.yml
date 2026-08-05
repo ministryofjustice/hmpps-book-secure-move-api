@@ -143,6 +143,26 @@ jobs:
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
       push: ${{ inputs.push || true }}
       docker_multiplatform: false
+  tag-build:
+    name: Tag build
+    if: github.ref == 'refs/heads/MAPB-428'
+    needs:
+      - build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: List remote tags
+        run: |
+          git ls-remote --tags
+      - name: Create tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ needs.build-docker.outputs.app_version }}',
+              sha: context.sha
+            })
   deploy_staging:
     name: Deploy to the dev environment
     if: github.ref == 'refs/heads/MAPB-428'
@@ -164,6 +184,16 @@ jobs:
       - name: List remote tags
         run: |
           git ls-remote --tags
+      - name: Update tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/latest-staging',
+              sha: context.sha
+            })
   deploy_uat:
     name: Deploy to UAT
     if: github.ref == 'refs/heads/main'
