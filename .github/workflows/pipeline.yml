@@ -217,6 +217,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs:
       - deploy_staging
+      - build-docker
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
@@ -246,6 +247,7 @@ jobs:
     name: Deploy to Preprod
     if: github.ref == 'refs/heads/main'
     needs:
+      - build-docker
       - deploy_staging
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -276,6 +278,7 @@ jobs:
     name: Deploy to production
     if: github.ref == 'refs/heads/main'
     needs:
+      - build-docker
       - deploy_preprod
       - deploy_uat
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
