@@ -118,7 +118,7 @@ jobs:
           RAILS_ENV=test bundle exec rspec $TESTS
   test-build:
     name: Build docker image from hmpps-github-actions without publishing
-    if: github.ref != 'refs/heads/MAPB-428'
+    if: github.ref != 'refs/heads/main'
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       - test
@@ -129,9 +129,23 @@ jobs:
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
       push: false
       docker_multiplatform: false
+  list-tags:
+    name: Tag build
+    if: github.ref == 'refs/heads/MAPB-428'
+    runs-on: ubuntu-latest
+    steps:
+      - name: List tags
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.listMatchingRefs({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/*',
+            })
   build-docker:
     name: Build docker image from hmpps-github-actions
-    if: github.ref == 'refs/heads/MAPB-428'
+    if: github.ref == 'refs/heads/main'
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       - test
@@ -145,14 +159,20 @@ jobs:
       docker_multiplatform: false
   tag-build:
     name: Tag build
-    if: github.ref == 'refs/heads/MAPB-428'
+    if: github.ref == 'refs/heads/main'
     needs:
       - build-docker
     runs-on: ubuntu-latest
     steps:
-      - name: List remote tags
-        run: |
-          git ls-remote --tags
+      - name: List tags
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.listMatchingRefs({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/*',
+            })
       - name: Create tag
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
