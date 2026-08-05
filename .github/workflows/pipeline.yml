@@ -37,17 +37,17 @@ jobs:
         run: |
           SEMVER=$(cat .semver)
       - name: Checkout code
-        if: github.ref == 'refs/heads/MAPB-428'
+        if: github.ref == 'refs/heads/main'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: get-semver
         id: get-semver
-        if: github.ref == 'refs/heads/MAPB-428'
+        if: github.ref == 'refs/heads/main'
         shell: bash
         run: |
           cat .semver
           echo "semver=$(cat .semver)" >> "$GITHUB_OUTPUT"
       - name: Create semantic version tag
-        if: github.ref == 'refs/heads/MAPB-428'
+        if: github.ref == 'refs/heads/main'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
           script: |
@@ -205,8 +205,9 @@ jobs:
             github.rest.git.updateRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/latest-staging',
-              sha: context.sha
+              ref: 'tags/latest-staging',
+              sha: context.sha,
+              force: true
             })
   deploy_uat:
     name: Deploy to UAT
