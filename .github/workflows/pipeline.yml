@@ -182,7 +182,7 @@ jobs:
             })
 
   deploy_staging:
-    name: Deploy to the dev environment
+    name: Deploy to the staging environment
     if: github.ref == 'refs/heads/main'
     needs:
       - build-docker
@@ -194,7 +194,7 @@ jobs:
       app_version: '${{ needs.build-docker.outputs.app_version }}'
 
   tag_staging:
-    name: Tag staging
+    name: Tag code currently running in staging
     if: github.ref == 'refs/heads/main'
     needs:
       - deploy_staging
@@ -224,7 +224,7 @@ jobs:
       app_version: '${{ needs.build-docker.outputs.app_version }}'
 
   tag_uat:
-    name: Tag staging
+    name: Tag code currently running in UAT
     if: github.ref == 'refs/heads/main'
     needs:
       - deploy_uat
@@ -254,7 +254,7 @@ jobs:
       app_version: '${{ needs.build-docker.outputs.app_version }}'
 
   tag_preprod:
-    name: Tag staging
+    name: Tag code currently running in Preprod
     if: github.ref == 'refs/heads/main'
     needs:
       - deploy_preprod
@@ -276,7 +276,8 @@ jobs:
     name: Deploy to production
     if: github.ref == 'refs/heads/main'
     needs:
-      - deploy_staging
+      - deploy_preprod
+      - deploy_uat
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
@@ -284,7 +285,7 @@ jobs:
       app_version: '${{ needs.build-docker.outputs.app_version }}'
 
   tag_production:
-      name: Tag staging
+      name: Tag code currently running in Production
       if: github.ref == 'refs/heads/main'
       needs:
         - deploy_production
