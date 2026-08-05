@@ -36,6 +36,22 @@ jobs:
         shell: bash
         run: |
           SEMVER=$(cat .semver)
+      - name: get-semver
+        if: github.ref == 'refs/heads/MAPB-428'
+        shell: bash
+        run: |
+          SEMVER=$(cat .semver) >> $GITHUB_OUTPUT
+      - name: Create semantic version tag
+        if: github.ref == 'refs/heads/MAPB-428'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.get-semver.SEMVER }}',
+              sha: context.sha
+            })
   build:
     name: Build ruby
     runs-on: ubuntu-latest
@@ -157,20 +173,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ needs.build-docker.outputs.app_version }}',
-              sha: context.sha
-            })
-      - name: get-semver
-        shell: bash
-        run: |
-          SEMVER=$(cat .semver) >> $GITHUB_OUTPUT
-      - name: Create semantic version tag
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ steps.get-semver.SEMVER }}',
               sha: context.sha
             })
   deploy_staging:
