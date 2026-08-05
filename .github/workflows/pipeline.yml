@@ -34,7 +34,6 @@ jobs:
           git diff --name-only origin/main..HEAD | grep -o .semver && echo 'Semantic version has changed'
       - name: print-semver
         shell: bash
-        if: github.ref == 'refs/heads/MAPB-428'
         run: |
           SEMVER=$(cat .semver)
   build:
@@ -163,15 +162,15 @@ jobs:
       - name: get-semver
         shell: bash
         run: |
-          SEMVER=$(cat .semver)
-      - name: Create tag
+          SEMVER=$(cat .semver) >> $GITHUB_OUTPUT
+      - name: Create semantic version tag
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
           script: |
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{ SEMVER }}',
+              ref: 'refs/tags/${{ steps.get-semver.SEMVER }}',
               sha: context.sha
             })
   deploy_staging:
