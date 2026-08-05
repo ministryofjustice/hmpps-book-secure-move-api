@@ -1,0 +1,304 @@
+name: Pipeline [test -> build -> deploy]
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: write
+  packages: write
+  actions: write
+
+concurrency:
+  # if branch is main, append commit sha to the group name, so that other jobs from main don't get cancelled
+  group: ${{ github.workflow }}-${{ github.ref }}${{ (github.ref == 'refs/heads/main') && format('-{0}', github.sha) || '' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  versioning:
+    name: Versioning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request HEAD
+        id: checkout_pr_head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Checks version file has been incremented
+        shell: bash
+        if: github.ref != 'refs/heads/main'
+        run: |
+          git fetch origin main
+          git diff --name-only origin/main..HEAD | grep -o .semver && echo 'Semantic version has changed'
+      - name: print-semver
+        shell: bash
+        run: |
+          SEMVER=$(cat .semver)
+      - name: Checkout code
+        if: github.ref == 'refs/heads/main'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: get-semver
+        id: get-semver
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          cat .semver
+          echo "semver=$(cat .semver)" >> "$GITHUB_OUTPUT"
+      - name: Create semantic version tag
+        if: github.ref == 'refs/heads/main'
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.get-semver.outputs.semver }}',
+              sha: context.sha
+            })
+  build:
+    name: Build ruby
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+    - name: Setup Ruby and install gems
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
+      with:
+        bundler-cache: true
+  helm_lint:
+    strategy:
+      matrix:
+        environments: ['staging', 'uat', 'preprod', 'production']
+    name: Helm lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: ${{ matrix.environments }}
+  test:
+    name: "Run tests"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+       node: [ 0, 1, 2, 3 ] # 4 parallel runners
+    env:
+      BUNDLER_VERSION: 2.6.9
+      RAILS_ENV: test
+      RACK_ENV: test
+      DATABASE_URL: "postgres://postgres:postgres@localhost/hmpps-book-secure-move-api"
+      EXTERNAL_URL: mocked_in_tests
+      ENCRYPTOR_SALT: "2EREZ8Xub/vt0ya1ZM6YKUwIMN72MbmqeWMq7KS4BV8oSJJc27rDpZYmA6AQGYcS"
+      EXTERNAL_WIREMOCK: "true"
+    services:
+      postgres:
+        image: postgres:16.14-alpine
+        env:
+          POSTGRES_DB: hmpps-book-secure-move-api
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Get wiremock
+        shell: bash
+        run: |
+          curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
+      - name: Setup Ruby and install gems
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
+        with:
+          bundler-cache: true
+      - name: Setup test database
+        run: bundle exec rake db:prepare RAILS_ENV=test
+      - name: Run rubocop
+        run: bundle exec rubocop
+      - name: Run wiremock
+        run: |
+          nohup java -jar wiremock.jar --port 8888 &
+          sleep 5
+      - name: Load wiremock mappings
+        run: |
+          echo "Loading wiremock mappings..."
+          find spec/wiremock/prison-api/mappings/*.json -exec curl -vv  --request POST --url http://localhost:8888/__admin/mappings --header 'content-type: application/json' --data-binary "@{}" \;
+          echo "Done"
+      - name: Run rspec
+        env:
+          NOMIS_CLIENT_ID: ${{ secrets.NOMIS_CLIENT_ID }}
+          NOMIS_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          NOMIS_AUTH_SCHEME: ${{ secrets.NOMIS_AUTH_SCHEME }}
+        run: |
+          FILES=$(find spec -name '*_spec.rb' | sort)
+          TESTS=$(echo "$FILES" | awk "NR % 4 == ${{ matrix.node }}")
+          echo "Running:"
+          echo "$TESTS"
+          RAILS_ENV=test bundle exec rspec $TESTS
+  test-build:
+    name: Build docker image from hmpps-github-actions without publishing
+    if: github.ref != 'refs/heads/main'
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
+    needs:
+      - test
+      - build
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      additional_docker_tag: ${{ inputs.additional_docker_tag }}
+      push: false
+      docker_multiplatform: false
+  build-docker:
+    name: Build docker image from hmpps-github-actions
+    if: github.ref == 'refs/heads/main'
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
+    needs:
+      - test
+      - build
+      - versioning
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      additional_docker_tag: ${{ inputs.additional_docker_tag }}
+      push: ${{ inputs.push || true }}
+      docker_multiplatform: false
+  tag-build:
+    name: Tag build
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ needs.build-docker.outputs.app_version }}',
+              sha: context.sha
+            })
+
+  deploy_staging:
+    name: Deploy to the staging environment
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build-docker
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'staging'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+
+  tag_staging:
+    name: Tag code currently running in staging
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update latest-staging tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'tags/latest-staging',
+              sha: context.sha,
+              force: true
+            })
+
+  deploy_uat:
+    name: Deploy to UAT
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_staging
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'uat'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+
+  tag_uat:
+    name: Tag code currently running in UAT
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_uat
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update latest-uat tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'tags/latest-uat,
+              sha: context.sha,
+              force: true
+            })    
+
+  deploy_preprod:
+    name: Deploy to Preprod
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_staging
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'preprod'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+
+  tag_preprod:
+    name: Tag code currently running in Preprod
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_preprod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update latest-staging tag
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+        with:
+          script: |
+            github.rest.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'tags/latest-preprod',
+              sha: context.sha,
+              force: true
+            })
+
+  deploy_production:
+    name: Deploy to production
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - deploy_preprod
+      - deploy_uat
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'preprod'
+      app_version: '${{ needs.build-docker.outputs.app_version }}'
+
+  tag_production:
+      name: Tag code currently running in Production
+      if: github.ref == 'refs/heads/main'
+      needs:
+        - deploy_production
+      runs-on: ubuntu-latest
+      steps:
+        - name: Update latest-staging tag
+          uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
+          with:
+            script: |
+              github.rest.git.updateRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: 'tags/latest-production',
+                sha: context.sha,
+                force: true
+              })
