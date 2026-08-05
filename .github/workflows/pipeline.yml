@@ -129,7 +129,7 @@ jobs:
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
       push: false
       docker_multiplatform: false
-  list-tags:
+  tag-test-build:
     name: Tag test build
     if: github.ref == 'refs/heads/MAPB-428'
     runs-on: ubuntu-latest
