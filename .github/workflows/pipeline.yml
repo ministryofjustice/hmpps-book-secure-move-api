@@ -130,7 +130,7 @@ jobs:
       push: false
       docker_multiplatform: false
   list-tags:
-    name: Tag build
+    name: Tag test build
     if: github.ref == 'refs/heads/MAPB-428'
     runs-on: ubuntu-latest
     steps:
@@ -138,10 +138,11 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
           script: |
-            github.rest.git.listMatchingRefs({
+            github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/*',
+              ref: 'refs/tags/${{ needs.test-build.outputs.app_version }}',
+              sha: context.sha
             })
   build-docker:
     name: Build docker image from hmpps-github-actions
