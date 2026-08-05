@@ -157,7 +157,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{ needs.test-build.outputs.app_version }}',
+              ref: 'refs/tags/${{ needs.build-docker.outputs.app_version }}',
               sha: context.sha
             })
   deploy_staging:
@@ -178,10 +178,7 @@ jobs:
       - deploy_staging
     runs-on: ubuntu-latest
     steps:
-      - name: List remote tags
-        run: |
-          git ls-remote --tags
-      - name: Update tag
+      - name: Update latest-staging tag
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
           script: |
