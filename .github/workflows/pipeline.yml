@@ -129,26 +129,9 @@ jobs:
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
       push: false
       docker_multiplatform: false
-  tag-test-build:
-    name: Tag test build
-    if: github.ref == 'refs/heads/MAPB-428'
-    runs-on: ubuntu-latest
-    needs:
-      - test-build
-    steps:
-      - name: List tags
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ needs.test-build.outputs.app_version }}',
-              sha: context.sha
-            })
   build-docker:
     name: Build docker image from hmpps-github-actions
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/MAPB-428'
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       - test
@@ -162,20 +145,11 @@ jobs:
       docker_multiplatform: false
   tag-build:
     name: Tag build
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/MAPB-428'
     needs:
       - build-docker
     runs-on: ubuntu-latest
     steps:
-      - name: List tags
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
-        with:
-          script: |
-            github.rest.git.listMatchingRefs({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/*',
-            })
       - name: Create tag
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
@@ -183,7 +157,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{ needs.build-docker.outputs.app_version }}',
+              ref: 'refs/tags/${{ needs.test-build.outputs.app_version }}',
               sha: context.sha
             })
   deploy_staging:
@@ -211,7 +185,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9
         with:
           script: |
-            github.rest.git.updateRef({
+            github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/latest-staging',
