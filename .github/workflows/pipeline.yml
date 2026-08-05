@@ -238,7 +238,7 @@ jobs:
             github.rest.git.updateRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'tags/latest-uat,
+              ref: 'tags/latest-uat',
               sha: context.sha,
               force: true
             })    
@@ -284,7 +284,7 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
-      environment: 'preprod'
+      environment: 'production'
       app_version: '${{ needs.build-docker.outputs.app_version }}'
 
   tag_production:
