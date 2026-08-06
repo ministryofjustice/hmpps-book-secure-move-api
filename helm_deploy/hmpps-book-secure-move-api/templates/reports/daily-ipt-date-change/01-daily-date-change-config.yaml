@@ -58,7 +58,7 @@ data:
         JOIN locations fl ON m.from_location_id = fl.id
         JOIN locations tl ON m.to_location_id = tl.id
         WHERE m.status = 'completed'
-        AND m.date between '2026-04-01' and '2026-04-30'
+        AND m.date between '[FROM]' and '[TO]'
         AND m.move_type = 'prison_transfer'
         AND e.type = 'GenericEvent::MoveDateChanged'
         AND v.event='update'
