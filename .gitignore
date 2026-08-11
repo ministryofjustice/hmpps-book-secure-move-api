@@ -54,3 +54,6 @@ out
 
 # Helm dependencies
 helm_deploy/hmpps-book-secure-move-api/charts/*
+
+#Everything else:
+/.snyk
