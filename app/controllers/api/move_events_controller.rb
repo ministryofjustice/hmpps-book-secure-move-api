@@ -60,6 +60,10 @@ module Api
         Notifier.prepare_notifications(topic: move, action_name: 'cross_supplier_remove')
       end
 
+      if was_cross_supplier && move.cross_supplier?
+        Notifier.prepare_notifications(topic: move, action_name: 'cross_supplier_move_update')
+      end
+
       render status: :no_content
     end
 

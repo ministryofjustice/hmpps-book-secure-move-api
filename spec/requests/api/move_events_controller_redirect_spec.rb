@@ -314,6 +314,41 @@ RSpec.describe Api::MoveEventsController do
           expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_remove')
         end
       end
+
+      context 'when the to_location changes and it continues to be a cross-supplier move' do
+        let(:initial_supplier) { create(:supplier, :serco) }
+        let(:receiving_supplier) { create(:supplier, :geoamey) }
+        let(:from_location) { create(:location, :court, suppliers: [initial_supplier]) }
+        let(:old_to_location) { create(:location, :court, suppliers: [receiving_supplier]) }
+        let(:new_location) { create(:location, :court, suppliers: [receiving_supplier]) }
+        let(:move) { create(:move, :court_appearance, from_location:, to_location: old_to_location) }
+
+        let(:before_post) do
+          # Pre-existing events to make sure we don't send new notifications for all of them
+          create(
+            :event_move_redirect,
+            eventable: move,
+            occurred_at: '2019-01-01',
+            recorded_at: '2019-01-01',
+            details: {
+              to_location_id: new_location.id,
+            },
+          )
+          create(
+            :event_move_redirect,
+            eventable: move,
+            occurred_at: '2019-01-02',
+            recorded_at: '2019-01-02',
+            details: {
+              to_location_id: old_to_location.id,
+            },
+          )
+        end
+
+        it 'sends a cross_supplier_move_remove notification to the initial supplier' do
+          expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update')
+        end
+      end
     end
   end
 end
