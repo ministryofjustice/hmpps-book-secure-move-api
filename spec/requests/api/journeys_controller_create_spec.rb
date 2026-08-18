@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::JourneysController do
   describe 'POST /moves/:move_id/journeys' do
     subject(:do_post) do
+      allow(Notifier).to receive(:prepare_notifications)
       post "/api/v1/moves/#{move_id}/journeys", params: journey_params, headers:, as: :json
     end
 
@@ -93,6 +94,13 @@ RSpec.describe Api::JourneysController do
 
       it 'creates a JourneyCreate generic event' do
         expect { do_post }.to change(GenericEvent::JourneyCreate, :count).by(1)
+      end
+
+      context 'when the move is not cross-supplier' do
+        it 'does not prepare a cross-supplier move status notification' do
+          do_post
+          expect(Notifier).not_to have_received(:prepare_notifications)
+        end
       end
 
       it 'sets the created by on the GenericEvent' do
@@ -218,6 +226,48 @@ RSpec.describe Api::JourneysController do
                'detail' => 'Validation failed: Location reference was not found id=foo-bar' }]
           end
         end
+      end
+    end
+
+    context 'when the create journey is cross-supplier' do
+      let(:application) { create(:application, owner: supplier) }
+      let(:access_token) { create(:access_token, application:).token }
+      let(:schema) { load_yaml_schema('post_journeys_responses.yaml') }
+      let(:from_location) { create(:location, suppliers: [supplier]) }
+      let(:alternate_supplier) { create(:supplier) }
+      let(:cross_supplier_to_location) { create(:location, suppliers: [alternate_supplier]) }
+      let(:move) { create(:move, supplier:, from_location:, to_location: cross_supplier_to_location) }
+      let(:data) do
+        {
+          "id": Journey.find_by(date: '2020-05-04')&.id,
+          "type": 'journeys',
+          "attributes": {
+            "billable": false,
+            "state": 'proposed',
+            "timestamp": '2020-05-04T09:00:00+01:00',
+            "date": '2020-05-04',
+            "vehicle": { "id": '12345678ABC', "registration": 'AB12 CDE' },
+          },
+          "relationships": {
+            "from_location": {
+              "data": {
+                "id": from_location.id,
+                "type": 'locations',
+              },
+            },
+            "to_location": {
+              "data": {
+                "id": cross_supplier_to_location.id,
+                "type": 'locations',
+              },
+            },
+          },
+        }
+      end
+
+      it 'prepares a cross-supplier move status notification' do
+        do_post
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update_status')
       end
     end
   end

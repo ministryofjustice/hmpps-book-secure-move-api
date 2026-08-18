@@ -10,6 +10,7 @@ module Api
     before_action :validate_idempotency_key, only: %i[create update]
     around_action :idempotent_action, only: %i[create update]
     after_action :create_journey_event, only: %i[create update]
+    after_action :notify_cross_supplier_move_update_status, only: :create
 
     PERMITTED_NEW_JOURNEY_PARAMS = [
       :type,
@@ -171,6 +172,12 @@ module Api
                     end
 
       create_automatic_event!(eventable: journey, event_class:, supplier_id: supplier.id)
+    end
+
+    def notify_cross_supplier_move_update_status
+      return unless move.cross_supplier?
+
+      Notifier.prepare_notifications(topic: move, action_name: 'cross_supplier_move_update_status')
     end
   end
 end
