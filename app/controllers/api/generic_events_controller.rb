@@ -31,7 +31,7 @@ module Api
         Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_remove')
       end
 
-      if was_cross_supplier && cross_supplier_move?(event.eventable)
+      if event.is_a?(GenericEvent::MoveRedirect) && was_cross_supplier && cross_supplier_move?(event.eventable)
         Notifier.prepare_notifications(topic: event.eventable, action_name: 'cross_supplier_move_update')
       end
 
