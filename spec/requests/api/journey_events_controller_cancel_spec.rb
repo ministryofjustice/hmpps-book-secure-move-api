@@ -5,12 +5,15 @@ require 'rails_helper'
 RSpec.describe Api::JourneyEventsController do
   describe 'POST /moves/:move_id/journeys/:journey_id/cancel' do
     subject(:do_post) do
+      allow(Notifier).to receive(:prepare_notifications)
       post("/api/v1/moves/#{move.id}/journeys/#{journey_id}/cancel", params:, headers:, as: :json)
     end
 
     include_context 'with supplier with spoofed access token'
 
-    let(:move) { create(:move, from_location: create(:location, suppliers: [supplier])) }
+    let(:from_location) { create(:location, suppliers: [supplier]) }
+    let(:to_location) { create(:location, suppliers: [supplier]) }
+    let(:move) { create(:move, supplier:, from_location:, to_location:) }
     let(:journey) { create(:journey, initial_journey_state, move:, supplier:) }
     let(:journey_id) { journey.id }
     let(:initial_journey_state) { :in_progress }
@@ -47,6 +50,25 @@ RSpec.describe Api::JourneyEventsController do
         do_post
         event = GenericEvent.last
         expect(event.created_by).to eq('TEST_USER')
+      end
+
+      context 'when the journey move is cross-supplier' do
+        let(:receiving_supplier) { create(:supplier) }
+        let(:to_location) { create(:location, suppliers: [receiving_supplier]) }
+
+        it 'sends a cross_supplier_move_update notification' do
+          do_post
+
+          expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update')
+        end
+      end
+
+      context 'when the journey move is not cross-supplier' do
+        it 'does not send a cross_supplier_move_update notification' do
+          do_post
+
+          expect(Notifier).not_to have_received(:prepare_notifications)
+        end
       end
     end
 
