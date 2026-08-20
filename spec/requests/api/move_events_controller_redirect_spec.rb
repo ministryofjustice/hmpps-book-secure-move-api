@@ -324,7 +324,6 @@ RSpec.describe Api::MoveEventsController do
         let(:move) { create(:move, :court_appearance, from_location:, to_location: old_to_location) }
 
         let(:before_post) do
-          # Pre-existing events to make sure we don't send new notifications for all of them
           create(
             :event_move_redirect,
             eventable: move,
@@ -345,7 +344,7 @@ RSpec.describe Api::MoveEventsController do
           )
         end
 
-        it 'sends a cross_supplier_move_remove notification to the initial supplier' do
+        it 'sends a cross_supplier_move_update notification to the initial supplier' do
           expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update')
         end
       end

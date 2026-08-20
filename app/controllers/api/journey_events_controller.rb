@@ -7,7 +7,7 @@ module Api
 
     before_action :validate_idempotency_key
     around_action :idempotent_action
-    after_action :notify_cross_supplier_move_update_status, only: :cancel
+    after_action :notify_cross_supplier_move_update, only: :cancel
 
     COMMON_PARAMS = [:type, { attributes: %i[timestamp notes] }].freeze
     START_PARAMS = [:type, { attributes: %i[timestamp notes vehicle_reg vehicle_depot] }].freeze
@@ -100,10 +100,10 @@ module Api
       end
     end
 
-    def notify_cross_supplier_move_update_status
+    def notify_cross_supplier_move_update
       return unless journey.move.cross_supplier?
 
-      Notifier.prepare_notifications(topic: journey.move, action_name: 'cross_supplier_move_update_status')
+      Notifier.prepare_notifications(topic: journey.move, action_name: 'cross_supplier_move_update')
     end
   end
 end

@@ -56,15 +56,15 @@ RSpec.describe Api::JourneyEventsController do
         let(:receiving_supplier) { create(:supplier) }
         let(:to_location) { create(:location, suppliers: [receiving_supplier]) }
 
-        it 'prepares a cross-supplier move status notification' do
+        it 'sends a cross_supplier_move_update notification' do
           do_post
 
-          expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update_status')
+          expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update')
         end
       end
 
       context 'when the journey move is not cross-supplier' do
-        it 'does not prepare a cross-supplier move status notification' do
+        it 'does not send a cross_supplier_move_update notification' do
           do_post
 
           expect(Notifier).not_to have_received(:prepare_notifications)

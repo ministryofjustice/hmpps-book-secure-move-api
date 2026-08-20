@@ -265,9 +265,9 @@ RSpec.describe Api::JourneysController do
         }
       end
 
-      it 'prepares a cross-supplier move status notification' do
+      it 'sends a cross_supplier_move_update notification' do
         do_post
-        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update_status')
+        expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_move_update')
       end
     end
   end
