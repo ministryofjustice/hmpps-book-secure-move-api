@@ -51,10 +51,19 @@ private
     FrameworkResponseSerializer.new(framework_response).serializable_hash.deep_merge(data: { relationships: })
   end
 
+  EXCLUDED_QUESTION_KEYS = %w[concealed-items terrorism-offences hostage-taker escape-risk stalker-harasser-or-intimidator gang-member-or-organised-crime violent-or-dangerous].freeze
+
+  def filtered_framework_responses(assessment)
+    assessment.framework_responses.reject do |fr|
+      EXCLUDED_QUESTION_KEYS.include?(fr.framework_question.key)
+    end
+  end
+
   def assessment_relationships(assessment)
     {
       events: assessment.generic_events.map { |e| serialize_event(e) },
-      framework_responses: assessment.framework_responses.map { |fr| serialize_framework_response(fr) },
+      framework_responses: filtered_framework_responses(assessment)
+                             .map { |fr| serialize_framework_response(fr) },
     }
   end
 
