@@ -31,7 +31,8 @@ private
     relationships = {
       profiles: person.profiles.where(created_at: before_to_date).map { |p| serialize_profile(p) },
       moves: person.moves.where(created_at: before_to_date).map { |m| serialize_move(m) },
-      events: person.generic_events.map { |e| serialize_event(e) },
+      events: person.generic_events.where.eventable.not(type: %w[Move Journey])
+                    .map { |e| serialize_event(e) },
     }
 
     relationships[:image] = ImageSerializer.new(person.image).serializable_hash if person.image.present?
