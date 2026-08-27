@@ -109,9 +109,9 @@ private
     is_sending_to_from_location_supplier = is_move &&
       topic.from_location.suppliers.include?(subscription.supplier)
 
-      # make sure we send a create_move notification if we haven't sent one yet
+    # make sure we send a create_move notification if we haven't sent one yet
     if action == 'update_move_status' &&
-      !is_cross_supplier_move
+        !is_cross_supplier_move
       create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
       action = 'create_move' if create_notification.nil? && !topic.cancelled?
     end
