@@ -31,7 +31,7 @@ private
     relationships = {
       profiles: person.profiles.where(created_at: before_to_date).map { |p| serialize_profile(p) },
       moves: person.moves.where(created_at: before_to_date).map { |m| serialize_move(m) },
-      events: person.generic_events.where.eventable.not(type: %w[Move Journey])
+      events: person.generic_events.where.not(eventable_type: %w[Move Journey])
                     .map { |e| serialize_event(e) },
     }
 
