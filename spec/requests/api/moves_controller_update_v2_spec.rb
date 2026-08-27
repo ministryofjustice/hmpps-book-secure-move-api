@@ -412,9 +412,6 @@ RSpec.describe Api::MovesController do
       it 'notifies the receiving supplier with a cross_supplier_move_update_status event on a subsequent status update' do
         perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           do_patch
-        end
-
-        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           do_patch({ data: move_params.deep_merge(attributes: { status: 'booked' }) })
         end
 
