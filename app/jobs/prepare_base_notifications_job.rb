@@ -103,7 +103,7 @@ private
 
     is_move = topic.is_a?(Move)
 
-    is_cross_supplier_move = is_move &&
+    is_move_sending_to_different_supplier = is_move &&
       topic.supplier != subscription.supplier
 
     is_sending_to_from_location_supplier = is_move &&
@@ -111,13 +111,13 @@ private
 
     # make sure we send a create_move notification if we haven't sent one yet
     if action == 'update_move_status' &&
-        !is_cross_supplier_move
+        !is_move_sending_to_different_supplier
       create_notification = topic.notifications.find_by(event_type: 'create_move', notification_type_id: type_id)
       action = 'create_move' if create_notification.nil? && !topic.cancelled?
     end
 
     # The move's supplier always gets create_move, never cross_supplier_move_add
-    if action == 'create_move' && !is_cross_supplier_move
+    if action == 'create_move' && !is_move_sending_to_different_supplier
       return 'create_move'
     end
 
@@ -128,7 +128,7 @@ private
 
     if %w[update_move update_move_status].include?(action) &&
         !is_sending_to_from_location_supplier &&
-        is_cross_supplier_move
+        is_move_sending_to_different_supplier
       add_notification = topic.notifications.find_by(event_type: 'cross_supplier_move_add', notification_type_id: type_id)
       action = add_notification.nil? ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]
     end
