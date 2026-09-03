@@ -102,34 +102,6 @@
                     {{/attributes}}
 
                     {{#relationships}}
-                        <h3>Move events</h3>
-                        {{#events}}
-                            {{#data}}
-                                {{#attributes}}
-                                    <table class="data-table">
-                                        <tr>
-                                            <td class="data-column-25">Event type</td>
-                                            <td class="data-column-25">Occurred at</td>
-                                            <td class="data-column-25">Recorded at</td>
-                                            <td class="data-column-25">Created by</td>
-                                        </tr>
-                                        <tr>
-                                            <td>{{event_type}}</td>
-                                            <td>{{formatDate occurred_at}}</td>
-                                            <td>{{formatDate recorded_at}}</td>
-                                            <td>{{created_by}}</td>
-                                        </tr>
-                                    </table>
-                                    <table class="summary-list">
-                                        <tr>
-                                            <td>Notes</td>
-                                            <td>{{ optionalValue notes }}</td>
-                                        </tr>
-                                    </table>
-                                {{/attributes}}
-                            {{/data}}
-                        {{/events}}
-
                         <h3>Journeys for move {{ attributes.reference }}</h3>
                         {{#journeys}}
                             {{#data}}
@@ -156,35 +128,6 @@
                                         <td>{{ relationships.to_location.data.attributes.title }}</td>
                                     </tr>
                                 </table>
-                                {{#relationships}}
-                                    <h4>Journey {{ data.attributes.number }} Events</h4>
-                                    {{#events}}
-                                        {{#data}}
-                                            {{#attributes}}
-                                                <table class="data-table">
-                                                    <tr>
-                                                        <td class="data-column-25">Event type</td>
-                                                        <td class="data-column-25">Occurred at</td>
-                                                        <td class="data-column-25">Recorded at</td>
-                                                        <td class="data-column-25">Created by</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>{{event_type}}</td>
-                                                        <td>{{formatDate occurred_at}}</td>
-                                                        <td>{{formatDate recorded_at}}</td>
-                                                        <td>{{created_by}}</td>
-                                                    </tr>
-                                                </table>
-
-                                            {{/attributes}}
-                                        {{/data}}
-                                    {{/events}}
-                                    {{^events}}
-                                        <p>No events for this journey</p>
-                                    {{/events}}
-
-                                {{/relationships}}
-
                             {{/data}}
                         {{/journeys}}
                         {{^journeys}}
