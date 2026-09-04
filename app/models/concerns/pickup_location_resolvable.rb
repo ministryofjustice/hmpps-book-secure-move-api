@@ -22,14 +22,26 @@ private
   end
 
   def active_lodging
-    return if move.nil? || occurred_at.nil?
+    return if move.nil? || pickup_date.nil?
 
-    date = occurred_at.to_date
+    date = pickup_date
 
     move.lodgings.default_order.to_a.reverse.find do |lodging|
       %w[started completed].include?(lodging.status) &&
         Date.iso8601(lodging.start_date) <= date &&
         date <= Date.iso8601(lodging.end_date)
     end
+  end
+
+  def pickup_date
+    (parsed_expected_at || occurred_at)&.to_date
+  end
+
+  def parsed_expected_at
+    return if expected_at.blank?
+
+    Time.zone.iso8601(expected_at)
+  rescue ArgumentError
+    nil
   end
 end

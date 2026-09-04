@@ -68,5 +68,22 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
         expect(generic_event.location).to eq(move.from_location)
       end
     end
+
+    context 'when occurred_at falls outside the lodging window but expected_at falls within it' do
+      let(:occurred_at) { Time.zone.parse('2020-06-20T09:00:00+01:00') }
+      let(:lodge_location) { create(:location) }
+
+      let!(:lodging) do
+        create(:lodging, move:, location: lodge_location, start_date: '2020-06-15', end_date: '2020-06-16', status: 'started')
+      end
+
+      before { generic_event.expected_at = '2020-06-16T10:20:30+01:00' }
+
+      it "resolves to the lodging's location, driven by the pickup time rather than when the update was recorded" do
+        generic_event.valid?
+
+        expect(generic_event.location).to eq(lodge_location)
+      end
+    end
   end
 end
