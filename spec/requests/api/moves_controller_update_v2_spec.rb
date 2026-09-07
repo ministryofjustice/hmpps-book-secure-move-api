@@ -364,7 +364,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription.notifications.last.attributes).to include_json(
+        expect(subscription.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'update_move_status' }),
         )
       end
@@ -374,7 +374,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription2.notifications.last.attributes).to include_json(
+        expect(subscription2.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'cross_supplier_move_update_status' }),
         )
       end
