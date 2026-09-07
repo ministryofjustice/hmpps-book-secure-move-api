@@ -106,13 +106,13 @@ private
     is_sending_move_action_to_cross_supplier = is_move &&
       topic.supplier != subscription.supplier
 
-    is_sending_move_action_to_sub_supplier = is_move &&
+    is_sending_move_action_to_move_operator = is_move &&
       topic.supplier == subscription.supplier
 
-    sub_supplier_is_in_from_location_suppliers = is_move &&
+    move_operator_is_in_from_location_suppliers = is_move &&
       topic.from_location.suppliers.include?(subscription.supplier)
 
-    if is_sending_move_action_to_sub_supplier
+    if is_sending_move_action_to_move_operator
 
       # make sure we send a create_move notification if we haven't sent one yet
       if action == 'update_move_status'
@@ -124,13 +124,13 @@ private
 
       # send create notification as `cross_supplier_move_add` if we are notifying a cross-supplier supplier
       if action == 'create_move' &&
-          !sub_supplier_is_in_from_location_suppliers
+          !move_operator_is_in_from_location_suppliers
         action = 'cross_supplier_move_add'
       end
 
       # make sure we send a cross_supplier_move_add notification if we haven't sent one yet
       if %w[update_move update_move_status].include?(action) &&
-          !sub_supplier_is_in_from_location_suppliers
+          !move_operator_is_in_from_location_suppliers
         move_add_exists = Notification.kept.exists?(subscription: subscription, topic: topic, event_type: 'cross_supplier_move_add', notification_type_id: type_id)
         action = !move_add_exists ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]
       end
