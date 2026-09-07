@@ -355,8 +355,8 @@ RSpec.describe Api::MovesController do
       before do
         create(:notification_type, :webhook)
         allow(Faraday).to receive(:new).and_return(faraday_client)
-        create(:notification, topic: move, event_type: 'create_move')
-        create(:notification, topic: move, event_type: 'cross_supplier_move_add')
+        create(:notification, subscription: subscription, topic: move, event_type: 'create_move')
+        create(:notification, subscription: subscription2, topic: move, event_type: 'cross_supplier_move_add')
       end
 
       it 'notifies the initial supplier' do
@@ -364,7 +364,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription.notifications.last.attributes).to include_json(
+        expect(subscription.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'update_move_status' }),
         )
       end
@@ -374,7 +374,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription2.notifications.last.attributes).to include_json(
+        expect(subscription2.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'cross_supplier_move_update_status' }),
         )
       end
