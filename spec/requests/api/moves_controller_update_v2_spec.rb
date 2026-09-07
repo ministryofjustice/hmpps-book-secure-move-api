@@ -355,8 +355,8 @@ RSpec.describe Api::MovesController do
       before do
         create(:notification_type, :webhook)
         allow(Faraday).to receive(:new).and_return(faraday_client)
-        create(:notification, topic: move, event_type: 'create_move')
-        create(:notification, topic: move, event_type: 'cross_supplier_move_add')
+        create(:notification, subscription: subscription, topic: move, event_type: 'create_move')
+        create(:notification, subscription: subscription2, topic: move, event_type: 'cross_supplier_move_add')
       end
 
       it 'notifies the initial supplier' do
