@@ -131,13 +131,26 @@ private
       # make sure we send a cross_supplier_move_add notification if we haven't sent one yet
       if %w[update_move update_move_status].include?(action) &&
           !subscription_supplier_is_in_from_location_suppliers
-        move_add_exists = Notification.kept.exists?(subscription: subscription, topic: topic, event_type: 'cross_supplier_move_add', notification_type_id: type_id)
-        action = !move_add_exists ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]
+        active_move_add = active_cross_supplier_move_add?(subscription, topic, type_id)
+        action = !active_move_add ? 'cross_supplier_move_add' : CROSS_SUPPLIER_EQUIVALENT[action]
       end
 
     end
 
     action
+  end
+
+  # A move can be added, removed and re-added as cross-supplier, so an add is
+  # only still active if it has not been matched by a removal
+  # This simply checks counts of adds and removes to determine if a cross-supplier move_add is still active
+  def active_cross_supplier_move_add?(subscription, topic, type_id)
+    counts = Notification.kept
+                         .where(subscription:, topic:, notification_type_id: type_id)
+                         .where(event_type: %w[cross_supplier_move_add cross_supplier_move_remove])
+                         .group(:event_type)
+                         .count
+
+    counts['cross_supplier_move_add'].to_i > counts['cross_supplier_move_remove'].to_i
   end
 
   def notify_job(type_id)
