@@ -52,22 +52,35 @@ private
   end
 
   def build_and_send_notifications(subscription, type_id, topic, action_name, queue_as)
-    type = event_type(action_name, topic, type_id, subscription)
+    # Row-level lock on the subscription to reliably prevent race conditions when creating notifications
+    # Race conditions are present due to cross_supplier notification checks that rely on _add and _remove records being created
+    notification = subscription.with_lock do
+      type = event_type(action_name, topic, type_id, subscription)
 
-    if type.starts_with?('cross_supplier_')
-      # Move's assigned supplier should never get cross-supplier notifications
-      return if subscription.supplier == topic.supplier
+      next if type.starts_with?('cross_supplier_') && !notifiable_cross_supplier?(subscription, topic)
 
-      enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
-      return unless enabled_suppliers.include?(subscription.supplier.key)
+      create_notification(subscription, type_id, topic, type)
     end
 
-    notification = subscription.notifications.create!(
+    return if notification.nil?
+
+    notify_job(type_id).perform_later(notification_id: notification.id, queue_as:)
+  end
+
+  def notifiable_cross_supplier?(subscription, topic)
+    # Move's assigned supplier should never get cross-supplier notifications
+    return false if subscription.supplier == topic.supplier
+
+    enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
+    enabled_suppliers.include?(subscription.supplier.key)
+  end
+
+  def create_notification(subscription, type_id, topic, type)
+    subscription.notifications.create!(
       notification_type_id: type_id,
       topic:,
       event_type: type,
     )
-    notify_job(type_id).perform_later(notification_id: notification.id, queue_as:)
   end
 
   def should_webhook?(subscription, move, action_name)
