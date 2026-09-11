@@ -58,6 +58,10 @@ private
       # Move's assigned supplier should never get cross-supplier notifications
       return if subscription.supplier == topic.supplier
 
+      # Skip creating a cross-supplier move add notification if one is already active
+      # This check has already run when the type was set, but we check again here in case the db has updated since then
+      return if type == 'cross_supplier_move_add' && active_cross_supplier_move_add?(subscription, topic, type_id)
+
       enabled_suppliers = ENV.fetch('FEATURE_FLAG_CROSS_SUPPLIER_NOTIFICATIONS_SUPPLIERS', '').split(',')
       return unless enabled_suppliers.include?(subscription.supplier.key)
     end
