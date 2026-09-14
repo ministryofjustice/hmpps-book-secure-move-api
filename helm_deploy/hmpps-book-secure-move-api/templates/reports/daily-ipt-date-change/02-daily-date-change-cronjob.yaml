@@ -47,11 +47,6 @@ spec:
                     configMapKeyRef:
                       name: {{ $config }}
                       key: from-date
-                - name: REPORT_END
-                  valueFrom:
-                    configMapKeyRef:
-                      name: {{ $config }}
-                      key: to-date
                 - name: EMAIL_SUBJECT
                   valueFrom:
                     configMapKeyRef:
