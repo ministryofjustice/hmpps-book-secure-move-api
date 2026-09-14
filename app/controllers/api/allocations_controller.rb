@@ -53,7 +53,7 @@ module Api
 
     PERMITTED_FILTERED_PARAMS = [
       :type,
-      { attributes: [filter: PERMITTED_FILTER_PARAMS] },
+      { attributes: [{ filter: PERMITTED_FILTER_PARAMS }] },
     ].freeze
 
     def sort_params
