@@ -6,50 +6,6 @@
 
 {{#.}}
     {{#data}}
-        {{#attributes}}
-            <table class="data-table">
-                <tr>
-                    <td class="data-column-33">First names</td>
-                    <td class="data-column-33">Last name</td>
-                    <td class="data-column-33">Date of birth</td>
-                </tr>
-                <tr>
-                    <td>{{optionalValue first_names}}</td>
-                    <td>{{optionalValue last_name}}</td>
-                    <td>{{optionalValue date_of_birth}}</td>
-                </tr>
-            </table>
-            <table class="data-table">
-                <tr>
-                    <td class="data-column-100">Identifiers:</td>
-                </tr>
-                <tr>
-                    {{#identifiers}}
-                        <td class="data-column-33">{{optionalValue identifier_type}}</td>
-                    {{/identifiers}}
-                </tr>
-                <tr>
-                    {{#identifiers}}
-                        <td class="data-column-33">{{optionalValue value}}</td>
-                    {{/identifiers}}
-                </tr>
-            </table>
-        {{/attributes}}
-
-        <h2>Gender / Ethnicity</h2>
-        <table class="data-table">
-            <tr>
-                <td class="data-column-33">Gender</td>
-                <td class="data-column-33">Gender additional information</td>
-                <td class="data-column-33">Ethnicity</td>
-            </tr>
-            <tr>
-                <td>{{optionalValue relationships.gender.data.attributes.title}}</td>
-                <td>{{optionalValue attributes.gender_additional_information}}</td>
-                <td>{{optionalValue relationships.ethnicity.data.attributes.title}}</td>
-            </tr>
-        </table>
-
         {{#relationships}}
             <h2>Moves</h2>
             {{#moves}}
