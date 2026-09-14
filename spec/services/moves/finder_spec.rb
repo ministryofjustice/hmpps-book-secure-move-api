@@ -505,7 +505,7 @@ RSpec.describe Moves::Finder do
       let!(:move_with_confirmed_person_escort_record) do
         create(:move, :with_person_escort_record, person_escort_record_status: 'confirmed')
       end
-      let(:active_record_relationships) { [profile: [:person_escort_record]] }
+      let(:active_record_relationships) { [{ profile: [:person_escort_record] }] }
 
       context 'with ready_for_transit set as `true`' do
         let(:filter_params) { { ready_for_transit: 'true' } }

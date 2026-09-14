@@ -262,7 +262,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response)
-        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 2' }])
 
         expect(child_response.reload.value).to be_empty
       end
@@ -355,7 +355,7 @@ RSpec.describe FrameworkResponse do
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         flag = create(:framework_flag)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, framework_flags: [flag])
-        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 1' }])
 
         expect(child_response.reload.framework_flags).to contain_exactly(flag)
       end
@@ -364,7 +364,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
-        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 2' }])
 
         expect(child_response.reload.responded).to be(false)
       end
@@ -373,7 +373,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true)
-        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 1' }])
 
         expect(child_response.reload.responded).to be(true)
       end
@@ -382,7 +382,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
-        parent_response.update_with_flags!(new_value: [option: 'Level 2'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 2' }])
 
         expect(child_response.reload.prefilled).to be(false)
       end
@@ -391,7 +391,7 @@ RSpec.describe FrameworkResponse do
         parent_response = create(:collection_response, :details)
         child_question = create(:framework_question, :checkbox, followup_comment: true, dependent_value: 'Level 1', parent: parent_response.framework_question)
         child_response = create(:collection_response, :details, framework_question: child_question, parent: parent_response, responded: true, prefilled: true)
-        parent_response.update_with_flags!(new_value: [option: 'Level 1'])
+        parent_response.update_with_flags!(new_value: [{ option: 'Level 1' }])
 
         expect(child_response.reload.prefilled).to be(true)
       end

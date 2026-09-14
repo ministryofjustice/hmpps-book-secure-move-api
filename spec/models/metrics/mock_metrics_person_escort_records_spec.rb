@@ -46,7 +46,7 @@ RSpec.describe MockMetricsPersonEscortRecords do
     describe 'person_escort_records_with_moves' do
       subject { described_class.new(supplier:).person_escort_records_with_moves }
 
-      let(:person_escort_records) { create_list(:person_escort_record, 2, move_attr: [supplier:]) }
+      let(:person_escort_records) { create_list(:person_escort_record, 2, move_attr: [{ supplier: }]) }
       let(:other_person_escort_records) { create_list(:person_escort_record, 2) }
 
       before do
