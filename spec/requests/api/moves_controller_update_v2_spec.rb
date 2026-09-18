@@ -355,8 +355,8 @@ RSpec.describe Api::MovesController do
       before do
         create(:notification_type, :webhook)
         allow(Faraday).to receive(:new).and_return(faraday_client)
-        create(:notification, topic: move, event_type: 'create_move')
-        create(:notification, topic: move, event_type: 'cross_supplier_move_add')
+        create(:notification, subscription: subscription, topic: move, event_type: 'create_move')
+        create(:notification, subscription: subscription2, topic: move, event_type: 'cross_supplier_move_add')
       end
 
       it 'notifies the initial supplier' do
@@ -364,7 +364,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription.notifications.last.attributes).to include_json(
+        expect(subscription.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'update_move_status' }),
         )
       end
@@ -374,7 +374,7 @@ RSpec.describe Api::MovesController do
           do_patch
         end
 
-        expect(subscription2.notifications.last.attributes).to include_json(
+        expect(subscription2.notifications.order(:created_at).last.attributes).to include_json(
           expected_notification_attributes.merge({ 'event_type' => 'cross_supplier_move_update_status' }),
         )
       end
@@ -402,6 +402,47 @@ RSpec.describe Api::MovesController do
       end
 
       it 'notifies the receiving supplier with a cross_supplier_move_add event on the first status update' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          do_patch
+        end
+
+        expect(subscription2.notifications.order(:created_at).last.event_type).to eq('cross_supplier_move_add')
+      end
+
+      it 'notifies the receiving supplier with a cross_supplier_move_update_status event on a subsequent status update' do
+        perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
+          do_patch
+          do_patch({ data: move_params.deep_merge(attributes: { status: 'booked' }) })
+        end
+
+        expect(subscription2.notifications.order(:created_at).last.event_type).to eq('cross_supplier_move_update_status')
+      end
+    end
+
+    context 'when it is a cross-supplier move with a prior cross_supplier_move_add and cross_supplier_move_remove notification' do
+      let!(:receiving_supplier) { create(:supplier, :geoamey) }
+      let!(:subscription) { create(:subscription, :no_email_address, supplier:) }
+      let!(:subscription2) { create(:subscription, :no_email_address, supplier: receiving_supplier) }
+      let(:to_location) { create :location, :court, suppliers: [receiving_supplier] }
+      let!(:move) { create :move, :proposed, :prison_recall, from_location:, to_location:, profile:, supplier: }
+
+      let(:faraday_client) do
+        class_double(
+          Faraday,
+          headers: {},
+          post: instance_double(Faraday::Response, success?: true, status: 202),
+        )
+      end
+
+      before do
+        create(:notification_type, :webhook)
+        allow(Faraday).to receive(:new).and_return(faraday_client)
+        create(:notification, subscription: subscription, topic: move, event_type: 'create_move')
+        create(:notification, subscription: subscription2, topic: move, event_type: 'cross_supplier_move_add')
+        create(:notification, subscription: subscription2, topic: move, event_type: 'cross_supplier_move_remove')
+      end
+
+      it 'notifies the receiving supplier with a cross_supplier_move_add event when it is updated to be a cross-supplier move again' do
         perform_enqueued_jobs(only: [PrepareMoveNotificationsJob, NotifyWebhookJob]) do
           do_patch
         end
