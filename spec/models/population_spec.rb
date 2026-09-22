@@ -228,7 +228,7 @@ RSpec.describe Population do
     let!(:population1) { create(:population, location: prison1, date: Time.zone.today) } # Included
     let(:prison1) { create(:location, :prison) }
     let(:prison2) { create(:location, :prison) }
-    let(:date_range) { (Date.yesterday..Date.tomorrow) }
+    let(:date_range) { Date.yesterday..Date.tomorrow }
     let(:locations) { Location.where(id: [prison1.id, prison2.id]) }
     let(:expected_hash) do
       {
