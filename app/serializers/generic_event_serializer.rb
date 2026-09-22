@@ -22,4 +22,10 @@ class GenericEventSerializer
       end
     end
   end
+
+  DETAIL_SUMMARY_KEYS = %i[subtype outcome court_outcome court_cell_number stakeholder summary further_details].freeze
+
+  attribute :has_details do |record, _params|
+    DETAIL_SUMMARY_KEYS.any? { |key| record.details[key].present? }
+  end
 end
