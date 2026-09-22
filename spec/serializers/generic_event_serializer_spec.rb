@@ -81,6 +81,7 @@ RSpec.describe GenericEventSerializer do
             recorded_at: event.recorded_at.iso8601,
             notes: 'Flibble',
             event_type: 'MoveRedirect',
+            has_details: false,
             details: {
               reason: 'no_space',
               move_type: 'court_appearance',

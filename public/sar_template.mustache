@@ -107,16 +107,6 @@
                             {{#attributes}}
                                 <table class="data-table">
                                     <tr>
-                                        <td class="data-column-50">Framework version</td>
-                                        <td class="data-column-50">Status</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="data-column-50">{{ version }}</td>
-                                        <td class="data-column-50">{{ status }}</td>
-                                    </tr>
-                                </table>
-                                <table class="data-table">
-                                    <tr>
                                         <td class="data-column-25">Created at</td>
                                         <td class="data-column-25">Completed at</td>
                                         <td class="data-column-25">Confirmed at</td>
@@ -202,7 +192,7 @@
                                                 <td class="data-column-75">{{optionalValue notes}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="data-column-100">Details: </td>
+                                                <td class="data-column-100">Details: {{^has_details}}No Data Held{{/has_details}}</td>
                                             </tr>
                                             {{#details.subtype}}
                                                 <tr>
