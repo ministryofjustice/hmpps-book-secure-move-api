@@ -7,7 +7,8 @@ RSpec.describe Moves::MoveTypeValidator do
     # anonymous class to test validation against
     Class.new {
       include ActiveModel::Validations
-      attr_accessor :from_location, :to_location, :move_type, :move
+      attr_accessor :from_location, :to_location, :move_type, :move, :cancelled
+      alias_method :cancelled?, :cancelled
 
       validates_with Moves::MoveTypeValidator
 
@@ -19,9 +20,12 @@ RSpec.describe Moves::MoveTypeValidator do
     }.new
   end
 
+  let(:cancelled) { false }
+
   before do
     target.move_type = move_type
     target.move = create(:move)
+    target.cancelled = cancelled
   end
 
   context 'when move_type is nil' do
@@ -51,6 +55,16 @@ RSpec.describe Moves::MoveTypeValidator do
       target.to_location = build(:location, :inactive)
       expect(target).not_to be_valid # NB: need to check for validity before reading the error messages
       expect(target.errors[:to_location]).to match_array('must be an active location')
+    end
+
+    context 'when the record is cancelled' do
+      let(:cancelled) { true }
+
+      it 'does not validate `from_location` and `to_location`' do
+        target.from_location = build(:location, :inactive)
+        target.to_location = build(:location, :inactive)
+        expect(target).to be_valid
+      end
     end
   end
 
