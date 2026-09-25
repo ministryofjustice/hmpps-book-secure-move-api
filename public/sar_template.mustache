@@ -250,10 +250,19 @@
                         {{#youth_risk_assessment.data}}
                             <h4>Youth risk assessment</h4>
                             <table class="data-table">
+                                <tr>
+                                    <td class="data-column-40" style="white-space: normal;">Question key</td>
+                                    <td class="data-column-60" style="white-space: normal;">Response(s)</td>
+                                </tr>
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40" style="white-space: normal;">
+                                            <b>{{data.relationships.question.data.attributes.key}}</b>
+                                        </td>
+                                        <td class="data-column-60" style="white-space: normal;">
+                                            {{^data.attributes.responded}}
+                                                [Not responded]
+                                            {{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
