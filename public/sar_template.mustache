@@ -107,6 +107,16 @@
                             {{#attributes}}
                                 <table class="data-table">
                                     <tr>
+                                        <td class="data-column-50">Framework version</td>
+                                        <td class="data-column-50">Status</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="data-column-50">{{ version }}</td>
+                                        <td class="data-column-50">{{ status }}</td>
+                                    </tr>
+                                </table>
+                                <table class="data-table">
+                                    <tr>
                                         <td class="data-column-25">Created at</td>
                                         <td class="data-column-25">Completed at</td>
                                         <td class="data-column-25">Confirmed at</td>
@@ -192,8 +202,7 @@
                                                 <td class="data-column-75">{{optionalValue notes}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="data-column-25">Details: </td>
-                                                <td class="data-column-75"{{#has_details}} style="border-bottom: none;"{{/has_details}}>{{^has_details}}No Data Held{{/has_details}}</td>
+                                                <td class="data-column-100">Details: </td>
                                             </tr>
                                             {{#details.subtype}}
                                                 <tr>
@@ -250,10 +259,19 @@
                         {{#youth_risk_assessment.data}}
                             <h4>Youth risk assessment</h4>
                             <table class="data-table">
+                                <tr>
+                                    <td class="data-column-40" style="white-space: normal;">Question key</td>
+                                    <td class="data-column-60" style="white-space: normal;">Response(s)</td>
+                                </tr>
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40" style="white-space: normal;">
+                                            <b>{{data.relationships.question.data.attributes.key}}</b>
+                                        </td>
+                                        <td class="data-column-60" style="white-space: normal;">
+                                            {{^data.attributes.responded}}
+                                                [Not responded]
+                                            {{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}
