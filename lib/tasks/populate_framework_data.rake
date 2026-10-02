@@ -12,11 +12,11 @@ namespace :frameworks do
     elsif args[:filepath].blank? && args[:version].blank?
       print("Populating Frameworks from Github tags\n")
       begin
-        respository = Git.clone(GITHUB_FRAMEWORK_URI, GITHUB_FRAMEWORK_NAME, path: FRAMEWORK_TEMP_PATH)
-        respository.tags.each do |tag|
-          respository.checkout(tag.name)
+        repository = Git.clone(GITHUB_FRAMEWORK_URI, GITHUB_FRAMEWORK_NAME, chdir: FRAMEWORK_TEMP_PATH)
+        repository.tag_list.each do |tag|
+          repository.checkout(tag.name)
           version = tag.name.gsub('v', '')
-          filepath = "#{respository.dir.path}/frameworks"
+          filepath = "#{repository.dir}/frameworks"
           import_framework(filepath, version)
         end
       ensure
