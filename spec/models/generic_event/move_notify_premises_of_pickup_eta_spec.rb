@@ -28,7 +28,7 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
   end
 
   describe 'location_id resolution' do
-    it "defaults to the move's from_location when there is no active lodging" do
+    it "defaults to the move's from_location when there is no previous MoveLodgingStart" do
       generic_event.valid?
 
       expect(generic_event.location).to eq(move.from_location)
@@ -43,12 +43,13 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
       expect(generic_event.location).to eq(supplied_location)
     end
 
-    context 'when an overnight lodge is in progress on the day of the event' do
-      let!(:lodging) do
-        create(:lodging, move:, location: lodge_location, start_date: '2020-06-15', end_date: '2020-06-16', status: 'started')
-      end
-
+    context 'when a MoveLodgingStart occurred before the pickup time' do
       let(:lodge_location) { create(:location) }
+
+      let!(:lodging_start) do
+        create(:event_move_lodging_start, eventable: move, occurred_at: Time.zone.parse('2020-06-15T20:00:00+01:00'),
+                                          details: { location_id: lodge_location.id, reason: 'overnight_lodging' })
+      end
 
       it "resolves to the lodging's location rather than the move's original from_location" do
         generic_event.valid?
@@ -57,9 +58,10 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
       end
     end
 
-    context 'when an overnight lodge covers the date but has not yet started' do
-      let!(:lodging) do
-        create(:lodging, move:, location: create(:location), start_date: '2020-06-15', end_date: '2020-06-16', status: 'proposed')
+    context 'when the only MoveLodgingStart occurs after the pickup time' do
+      let!(:lodging_start) do
+        create(:event_move_lodging_start, eventable: move, occurred_at: Time.zone.parse('2020-06-17T08:00:00+01:00'),
+                                          details: { location_id: create(:location).id, reason: 'overnight_lodging' })
       end
 
       it "still defaults to the move's from_location" do
@@ -69,20 +71,40 @@ RSpec.describe GenericEvent::MoveNotifyPremisesOfPickupEta do
       end
     end
 
-    context 'when occurred_at falls outside the lodging window but expected_at falls within it' do
-      let(:occurred_at) { Time.zone.parse('2020-06-20T09:00:00+01:00') }
-      let(:lodge_location) { create(:location) }
+    context 'when there are multiple prior MoveLodgingStart events' do
+      let(:latest_lodge_location) { create(:location) }
 
-      let!(:lodging) do
-        create(:lodging, move:, location: lodge_location, start_date: '2020-06-15', end_date: '2020-06-16', status: 'started')
+      let!(:earlier_lodging_start) do
+        create(:event_move_lodging_start, eventable: move, occurred_at: Time.zone.parse('2020-06-10T20:00:00+01:00'),
+                                          details: { location_id: create(:location).id, reason: 'overnight_lodging' })
+      end
+
+      let!(:latest_lodging_start) do
+        create(:event_move_lodging_start, eventable: move, occurred_at: Time.zone.parse('2020-06-15T20:00:00+01:00'),
+                                          details: { location_id: latest_lodge_location.id, reason: 'overnight_lodging' })
+      end
+
+      it 'resolves to the most recent lodging start before the pickup time' do
+        generic_event.valid?
+
+        expect(generic_event.location).to eq(latest_lodge_location)
+      end
+    end
+
+    context 'when occurred_at is later than expected_at, and a lodging starts in between' do
+      let(:occurred_at) { Time.zone.parse('2020-06-20T09:00:00+01:00') }
+
+      let!(:lodging_start) do
+        create(:event_move_lodging_start, eventable: move, occurred_at: Time.zone.parse('2020-06-18T00:00:00+01:00'),
+                                          details: { location_id: create(:location).id, reason: 'overnight_lodging' })
       end
 
       before { generic_event.expected_at = '2020-06-16T10:20:30+01:00' }
 
-      it "resolves to the lodging's location, driven by the pickup time rather than when the update was recorded" do
+      it 'is driven by the pickup time (expected_at) rather than when the notification was recorded (occurred_at)' do
         generic_event.valid?
 
-        expect(generic_event.location).to eq(lodge_location)
+        expect(generic_event.location).to eq(move.from_location)
       end
     end
   end
