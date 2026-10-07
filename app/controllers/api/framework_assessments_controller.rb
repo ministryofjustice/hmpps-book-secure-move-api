@@ -5,7 +5,7 @@ module Api
     NEW_ASSESSMENT_PERMITTED_PARAMS = [
       :type,
       { attributes: [:version],
-        relationships: [move: {}] },
+        relationships: [{ move: {} }] },
     ].freeze
 
     UPDATE_ASSESSMENT_PERMITTED_PARAMS = [

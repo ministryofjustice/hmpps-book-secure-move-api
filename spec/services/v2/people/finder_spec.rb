@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe V2::People::Finder do
   subject(:finder) { described_class.new(filter_params) }
 
-  let!(:person) { (create :person) }
+  let!(:person) { create :person }
   let(:filter_params) { {} }
 
   describe 'filtering' do

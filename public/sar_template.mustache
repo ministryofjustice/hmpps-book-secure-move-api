@@ -6,50 +6,6 @@
 
 {{#.}}
     {{#data}}
-        {{#attributes}}
-            <table class="data-table">
-                <tr>
-                    <td class="data-column-33">First names</td>
-                    <td class="data-column-33">Last name</td>
-                    <td class="data-column-33">Date of birth</td>
-                </tr>
-                <tr>
-                    <td>{{optionalValue first_names}}</td>
-                    <td>{{optionalValue last_name}}</td>
-                    <td>{{optionalValue date_of_birth}}</td>
-                </tr>
-            </table>
-            <table class="data-table">
-                <tr>
-                    <td class="data-column-100">Identifiers:</td>
-                </tr>
-                <tr>
-                    {{#identifiers}}
-                        <td class="data-column-33">{{optionalValue identifier_type}}</td>
-                    {{/identifiers}}
-                </tr>
-                <tr>
-                    {{#identifiers}}
-                        <td class="data-column-33">{{optionalValue value}}</td>
-                    {{/identifiers}}
-                </tr>
-            </table>
-        {{/attributes}}
-
-        <h2>Gender / Ethnicity</h2>
-        <table class="data-table">
-            <tr>
-                <td class="data-column-33">Gender</td>
-                <td class="data-column-33">Gender additional information</td>
-                <td class="data-column-33">Ethnicity</td>
-            </tr>
-            <tr>
-                <td>{{optionalValue relationships.gender.data.attributes.title}}</td>
-                <td>{{optionalValue attributes.gender_additional_information}}</td>
-                <td>{{optionalValue relationships.ethnicity.data.attributes.title}}</td>
-            </tr>
-        </table>
-
         {{#relationships}}
             <h2>Moves</h2>
             {{#moves}}
@@ -151,16 +107,6 @@
                             {{#attributes}}
                                 <table class="data-table">
                                     <tr>
-                                        <td class="data-column-50">Framework version</td>
-                                        <td class="data-column-50">Status</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="data-column-50">{{ version }}</td>
-                                        <td class="data-column-50">{{ status }}</td>
-                                    </tr>
-                                </table>
-                                <table class="data-table">
-                                    <tr>
                                         <td class="data-column-25">Created at</td>
                                         <td class="data-column-25">Completed at</td>
                                         <td class="data-column-25">Confirmed at</td>
@@ -246,7 +192,8 @@
                                                 <td class="data-column-75">{{optionalValue notes}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="data-column-100">Details: </td>
+                                                <td class="data-column-25">Details: </td>
+                                                <td class="data-column-75"{{#has_details}} style="border-bottom: none;"{{/has_details}}>{{^has_details}}No Data Held{{/has_details}}</td>
                                             </tr>
                                             {{#details.subtype}}
                                                 <tr>
@@ -303,10 +250,19 @@
                         {{#youth_risk_assessment.data}}
                             <h4>Youth risk assessment</h4>
                             <table class="data-table">
+                                <tr>
+                                    <td class="data-column-40" style="white-space: normal;">Question key</td>
+                                    <td class="data-column-60" style="white-space: normal;">Response(s)</td>
+                                </tr>
                                 {{#relationships.framework_responses}}
                                     <tr>
-                                        <td class="data-column-40" ><b>{{data.relationships.question.data.attributes.key}}</b></td>
-                                        <td class="data-column-60">{{^data.attributes.responded}}[Not responded]{{/data.attributes.responded}}
+                                        <td class="data-column-40" style="white-space: normal;">
+                                            <b>{{data.relationships.question.data.attributes.key}}</b>
+                                        </td>
+                                        <td class="data-column-60" style="white-space: normal;">
+                                            {{^data.attributes.responded}}
+                                                [Not responded]
+                                            {{/data.attributes.responded}}
                                             {{#data.attributes.responded}}
                                                 {{#data.attributes.value}}
                                                     {{#option}}{{.}}{{/option}}{{#details}} - {{.}}{{/details}}

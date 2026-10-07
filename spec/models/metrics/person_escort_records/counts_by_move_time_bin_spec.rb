@@ -23,12 +23,12 @@ RSpec.describe Metrics::PersonEscortRecords::CountsByMoveTimeBin do
     let(:next_7_days) { Metrics::TimeBins::COMMON_TIME_BINS.find { |x| x.title == 'next 7 days exc today' } }
 
     before do
-      create(:person_escort_record, move_attr: [date: 4.days.ago])
-      create(:person_escort_record, move_attr: [date: Date.yesterday])
-      create(:person_escort_record, move_attr: [date: Time.zone.today])
-      create(:person_escort_record, move_attr: [date: Date.tomorrow])
-      create(:person_escort_record, move_attr: [date: 4.days.from_now])
-      create(:person_escort_record, move_attr: [date: 8.days.from_now])
+      create(:person_escort_record, move_attr: [{ date: 4.days.ago }])
+      create(:person_escort_record, move_attr: [{ date: Date.yesterday }])
+      create(:person_escort_record, move_attr: [{ date: Time.zone.today }])
+      create(:person_escort_record, move_attr: [{ date: Date.tomorrow }])
+      create(:person_escort_record, move_attr: [{ date: 4.days.from_now }])
+      create(:person_escort_record, move_attr: [{ date: 8.days.from_now }])
     end
 
     it 'computes the metric' do

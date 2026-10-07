@@ -81,6 +81,7 @@ RSpec.describe GenericEventSerializer do
             recorded_at: event.recorded_at.iso8601,
             notes: 'Flibble',
             event_type: 'MoveRedirect',
+            has_details: false,
             details: {
               reason: 'no_space',
               move_type: 'court_appearance',
@@ -97,6 +98,24 @@ RSpec.describe GenericEventSerializer do
 
     it 'returns an event without the relationships in the details' do
       expect(result).to eq(expected_json)
+    end
+  end
+
+  context 'when the details include summary fields' do
+    let(:event) { create(:event_per_prisoner_welfare) }
+    let(:adapter_options) { {} }
+
+    it 'sets has_details to true' do
+      expect(result.dig(:data, :attributes, :has_details)).to be(true)
+    end
+  end
+
+  context 'when the details do not include any summary fields' do
+    let(:event) { create(:event_per_court_ready_in_custody) }
+    let(:adapter_options) { {} }
+
+    it 'sets has_details to false' do
+      expect(result.dig(:data, :attributes, :has_details)).to be(false)
     end
   end
 end

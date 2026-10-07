@@ -74,6 +74,11 @@ EventResponseBody:
           example:
             cancellation_reason: "made_in_error"
             cancellation_reason_comment: "cancelled because the prisoner refused to move"
+        has_details:
+          type: boolean
+          description: |
+            Whether `details` contains any of the summary fields shown in the Subject Access Request report (`subtype`, `outcome`, `court_outcome`, `court_cell_number`, `stakeholder`, `summary`, `further_details`). Does not indicate whether `details` is present or empty in general - other event-specific keys in `details` are not considered.
+          example: true
     relationships:
       type: object
       required:

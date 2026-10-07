@@ -15,7 +15,7 @@ module Api
     PERMITTED_NEW_JOURNEY_PARAMS = [
       :type,
       { attributes: [:timestamp, :billable, { vehicle: {} }, :date],
-        relationships: [from_location: {}, to_location: {}, supplier: {}] },
+        relationships: [{ from_location: {}, to_location: {}, supplier: {} }] },
     ].freeze
 
     PERMITTED_UPDATE_JOURNEY_PARAMS = [

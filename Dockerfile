@@ -60,8 +60,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-# Fix CVE-2025-8715 by explicitly installing patched PostgreSQL version
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat libexpat libblkid libmount
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle

@@ -13,13 +13,13 @@ module Api
     PERMITTED_NEW_PARAMS = [
       :type,
       { attributes: %i[start_date end_date],
-        relationships: [location: {}, move: {}] },
+        relationships: [{ location: {}, move: {} }] },
     ].freeze
 
     PERMITTED_UPDATE_PARAMS = [
       :type,
       { attributes: %i[end_date],
-        relationships: [location: {}] },
+        relationships: [{ location: {} }] },
     ].freeze
 
     PERMITTED_CANCEL_PARAMS = [

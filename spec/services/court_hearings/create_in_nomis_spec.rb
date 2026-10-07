@@ -46,13 +46,15 @@ RSpec.describe CourtHearings::CreateInNomis do
       let(:nomis_response_status) { 201 }
       let(:nomis_client_args) do
         [
-          booking_id:,
-          court_case_id: nomis_case_id,
-          body_params: {
-            'fromPrisonLocation': from_nomis_agency_id,
-            'toCourtLocation': to_nomis_agency_id,
-            'courtHearingDateTime': '2020-04-15T17:36:02',
-            'comments': comments,
+          {
+            booking_id:,
+            court_case_id: nomis_case_id,
+            body_params: {
+              'fromPrisonLocation': from_nomis_agency_id,
+              'toCourtLocation': to_nomis_agency_id,
+              'courtHearingDateTime': '2020-04-15T17:36:02',
+              'comments': comments,
+            },
           },
         ]
       end

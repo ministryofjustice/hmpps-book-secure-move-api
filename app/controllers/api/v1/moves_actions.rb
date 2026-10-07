@@ -22,7 +22,7 @@ module Api::V1
 
       log_with_request(:info, "V1 Move creation started - #{move.reference} #{move.status}")
 
-      move.person.update_nomis_data if move.person.present?
+      move.person.presence&.update_nomis_data
 
       Notifier.prepare_notifications(topic: move, action_name: 'create')
 

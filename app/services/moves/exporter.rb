@@ -158,7 +158,7 @@ module Moves
         move_flags = []
         move_flags += Array(move.person_escort_record&.framework_flags&.pluck(:title))
         move_flags += Array(move.youth_risk_assessment&.framework_flags&.pluck(:title))
-        row += flags_by_section.map { (move_flags&.include?(_1) ? 'TRUE' : '') }
+        row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
       end
 
       row.flatten # Expand answer_details column pairs into individual columns
