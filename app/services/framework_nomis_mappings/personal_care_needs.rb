@@ -17,6 +17,11 @@ module FrameworkNomisMappings
   private
 
     def imported_personal_care_needs
+      if HmppsApiClient.dps_services_disabled?('Framework NOMIS mappings: import personal care needs')
+        nomis_sync_status.set_failure(message: HmppsApiClient::DPS_SERVICES_DISABLED_MESSAGE)
+        return @imported_personal_care_needs = []
+      end
+
       @imported_personal_care_needs ||= NomisClient::PersonalCareNeeds.get(nomis_offender_numbers: [prison_number], personal_care_types: PERSONAL_CARE_NEED_CODES).tap do
         nomis_sync_status.set_success
       end

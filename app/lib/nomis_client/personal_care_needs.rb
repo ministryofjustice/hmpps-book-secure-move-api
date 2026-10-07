@@ -6,6 +6,8 @@ module NomisClient
 
     class << self
       def get(nomis_offender_numbers:, personal_care_types: PERSONAL_CARE_TYPES)
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get personal care needs')
+
         get_response(nomis_offender_numbers:, personal_care_types:).map { |personal_care_needs|
           personal_care_needs['personalCareNeeds'].map do |personal_care_need_attributes|
             attributes_for(personal_care_needs['offenderNo'], personal_care_need_attributes)

@@ -4,6 +4,8 @@ module NomisClient
   class BookingDetails
     class << self
       def get(nomis_booking_id)
+        return no_details if HmppsApiClient.dps_services_disabled?('Prison API: get booking details')
+
         if nomis_booking_id
           attributes_for(get_response(nomis_booking_id))
         else

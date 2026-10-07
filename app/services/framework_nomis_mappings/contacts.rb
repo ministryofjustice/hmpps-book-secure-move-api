@@ -16,6 +16,11 @@ module FrameworkNomisMappings
   private
 
     def imported_contacts
+      if HmppsApiClient.dps_services_disabled?('Framework NOMIS mappings: import contacts')
+        nomis_sync_status.set_failure(message: HmppsApiClient::DPS_SERVICES_DISABLED_MESSAGE)
+        return @imported_contacts = []
+      end
+
       @imported_contacts ||= NomisClient::Contacts.get(booking_id:).tap do
         nomis_sync_status.set_success
       end

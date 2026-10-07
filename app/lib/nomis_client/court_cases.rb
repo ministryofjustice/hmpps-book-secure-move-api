@@ -8,6 +8,8 @@ module NomisClient
       }.freeze
 
       def get(booking_id, filter_params = DEFAULT_FILTER_PARAMS)
+        return '[]' if HmppsApiClient.dps_services_disabled?('Prison API: get court cases')
+
         query = filter_query(filter_params)
 
         court_cases_route = "/bookings/#{booking_id}/court-cases#{query}"

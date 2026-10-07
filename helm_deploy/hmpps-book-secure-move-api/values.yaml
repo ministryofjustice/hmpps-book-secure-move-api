@@ -34,6 +34,7 @@ generic-service:
   # Environment variables to load into the deployment
   env:
     DB_POOL: "8"
+    ENABLE_DPS_SERVICES: "true"
     GOVUK_NOTIFY_STATUS_URL: "https://status.notifications.service.gov.uk"
     LOG_LEVEL: "debug"
     PROMETHEUS_METRICS: "on"
