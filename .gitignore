@@ -57,4 +57,6 @@ helm_deploy/hmpps-book-secure-move-api/charts/*
 
 #Everything else:
 /.snyk
+/.github/copilot-instructions.md
+/.github/git-commit-instructions.md
 .DS_Store

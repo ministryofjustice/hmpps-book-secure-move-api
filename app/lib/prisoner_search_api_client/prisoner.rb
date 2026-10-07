@@ -3,6 +3,7 @@ module PrisonerSearchApiClient
     class << self
       def get(prison_number)
         return nil unless prison_number
+        return nil if HmppsApiClient.dps_services_disabled?('Prisoner Search API: get prisoner')
 
         response_data = JSON.parse(fetch_response(prison_number).body)
         attributes_for(response_data)
@@ -13,6 +14,7 @@ module PrisonerSearchApiClient
 
       def facial_image_exists?(prison_number)
         return false unless prison_number
+        return false if HmppsApiClient.dps_services_disabled?('Prisoner Search API: check facial image exists')
 
         response_data = JSON.parse(fetch_response(prison_number, response_fields: 'currentFacialImageId').body)
         response_data['currentFacialImageId'].present?

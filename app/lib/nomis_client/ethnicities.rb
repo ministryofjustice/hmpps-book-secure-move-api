@@ -4,6 +4,8 @@ module NomisClient
   class Ethnicities
     class << self
       def get
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get ethnicities')
+
         attributes_for(
           NomisClient::Base.get(
             '/reference-domains/domains/ETHNICITY',

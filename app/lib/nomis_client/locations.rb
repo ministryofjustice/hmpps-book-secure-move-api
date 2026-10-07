@@ -4,6 +4,8 @@ module NomisClient
   class Locations
     class << self
       def get
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get locations')
+
         attributes_for(
           NomisClient::Base.get(
             '/agencies',

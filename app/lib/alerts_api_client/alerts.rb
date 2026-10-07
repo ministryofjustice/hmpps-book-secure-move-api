@@ -4,6 +4,8 @@ module AlertsApiClient
   class Alerts < AlertsApiClient::Base
     class << self
       def get(prison_number)
+        return [] if HmppsApiClient.dps_services_disabled?('Alerts API: get alerts')
+
         JSON.parse(fetch_response(prison_number).body)['content'].map do |alert|
           attributes_for(alert)
         end
