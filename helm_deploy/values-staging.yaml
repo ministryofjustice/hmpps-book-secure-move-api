@@ -16,6 +16,7 @@ generic-service:
     groups:
       - digital_staff_and_mojo
       - moj_cloud_platform
+      - pecs_geoamey
 
   env:
     S3_AP_BUCKET_NAME: moj-reg-dev
