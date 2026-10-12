@@ -14,6 +14,13 @@ generic-service:
       - hmpps-book-secure-move-api-production.apps.cloud-platform.service.justice.gov.uk
     tlsSecretName: hmpps-book-secure-move-api-production-cert
 
+  allowlist:
+    groups:
+      - internal
+      - digital_staff_and_mojo
+      - pecs_serco
+      - pecs_geoamey
+
   env:
     DISABLE_WEBHOOK_CREATE_EVENT_GEOAMEY: "true"
     DISABLE_WEBHOOK_CREATE_EVENT_SERCO: "true"

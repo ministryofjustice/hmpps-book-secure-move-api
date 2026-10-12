@@ -13,6 +13,13 @@ generic-service:
     hosts:
       - hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk
 
+  allowlist:
+    groups:
+      - internal
+      - digital_staff_and_mojo
+      - pecs_serco
+      - pecs_geoamey
+
   env:
     SENTRY_ENVIRONMENT: "uat"
     SERVER_FQDN: "hmpps-book-secure-move-api-uat.apps.cloud-platform.service.justice.gov.uk"

@@ -12,6 +12,12 @@ generic-service:
     hosts:
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
+  allowlist:
+    groups:
+      - internal
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+
   env:
     S3_AP_BUCKET_NAME: moj-reg-dev
     S3_AP_PROJECT_PATH: landing/hmpps-book-secure-move-api-dev
