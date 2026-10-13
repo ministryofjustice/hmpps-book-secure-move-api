@@ -12,6 +12,11 @@ generic-service:
     hosts:
       - hmpps-book-secure-move-api-preprod.apps.cloud-platform.service.justice.gov.uk
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+
   env:
     SENTRY_ENVIRONMENT: "preprod"
     SERVE_API_DOCS: "false"
