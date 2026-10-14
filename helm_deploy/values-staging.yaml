@@ -12,11 +12,11 @@ generic-service:
     hosts:
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
-  allowlist:
-    groups:
-      - digital_staff_and_mojo
-      - moj_cloud_platform
-      - pecs_geoamey
+  # allowlist:
+  #   groups:
+  #     - digital_staff_and_mojo
+  #     - moj_cloud_platform
+  #     - pecs_geoamey
 
   env:
     S3_AP_BUCKET_NAME: moj-reg-dev
