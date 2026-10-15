@@ -1,11 +1,11 @@
 services:
   db:
-    image: postgres
+    image: postgres:18
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-    - './.data/postgres:/var/lib/postgresql@16/data'
+    - './.data/postgres:/var/lib/postgresql'
     ports:
     - 5432:5432
     networks:
