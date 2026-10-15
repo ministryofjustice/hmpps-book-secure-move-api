@@ -10,7 +10,7 @@ If you have `rbenv` installed you can run `rbenv install $(cat .ruby-version)`.
 If you have `asdf` with the ruby plugin installed you can run `asdf install`.
 
 * System dependencies
-  * postgres
+  * postgres 18 (and a matching `pg_dump` client locally, as Rails dumps `structure.sql` after migrations)
   * redis
 
 ## Development Environment setup
