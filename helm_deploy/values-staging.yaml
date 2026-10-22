@@ -7,6 +7,11 @@ generic-service:
   replicaCount: 4
 
   ingress:
+    modsecurity_enabled: true
+    modsecurity_snippet: |
+      SecAuditEngine On
+      SecRuleEngine DetectionOnly
+      SecDefaultAction "phase:2,pass,log,tag:github_team=map-developers,tag:namespace={{ .Release.Namespace }}"
     annotations:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-staging-green
     hosts:
