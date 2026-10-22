@@ -9,6 +9,11 @@ generic-service:
   ingress:
     annotations:
       external-dns.alpha.kubernetes.io/set-identifier: hmpps-book-secure-move-api-v1-2-hmpps-book-secure-move-api-staging-green
+      modsecurity_enabled: true
+      modsecurity_snippet: |
+        SecAuditEngine On
+        SecRuleEngine DetectionOnly
+        SecDefaultAction "phase:2,pass,log,tag:github_team=map-developers,tag:namespace={{ .Release.Namespace }}"
     hosts:
       - hmpps-book-secure-move-api-staging.apps.cloud-platform.service.justice.gov.uk
 
