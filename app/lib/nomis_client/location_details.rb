@@ -4,6 +4,8 @@ module NomisClient
   class LocationDetails
     class << self
       def get
+        return {} if HmppsApiClient.dps_services_disabled?('Prison API: get location details')
+
         attributes_for(
           NomisClient::Base.get('/agencies/prison',
                                 headers: { 'Page-Limit' => '5000' }).parsed,

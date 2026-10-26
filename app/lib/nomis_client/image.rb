@@ -6,6 +6,8 @@ module NomisClient
   class Image < NomisClient::Base
     class << self
       def get(booking_id)
+        return nil if HmppsApiClient.dps_services_disabled?('Prison API: get image')
+
         image_route = "/bookings/#{booking_id}/image/data"
         begin
           NomisClient::Base.get(image_route).body

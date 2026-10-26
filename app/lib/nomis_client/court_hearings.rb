@@ -6,6 +6,8 @@ module NomisClient
 
     class << self
       def get(booking_id, start_date, end_date)
+        return { 'hearings' => [] } if HmppsApiClient.dps_services_disabled?('Prison API: get court hearings')
+
         court_hearings_path = "/bookings/#{booking_id}/court-hearings?fromDate=#{start_date.iso8601}&toDate=#{end_date.iso8601}"
 
         response = NomisClient::Base.get(
@@ -17,6 +19,8 @@ module NomisClient
       end
 
       def post(booking_id:, court_case_id:, body_params: {})
+        return nil if HmppsApiClient.dps_services_disabled?('Prison API: create court hearing')
+
         court_hearings_path = "/bookings/#{booking_id}/court-cases/#{court_case_id}/prison-to-court-hearings"
 
         begin

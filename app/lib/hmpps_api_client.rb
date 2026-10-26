@@ -2,8 +2,23 @@
 
 class HmppsApiClient
   HMPPS_TIMEOUT = 10 # in seconds
+  DPS_SERVICES_DISABLED_MESSAGE = 'DPS services are disabled (ENABLE_DPS_SERVICES is not true)'
+
+  class DpsServicesDisabledError < StandardError; end
 
   class << self
+    def dps_services_enabled?
+      ENV.fetch('ENABLE_DPS_SERVICES', 'true').to_s.strip.casecmp?('true')
+    end
+
+    # Returns true (and logs a warning) when DPS services are disabled, so callers can return an empty result
+    def dps_services_disabled?(request_description)
+      return false if dps_services_enabled?
+
+      Rails.logger.warn "[HmppsApiClient] #{DPS_SERVICES_DISABLED_MESSAGE}: not performing request: #{request_description}"
+      true
+    end
+
     def get(path, params = {})
       token_request(:get, path, params)
     end
@@ -33,6 +48,11 @@ class HmppsApiClient
     REFRESH_TOKEN_TIMEFRAME_IN_SECONDS = 5
 
     def token_request(method, path, params)
+      # Backstop: callers should check dps_services_disabled? first and return an empty result
+      if dps_services_disabled?("#{method.upcase} #{name} #{path}")
+        raise DpsServicesDisabledError, DPS_SERVICES_DISABLED_MESSAGE
+      end
+
       token.send(method, "#{token_request_path_prefix}#{path}", params)
     rescue Faraday::ConnectionFailed, Faraday::TimeoutError => e
       Rails.logger.warn "HMPPS Connection Error: #{e.message}"

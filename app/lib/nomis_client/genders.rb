@@ -4,6 +4,8 @@ module NomisClient
   class Genders
     class << self
       def get
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get genders')
+
         attributes_for(
           NomisClient::Base.get(
             '/reference-domains/domains/SEX',

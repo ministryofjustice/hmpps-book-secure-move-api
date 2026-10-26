@@ -5,6 +5,7 @@ module NomisClient
     class << self
       def get(booking_id:)
         return [] if booking_id.blank?
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get contacts')
 
         response = get_response(booking_id:)
 

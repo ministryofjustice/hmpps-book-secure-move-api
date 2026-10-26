@@ -5,6 +5,7 @@ module NomisClient
     class << self
       def get(booking_id:, reasonable_adjustment_types:)
         return [] unless booking_id.present? && reasonable_adjustment_types.present?
+        return [] if HmppsApiClient.dps_services_disabled?('Prison API: get reasonable adjustments')
 
         reasonable_adjustments_response = get_response(booking_id:, reasonable_adjustment_types:)
 

@@ -4,6 +4,8 @@ module AlertsApiClient
   class AlertTypes < AlertsApiClient::Base
     class << self
       def get
+        return [] if HmppsApiClient.dps_services_disabled?('Alerts API: get alert types')
+
         fetch_response.map { |alert_type|
           alert_type['alertCodes'].map do |alert_code|
             attributes_for(alert_type, alert_code)

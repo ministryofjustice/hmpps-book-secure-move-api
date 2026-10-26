@@ -17,6 +17,11 @@ module FrameworkNomisMappings
   private
 
     def imported_reasonable_adjustments
+      if HmppsApiClient.dps_services_disabled?('Framework NOMIS mappings: import reasonable adjustments')
+        nomis_sync_status.set_failure(message: HmppsApiClient::DPS_SERVICES_DISABLED_MESSAGE)
+        return @imported_reasonable_adjustments = []
+      end
+
       @imported_reasonable_adjustments ||= NomisClient::ReasonableAdjustments.get(booking_id:, reasonable_adjustment_types: nomis_codes.pluck(:code).compact.uniq.join(',')).tap do
         nomis_sync_status.set_success
       end

@@ -44,6 +44,9 @@ module Moves
     end
 
     def validate_active_locations
+      # Discarded locations should not block cancellation
+      return if record.respond_to?(:cancelled?) && record.cancelled?
+
       record.errors.add(:from_location, :inactive_location, message: 'must be an active location') if record.from_location&.discarded?
       record.errors.add(:to_location, :inactive_location, message: 'must be an active location') if record.to_location&.discarded?
     end

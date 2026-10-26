@@ -6,6 +6,7 @@ module ManageUsersApiClient
       def get(username)
         return nil if username.blank?
         return username if username =~ URI::MailTo::EMAIL_REGEXP
+        return nil if HmppsApiClient.dps_services_disabled?('Manage Users API: get user email')
 
         response = fetch_response(username)
         return nil if response.status == 204 || response.body.blank?

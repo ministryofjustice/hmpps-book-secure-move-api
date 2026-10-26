@@ -5,6 +5,12 @@ require 'csv'
 namespace :reference_data do
   desc 'create locations'
   task create_locations: :environment do
+    # The importer discards any location not returned by the Prison API, so an empty result would disable all locations
+    if HmppsApiClient.dps_services_disabled?('Prison API: import locations')
+      puts 'DPS services are disabled; skipping locations import'
+      next
+    end
+
     puts 'Importing locations...'
     locations = NomisClient::Locations.get
     location_details = NomisClient::LocationDetails.get
