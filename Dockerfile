@@ -1,4 +1,4 @@
-FROM ruby:4.0.7-alpine3.24 AS build-stage
+FROM ruby:3.4.12-alpine AS build-stage
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -20,7 +20,7 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:4.0.7-alpine3.24 AS swagger-build
+FROM ruby:3.4.12-alpine AS swagger-build
 
 WORKDIR /app
 
@@ -34,7 +34,7 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:4.0.7-alpine3.24
+FROM ruby:3.4.12-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE=${APP_BUILD_DATE}
