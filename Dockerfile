@@ -1,5 +1,7 @@
 FROM ruby:3.4.5-alpine AS build-stage
 
+ENV DOCKER_CACHE_BUSTER=2
+
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
 
