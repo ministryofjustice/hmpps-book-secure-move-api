@@ -36,7 +36,7 @@ class SubjectAccessRequestsController < HmppsAuthApiController
 private
 
   PERMITTED_SHOW_PARAMS = %i[
-    prn crn fromDate toDate from_date to_date 
+    prn crn fromDate toDate from_date to_date
   ].freeze
 
   # Overrides parent due to endpoint-specific roles
@@ -65,13 +65,17 @@ private
   end
 
   def from_date
-    @from_date ||= value = show_params[:fromDate] || show_params[:from_date]
-    value.present? ? Date.parse(value) : Date.new(1000)
+    @from_date ||= begin
+      value = show_params[:fromDate] || show_params[:from_date]
+      value.present? ? Date.parse(value) : Date.new(1000)
+    end
   end
 
   def to_date
-    @to_date ||= value = show_params[:toDate] || show_params[:to_date]
-    value.present? ? Date.parse(value) : Date.new(3000)
+    @to_date ||= begin
+      value = show_params[:toDate] || show_params[:to_date]
+      value.present? ? Date.parse(value) : Date.new(3000)
+    end
   end
 
   def sar
