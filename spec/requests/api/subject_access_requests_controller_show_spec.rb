@@ -54,6 +54,102 @@ RSpec.describe SubjectAccessRequestsController do
         end
       end
 
+      context 'when date parameters are provided as camelCase' do
+        let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+        let(:from_date) { '2024-01-01' }
+        let(:to_date) { '2024-12-31' }
+        let(:params) { { prn: 'test', fromDate: from_date, toDate: to_date } }
+
+        before do
+          allow_any_instance_of(SubjectAccessRequest).to receive(:empty?).and_return(false)
+          allow_any_instance_of(SubjectAccessRequest).to receive(:fetch).and_return({})
+          get_sar
+        end
+
+        it 'accepts camelCase fromDate parameter' do
+          expect(response.status).to eq 200
+        end
+
+        it 'accepts camelCase toDate parameter' do
+          expect(response.status).to eq 200
+        end
+
+        it 'passes parsed dates to SubjectAccessRequest' do
+          expect(SubjectAccessRequest).to have_received(:new).with(
+            'test',
+            Date.new(2024, 1, 1),
+            Date.new(2024, 12, 31)
+          )
+        end
+      end
+
+      context 'when date parameters are provided as snake_case' do
+        let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+        let(:from_date) { '2024-01-01' }
+        let(:to_date) { '2024-12-31' }
+        let(:params) { { prn: 'test', from_date: from_date, to_date: to_date } }
+
+        before do
+          allow_any_instance_of(SubjectAccessRequest).to receive(:empty?).and_return(false)
+          allow_any_instance_of(SubjectAccessRequest).to receive(:fetch).and_return({})
+          get_sar
+        end
+
+        it 'accepts snake_case from_date parameter' do
+          expect(response.status).to eq 200
+        end
+
+        it 'accepts snake_case to_date parameter' do
+          expect(response.status).to eq 200
+        end
+
+        it 'passes parsed dates to SubjectAccessRequest' do
+          expect(SubjectAccessRequest).to have_received(:new).with(
+            'test',
+            Date.new(2024, 1, 1),
+            Date.new(2024, 12, 31)
+          )
+        end
+      end
+
+      context 'when no date parameters are provided' do
+        let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+        let(:params) { { prn: 'test' } }
+
+        before do
+          allow_any_instance_of(SubjectAccessRequest).to receive(:empty?).and_return(false)
+          allow_any_instance_of(SubjectAccessRequest).to receive(:fetch).and_return({})
+          get_sar
+        end
+
+        it 'uses default date range' do
+          expect(SubjectAccessRequest).to have_received(:new).with(
+            'test',
+            Date.new(1000),
+            Date.new(3000)
+          )
+        end
+      end
+
+      context 'when both camelCase and snake_case date parameters are provided' do
+        let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+        let(:params) { { prn: 'test', from_date: '2024-01-01', fromDate: '2025-01-01', to_date: '2024-12-31', toDate: '2025-12-31' } }
+
+        before do
+          allow_any_instance_of(SubjectAccessRequest).to receive(:empty?).and_return(false)
+          allow_any_instance_of(SubjectAccessRequest).to receive(:fetch).and_return({})
+          get_sar
+        end
+
+        it 'prefers camelCase parameters' do
+          expect(SubjectAccessRequest).to have_received(:new).with(
+            'test',
+            Date.new(2025, 1, 1),
+            Date.new(2025, 12, 31)
+          )
+        end
+      end
+
       context 'when a prn is provided' do
         let(:params) { { prn: 'test' } }
 
