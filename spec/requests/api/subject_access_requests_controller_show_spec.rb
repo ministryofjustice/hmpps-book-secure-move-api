@@ -14,6 +14,12 @@ RSpec.describe SubjectAccessRequestsController do
     let(:response_json) { JSON.parse(response.body) }
     let(:content_type) { ApiController::CONTENT_TYPE }
 
+    def stub_subject_access_request
+      instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
+      allow(SubjectAccessRequest).to receive(:new).and_call_original.and_return(instance)
+      instance
+    end
+
     before do
       allow(JwksDecoder).to receive(:decode_token).and_return([token_payload])
     end
@@ -61,8 +67,7 @@ RSpec.describe SubjectAccessRequestsController do
         let(:params) { { prn: 'test', fromDate: from_date, toDate: to_date } }
 
         before do
-          sar_instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
-          allow(SubjectAccessRequest).to receive(:new).and_return(sar_instance)
+          stub_subject_access_request
           get_sar
         end
 
@@ -83,8 +88,7 @@ RSpec.describe SubjectAccessRequestsController do
         let(:params) { { prn: 'test', from_date: from_date, to_date: to_date } }
 
         before do
-          sar_instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
-          allow(SubjectAccessRequest).to receive(:new).and_return(sar_instance)
+          stub_subject_access_request
           get_sar
         end
 
@@ -103,8 +107,7 @@ RSpec.describe SubjectAccessRequestsController do
         let(:params) { { prn: 'test' } }
 
         before do
-          sar_instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
-          allow(SubjectAccessRequest).to receive(:new).and_return(sar_instance)
+          stub_subject_access_request
           get_sar
         end
 
@@ -130,12 +133,53 @@ RSpec.describe SubjectAccessRequestsController do
         end
 
         before do
+          stub_subject_access_request
+          get_sar
+        end
+
+        it 'prefers camelCase parameters' do
+          expect(SubjectAccessRequest).to have_received(:new).with(
+            'test',
+            Date.new(2025, 1, 1),
+            Date.new(2025, 12, 31),
+          )
+        end
+      end
+
+      context 'when invalid date parameters are provided via camelCase' do
+        let(:params) { { prn: 'test', fromDate: 'ABC', toDate: 'XYZ' } }
+
+        before do
+          get_sar
+        end
+
+        it 'returns validation error with status 400' do
+          expect(response.status).to eq 400
+          response_body = JSON.parse(response.body)
+          expect(response_body['error']).to be_present
+        end
+      end
+
+      context 'when invalid snake_case date is provided with valid camelCase' do
+        let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+        let(:params) do
+          {
+            prn: 'test',
+            from_date: 'not-a-date',
+            fromDate: '2025-01-01',
+            to_date: 'invalid',
+            toDate: '2025-12-31',
+          }
+        end
+
+        before do
           sar_instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
           allow(SubjectAccessRequest).to receive(:new).and_return(sar_instance)
           get_sar
         end
 
-        it 'prefers camelCase parameters' do
+        it 'uses camelCase dates when valid, ignoring invalid snake_case' do
+          expect(response.status).to eq 200
           expect(SubjectAccessRequest).to have_received(:new).with(
             'test',
             Date.new(2025, 1, 1),
