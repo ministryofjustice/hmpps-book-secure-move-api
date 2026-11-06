@@ -15,9 +15,7 @@ RSpec.describe SubjectAccessRequestsController do
     let(:content_type) { ApiController::CONTENT_TYPE }
 
     def stub_subject_access_request
-      instance = instance_double(SubjectAccessRequest, empty?: false, fetch: {})
-      allow(SubjectAccessRequest).to receive(:new).and_call_original.and_return(instance)
-      instance
+      allow(SubjectAccessRequest).to receive(:new).and_call_original
     end
 
     before do
