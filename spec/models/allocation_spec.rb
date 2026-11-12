@@ -155,7 +155,7 @@ RSpec.describe Allocation do
     it 'sets a default cancellation reason if reason not provided' do
       allocation.cancel
 
-      expect(allocation.cancellation_reason).to eq(described_class::CANCELLATION_REASON_OTHER)
+      expect(allocation.cancellation_reason).to eq(described_class::CANCELLATION_REASON_ALLOCATION_CANCELLED)
     end
 
     it 'sets the cancellation reason comment if provided' do
