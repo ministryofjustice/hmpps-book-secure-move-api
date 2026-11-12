@@ -16,4 +16,6 @@ RSpec.describe GenericEvent::MoveComplete do
       expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('in_transit').to('completed')
     end
   end
+
+  it_behaves_like 'an event that requires a state transition', :complete, %w[in_transit]
 end

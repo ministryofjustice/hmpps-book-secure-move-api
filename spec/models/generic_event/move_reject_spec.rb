@@ -192,4 +192,6 @@ RSpec.describe GenericEvent::MoveReject do
       end
     end
   end
+
+  it_behaves_like 'an event that requires a state transition', :reject, %w[proposed requested]
 end

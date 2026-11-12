@@ -19,7 +19,7 @@ RSpec.shared_examples 'a generic event endpoint' do |event_type|
 
   let(:event_attributes) do
     attributes_for(factory).tap do |attributes|
-      attributes.except!(:eventable)
+      attributes.except!(:eventable, :skip_state_transition_validation)
       attributes[:event_type] = event_type
       attributes[:details].keys.grep(/_id/).each do |relationship_key|
         attributes[:details].delete(relationship_key)

@@ -60,4 +60,8 @@ private
   def created_by
     doorkeeper_application_owner&.name
   end
+
+  def skip_state_transition_validation?
+    true
+  end
 end

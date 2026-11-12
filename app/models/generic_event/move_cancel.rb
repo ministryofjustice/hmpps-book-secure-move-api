@@ -2,6 +2,7 @@ class GenericEvent
   class MoveCancel < GenericEvent
     details_attributes :cancellation_reason, :cancellation_reason_comment
     eventable_types 'Move'
+    validate_state_transition :cancel
 
     validates :cancellation_reason, inclusion: { in: Move::CANCELLATION_REASONS }
 

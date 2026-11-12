@@ -17,8 +17,14 @@ module Eventable
     attributes = {}
     assign_common_attributes!(attributes, eventable, event_params)
     assign_specific_attributes!(attributes, event_params, event_sti_class)
+    attributes[:skip_state_transition_validation] = skip_state_transition_validation?
 
     event_sti_class.create!(attributes)
+  end
+
+  # Overridden by historic data imports which record transitions that have already been applied
+  def skip_state_transition_validation?
+    false
   end
 
   def create_automatic_event!(eventable:, event_class:, occurred_at: nil, supplier_id: nil, details: {})

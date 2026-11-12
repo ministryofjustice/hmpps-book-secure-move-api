@@ -7,10 +7,14 @@ RSpec.describe Api::GenericEventsController do
   let(:eventable_id) { create(:move).id }
 
   it_behaves_like 'a generic event endpoint', 'MoveAccept'
-  it_behaves_like 'a generic event endpoint', 'MoveApprove'
+  it_behaves_like 'a generic event endpoint', 'MoveApprove' do
+    let(:eventable_id) { create(:move, :proposed).id }
+  end
   it_behaves_like 'a generic event endpoint', 'MoveCancel'
   it_behaves_like 'a generic event endpoint', 'MoveCollectionByEscort'
-  it_behaves_like 'a generic event endpoint', 'MoveComplete'
+  it_behaves_like 'a generic event endpoint', 'MoveComplete' do
+    let(:eventable_id) { create(:move, :in_transit).id }
+  end
   it_behaves_like 'a generic event endpoint', 'MoveCrossSupplierDropOff'
   it_behaves_like 'a generic event endpoint', 'MoveCrossSupplierPickUp'
   it_behaves_like 'a generic event endpoint', 'MoveDateChanged'
@@ -26,7 +30,9 @@ RSpec.describe Api::GenericEventsController do
   it_behaves_like 'a generic event endpoint', 'MoveOperationTornado'
   it_behaves_like 'a generic event endpoint', 'MoveRedirect'
   it_behaves_like 'a generic event endpoint', 'MoveReject'
-  it_behaves_like 'a generic event endpoint', 'MoveStart'
+  it_behaves_like 'a generic event endpoint', 'MoveStart' do
+    let(:eventable_id) { create(:move, :booked).id }
+  end
   it_behaves_like 'a generic event endpoint', 'PersonMoveAssault'
   it_behaves_like 'a generic event endpoint', 'PersonMoveBookedIntoReceivingEstablishment'
   it_behaves_like 'a generic event endpoint', 'PersonMoveDeathInCustody'
@@ -276,6 +282,52 @@ RSpec.describe Api::GenericEventsController do
         expect(Notifier).to have_received(:prepare_notifications).once.with(topic: move, action_name: 'cross_supplier_remove')
         expect(Notifier).to have_received(:prepare_notifications).once.with(topic: event, action_name: 'create_event')
       end
+    end
+  end
+
+  context "when the event's transition is not permitted by the move's current state" do
+    let(:move) { create(:move, :proposed) }
+    let(:headers) do
+      {
+        'CONTENT_TYPE': ApiController::CONTENT_TYPE,
+        'Accept': 'application/vnd.api+json; version=2',
+        'Authorization' => 'Bearer spoofed-token',
+      }
+    end
+    let(:data) do
+      {
+        type: 'events',
+        attributes: {
+          event_type: 'MoveStart',
+          occurred_at: '2019-06-16T10:20:30+01:00',
+          recorded_at: '2019-06-16T10:20:30+01:00',
+        },
+        relationships: {
+          eventable: { data: { type: 'moves', id: move.id } },
+        },
+      }
+    end
+
+    def do_post
+      post '/api/events', params: { data: }, headers:, as: :json
+    end
+
+    it 'does not add the event to the timeline' do
+      expect { do_post }.not_to change(GenericEvent, :count)
+    end
+
+    it 'returns an unprocessable content status' do
+      do_post
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
+    it 'explains why the event was rejected' do
+      do_post
+      expect(response.parsed_body['errors'].pluck('detail')).to include('Eventable cannot start when proposed')
+    end
+
+    it 'does not change the move status' do
+      expect { do_post }.not_to(change { move.reload.status })
     end
   end
 end

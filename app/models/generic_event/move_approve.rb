@@ -2,6 +2,7 @@ class GenericEvent
   class MoveApprove < GenericEvent
     details_attributes :date
     eventable_types 'Move'
+    validate_state_transition :approve
 
     validates :date, presence: true
 

@@ -138,4 +138,6 @@ RSpec.describe GenericEvent::MoveStart do
 
     it_behaves_like 'a move event'
   end
+
+  it_behaves_like 'an event that requires a state transition', :start, %w[booked]
 end

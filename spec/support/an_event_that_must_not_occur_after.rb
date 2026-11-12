@@ -36,6 +36,7 @@ RSpec.shared_examples 'an event that must not occur after' do |*types|
               occurred_at: Time.zone.local(2020, 12, 1),
               recorded_at: Time.zone.now,
               eventable: get_eventable(generic_event, type),
+              skip_state_transition_validation: true,
             )
           end
 
@@ -53,6 +54,7 @@ RSpec.shared_examples 'an event that must not occur after' do |*types|
               occurred_at: Time.zone.local(2021, 1, 2),
               recorded_at: Time.zone.now,
               eventable: get_eventable(generic_event, type),
+              skip_state_transition_validation: true,
             )
           end
 
