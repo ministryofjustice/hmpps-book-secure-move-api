@@ -287,7 +287,7 @@ class GenericEvent < ApplicationRecord
       next if latest_matching_event.blank?
       next if occurred_at > latest_matching_event
 
-      errors.add(:occurred_at, :invalid_reversal, message: "cannot #{self.name.demodulize.underscore} after #{event_type.demodulize.underscore} at #{latest_matching_event.iso8601}")
+      errors.add(:occurred_at, :invalid_reversal, message: "cannot #{type.demodulize.underscore} after #{event_type.demodulize.underscore} at #{latest_matching_event.iso8601}")
     end
   end
 
