@@ -269,9 +269,25 @@ class GenericEvent < ApplicationRecord
     validate on: :create do
       next if skip_state_transition_validation
       next unless self.class.eventable_types.include?(eventable_type)
+      next unless eventable
       next if eventable.state_machine.can?(transition)
 
       errors.add(:eventable, :invalid_transition, message: "cannot #{transition} when #{eventable.state_machine.current}")
+    end
+  end
+
+  # Prevents reversal events from being backdated behind the event they are reversing.
+  def self.validate_event_reversal_after(event_type)
+    validate on: :create do
+      next if skip_state_transition_validation
+      next unless eventable
+      next if occurred_at.blank?
+
+      latest_matching_event = eventable.generic_events.where(type: event_type).maximum(:occurred_at)
+      next if latest_matching_event.blank?
+      next if occurred_at > latest_matching_event
+
+      errors.add(:occurred_at, :invalid_reversal, message: "cannot #{self.name.demodulize.underscore} after #{event_type.demodulize.underscore} at #{latest_matching_event.iso8601}")
     end
   end
 

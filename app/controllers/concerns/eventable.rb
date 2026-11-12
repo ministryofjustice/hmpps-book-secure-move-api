@@ -8,8 +8,12 @@ module Eventable
 
   def process_event(eventables, event_sti_class, event_params)
     [eventables].flatten.each do |eventable|
-      create_generic_event!(eventable, event_sti_class, event_params)
-      run_event_logs(eventable)
+      eventable.transaction do
+        eventable.with_lock do
+          create_generic_event!(eventable, event_sti_class, event_params)
+          run_event_logs(eventable)
+        end
+      end
     end
   end
 
