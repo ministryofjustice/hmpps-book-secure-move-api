@@ -53,4 +53,6 @@ RSpec.describe GenericEvent::JourneyStart do
 
   it_behaves_like 'an event that must not occur after', 'GenericEvent::JourneyComplete'
   it_behaves_like 'an event that must not occur before', 'GenericEvent::MoveStart'
+
+  it_behaves_like 'an event that requires a state transition', :start, %w[proposed]
 end

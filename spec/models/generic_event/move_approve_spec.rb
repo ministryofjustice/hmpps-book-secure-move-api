@@ -65,4 +65,6 @@ RSpec.describe GenericEvent::MoveApprove do
       expect(generic_event.for_feed).to include_json(expected_json)
     end
   end
+
+  it_behaves_like 'an event that requires a state transition', :approve, %w[proposed]
 end

@@ -8,8 +8,12 @@ module Eventable
 
   def process_event(eventables, event_sti_class, event_params)
     [eventables].flatten.each do |eventable|
-      create_generic_event!(eventable, event_sti_class, event_params)
-      run_event_logs(eventable)
+      eventable.transaction do
+        eventable.with_lock do
+          create_generic_event!(eventable, event_sti_class, event_params)
+          run_event_logs(eventable)
+        end
+      end
     end
   end
 
@@ -17,8 +21,14 @@ module Eventable
     attributes = {}
     assign_common_attributes!(attributes, eventable, event_params)
     assign_specific_attributes!(attributes, event_params, event_sti_class)
+    attributes[:skip_state_transition_validation] = skip_state_transition_validation?
 
     event_sti_class.create!(attributes)
+  end
+
+  # Overridden by historic data imports which record transitions that have already been applied
+  def skip_state_transition_validation?
+    false
   end
 
   def create_automatic_event!(eventable:, event_class:, occurred_at: nil, supplier_id: nil, details: {})

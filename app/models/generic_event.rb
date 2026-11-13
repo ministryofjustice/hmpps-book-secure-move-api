@@ -132,6 +132,9 @@ class GenericEvent < ApplicationRecord
 
   serialize :details, coder: HashWithIndifferentAccessSerializer
 
+  # Historic data imports may record a transition which has already been applied to the eventable
+  attr_accessor :skip_state_transition_validation
+
   before_validation :set_classification
 
   def event_type
@@ -258,6 +261,33 @@ class GenericEvent < ApplicationRecord
         Sentry.capture_message("#{type} occurred before #{after_type}", level: 'warning', extra: { supplier: supplier&.key, eventable_type:, eventable_id: })
         break
       end
+    end
+  end
+
+  # Prevents an event being recorded against an eventable whose current state does not permit the event's transition
+  def self.validate_state_transition(transition)
+    validate on: :create do
+      next if skip_state_transition_validation
+      next unless self.class.eventable_types.include?(eventable_type)
+      next unless eventable
+      next if eventable.state_machine.can?(transition)
+
+      errors.add(:eventable, :invalid_transition, message: "cannot #{transition} when #{eventable.state_machine.current}")
+    end
+  end
+
+  # Prevents reversal events from being backdated behind the event they are reversing.
+  def self.validate_event_reversal_after(event_type)
+    validate on: :create do
+      next if skip_state_transition_validation
+      next unless eventable
+      next if occurred_at.blank?
+
+      latest_matching_event = eventable.generic_events.where(type: event_type).maximum(:occurred_at)
+      next if latest_matching_event.blank?
+      next if occurred_at > latest_matching_event
+
+      errors.add(:occurred_at, :invalid_reversal, message: "cannot #{type.demodulize.underscore} after #{event_type.demodulize.underscore} at #{latest_matching_event.iso8601}")
     end
   end
 

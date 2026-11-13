@@ -103,4 +103,6 @@ RSpec.describe GenericEvent::MoveCancel do
       end
     end
   end
+
+  it_behaves_like 'an event that requires a state transition', :cancel, %w[proposed requested booked in_transit completed]
 end

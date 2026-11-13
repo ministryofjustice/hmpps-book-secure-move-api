@@ -15,4 +15,6 @@ RSpec.describe GenericEvent::MoveAccept do
       expect { generic_event.trigger }.to change { generic_event.eventable.status }.from('requested').to('booked')
     end
   end
+
+  it_behaves_like 'an event that requires a state transition', :accept, %w[requested]
 end

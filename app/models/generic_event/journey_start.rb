@@ -2,6 +2,7 @@ class GenericEvent
   class JourneyStart < GenericEvent
     details_attributes :vehicle_reg, :vehicle_depot
     eventable_types 'Journey'
+    validate_state_transition :start
     validate_occurs_before 'GenericEvent::JourneyComplete'
     validate_occurs_after 'GenericEvent::MoveStart'
 

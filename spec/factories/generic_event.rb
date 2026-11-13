@@ -7,6 +7,8 @@ FactoryBot.define do
     recorded_at { Time.zone.now }
     notes { 'Flibble' }
     details { {} }
+    # NB: factories record historic events, so they bypass state transition validation unless a spec opts back in
+    skip_state_transition_validation { true }
   end
 
   factory :incident, parent: :generic_event do

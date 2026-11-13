@@ -2,6 +2,7 @@ class GenericEvent
   class MoveReject < GenericEvent
     details_attributes :rejection_reason, :cancellation_reason_comment, :rebook
     eventable_types 'Move'
+    validate_state_transition :reject
 
     validates :rejection_reason, inclusion: { in: Move::REJECTION_REASONS }
 
