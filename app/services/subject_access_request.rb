@@ -1,6 +1,7 @@
 class SubjectAccessRequest
-  # Moves without a scheduled date (e.g. proposed moves) fall back to date_from
-  MOVE_DATE = Arel.sql('COALESCE(moves.date, moves.date_from)')
+  # Moves without a scheduled date fall back to date_from (proposed moves), then to the
+  # date the move was created (e.g. cancelled moves, which may have neither)
+  MOVE_DATE = Arel.sql('COALESCE(moves.date, moves.date_from, moves.created_at::date)')
 
   attr_reader :prison_number, :from_date, :to_date
 
@@ -54,7 +55,12 @@ private
       flags: framework_response.framework_flags.map { |f| FrameworkFlagSerializer.new(f).serializable_hash },
     }
 
-    FrameworkResponseSerializer.new(framework_response).serializable_hash.deep_merge(data: { relationships: })
+    FrameworkResponseSerializer.new(framework_response).serializable_hash.deep_merge(data: { relationships: }).tap do |hash|
+      # Empty object/array/string responses come through as {}, [] or "", which the report template
+      # may not treat as empty. Send nil instead so the template shows "No Data Held".
+      value = hash.dig(:data, :attributes, :value)
+      hash[:data][:attributes][:value] = nil if value.respond_to?(:empty?) && value.empty?
+    end
   end
 
   EXCLUDED_QUESTION_KEYS = %w[has-concealed-items concealed-items terrorism-offences hostage-taker escape-risk stalker-harasser-or-intimidator gang-member-or-organised-crime violent-or-dangerous].freeze

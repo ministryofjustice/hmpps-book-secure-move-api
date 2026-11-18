@@ -434,17 +434,74 @@ RSpec.describe SubjectAccessRequestsController do
           let!(:last_day_move) { create(:move, profile: old_profile, date: Date.new(2024, 12, 31), date_from: nil, date_to: nil) }
           let!(:proposed_move) { create(:move, :proposed, profile: new_profile, date: nil, date_from: Date.new(2024, 3, 1), date_to: nil) }
           let!(:proposed_out_of_range_move) { create(:move, :proposed, profile: new_profile, date: nil, date_from: Date.new(2025, 3, 1), date_to: nil) }
+          let!(:undated_cancelled_move) { create(:move, :cancelled, profile: old_profile, date: nil, date_from: nil, date_to: nil, created_at: Time.zone.local(2024, 5, 1, 10)) }
+          let!(:undated_cancelled_out_of_range_move) { create(:move, :cancelled, profile: old_profile, date: nil, date_from: nil, date_to: nil, created_at: Time.zone.local(2025, 5, 1, 10)) }
 
           before do
             get_sar
           end
 
-          it 'only returns moves whose date, or date_from when there is no date, is within the range' do
-            expect(move_ids).not_to include(before_range_move.id, after_range_move.id, proposed_out_of_range_move.id)
+          it 'only returns moves whose date, date_from or created_at (in that order of preference) is within the range' do
+            expect(move_ids).not_to include(before_range_move.id, after_range_move.id, proposed_out_of_range_move.id, undated_cancelled_out_of_range_move.id)
           end
 
           it 'returns the moves ordered by move date' do
-            expect(move_ids).to eq([proposed_move.id, mid_2024_move.id, late_2024_move.id, last_day_move.id])
+            expect(move_ids).to eq([proposed_move.id, undated_cancelled_move.id, mid_2024_move.id, late_2024_move.id, last_day_move.id])
+          end
+        end
+
+        context 'when records are created around the end of the toDate' do
+          let(:params) { { prn: 'test', fromDate: '2024-01-01', toDate: '2024-12-31' } }
+          let(:end_of_to_date) { Time.zone.local(2024, 12, 31, 23, 59, 59) }
+          let(:start_of_next_day) { Time.zone.local(2025, 1, 1, 0, 0, 0) }
+          let!(:person_on_to_date) { create(:person_without_profiles, prison_number: 'test', created_at: end_of_to_date) }
+          let!(:person_after_to_date) { create(:person_without_profiles, prison_number: 'test', created_at: start_of_next_day) }
+          let!(:profile_on_to_date) { create(:profile, person: person_on_to_date, created_at: end_of_to_date) }
+          let!(:profile_after_to_date) { create(:profile, person: person_on_to_date, created_at: start_of_next_day) }
+          let(:content) { JSON.parse(response.body, symbolize_names: true)[:content] }
+
+          before do
+            get_sar
+          end
+
+          it 'includes people created at any time on the toDate, but not after it' do
+            expect(content.map { _1.dig(:data, :id) }).to eq([person_on_to_date.id])
+          end
+
+          it 'includes profiles created at any time on the toDate, but not after it' do
+            profile_ids = content.dig(0, :data, :relationships, :profiles).map { _1.dig(:data, :id) }
+
+            expect(profile_ids).to eq([profile_on_to_date.id])
+          end
+        end
+
+        context 'when framework responses have been answered with empty values' do
+          let!(:person) { create(:person_without_profiles, prison_number: 'test') }
+          let(:per) { create(:person_escort_record, profile: create(:profile, person:)) }
+          let!(:empty_object_response) { create(:object_response, assessmentable: per, responded: true, value: {}) }
+          let!(:empty_array_response) { create(:array_response, assessmentable: per, responded: true, value: []) }
+          let!(:empty_string_response) { create(:string_response, assessmentable: per, responded: true, value: '') }
+          let!(:object_response) { create(:object_response, :details, assessmentable: per, responded: true) }
+          let!(:array_response) { create(:array_response, assessmentable: per, responded: true) }
+          let!(:string_response) { create(:string_response, assessmentable: per, responded: true) }
+          let(:values) do
+            JSON.parse(response.body, symbolize_names: false)
+                .dig('content', 0, 'data', 'relationships', 'profiles', 0, 'data', 'relationships', 'person_escort_record', 'data', 'relationships', 'framework_responses')
+                .to_h { [_1.dig('data', 'id'), _1.dig('data', 'attributes', 'value')] }
+          end
+
+          before do
+            get_sar
+          end
+
+          it 'returns nil for empty values' do
+            expect(values.values_at(empty_object_response.id, empty_array_response.id, empty_string_response.id)).to eq([nil, nil, nil])
+          end
+
+          it 'returns populated values unchanged' do
+            expect(values[object_response.id]).to eq('option' => 'Yes', 'details' => 'some comment')
+            expect(values[array_response.id]).to eq(['Level 1'])
+            expect(values[string_response.id]).to eq('Yes')
           end
         end
       end
