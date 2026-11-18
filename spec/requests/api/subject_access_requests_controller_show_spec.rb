@@ -207,7 +207,7 @@ RSpec.describe SubjectAccessRequestsController do
           let!(:yra_profile) { create(:profile, :with_youth_risk_assessment_with_responses, person:) }
           let(:profiles) { person.profiles }
           let!(:pers_events) { [create(:event_per_completion, eventable: per_profile.person_escort_record), create(:event_per_generic, eventable: per_profile.person_escort_record)] }
-          let!(:moves) { [create(:move, profile: per_profile), create(:move, profile: per_profile), create(:move, profile: yra_profile)] }
+          let!(:moves) { [create(:move, profile: per_profile, recall_date: Date.new(2023, 1, 2)), create(:move, profile: per_profile, recall_date: nil), create(:move, profile: yra_profile)] }
           let!(:moves_events) { [create(:event_move_accept, eventable: moves.first), create(:event_move_complete, eventable: moves.last)] }
           let!(:court_hearings) { [create(:court_hearing, move: moves.first), create(:court_hearing, move: moves.first), create(:court_hearing, move: moves.last)] }
           let!(:journeys) { [create(:journey, move: moves.first), create(:journey, move: moves.last)] }
@@ -248,6 +248,13 @@ RSpec.describe SubjectAccessRequestsController do
 
           it 'returns the moves' do
             expect(moves_hash.map { _1.dig(:data, :id) }).to match_array(moves.pluck(:id))
+          end
+
+          it 'returns the moves recall dates' do
+            recall_dates = moves_hash.to_h { [_1.dig(:data, :id), _1.dig(:data, :attributes, :recall_date)] }
+
+            expect(recall_dates[moves.first.id]).to eq('2023-01-02')
+            expect(recall_dates[moves.second.id]).to be_nil
           end
 
           it 'returns the moves court hearings' do
@@ -373,8 +380,16 @@ RSpec.describe SubjectAccessRequestsController do
         end
 
         context 'when multiple Persons are found matching the identifier' do
-          let!(:person1) { create(:person, prison_number: 'test') }
-          let!(:person2) { create(:person, prison_number: 'test') }
+          let!(:person1) { create(:person_without_profiles, prison_number: 'test', created_at: 2.days.ago) }
+          let!(:person2) { create(:person_without_profiles, prison_number: 'test', created_at: 1.day.ago) }
+          let!(:other_person) { create(:person_without_profiles, prison_number: 'other') }
+          let(:profile1) { create(:profile, person: person1) }
+          let(:profile2) { create(:profile, person: person2) }
+          let!(:person1_later_move) { create(:move, profile: profile1, date: Date.new(2024, 6, 1)) }
+          let!(:person2_move) { create(:move, profile: profile2, date: Date.new(2024, 3, 1)) }
+          let!(:person1_earlier_move) { create(:move, profile: profile1, date: Date.new(2023, 1, 1)) }
+          let!(:other_person_move) { create(:move, profile: create(:profile, person: other_person), date: Date.new(2024, 1, 1)) }
+          let(:content) { JSON.parse(response.body, symbolize_names: true)[:content] }
 
           before do
             get_sar
@@ -382,6 +397,54 @@ RSpec.describe SubjectAccessRequestsController do
 
           it 'returns a response object with status 200' do
             expect(response.status).to eq 200
+          end
+
+          it 'returns one entry per record, oldest first' do
+            expect(content.map { _1.dig(:data, :id) }).to eq([person1.id, person2.id])
+          end
+
+          it 'returns each record\'s own moves ordered by move date' do
+            move_ids = content.map { |c| c.dig(:data, :relationships, :moves).map { _1.dig(:data, :id) } }
+
+            expect(move_ids).to eq([[person1_earlier_move.id, person1_later_move.id], [person2_move.id]])
+          end
+
+          it 'does not return moves for other prison numbers' do
+            move_ids = content.flat_map { |c| c.dig(:data, :relationships, :moves).map { _1.dig(:data, :id) } }
+
+            expect(move_ids).not_to include(other_person_move.id)
+          end
+        end
+
+        context 'when a date range is provided' do
+          let(:params) { { prn: 'test', fromDate: '2024-01-01', toDate: '2024-12-31' } }
+          let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Date.new(2023, 1, 1)) }
+          let(:old_profile) { create(:profile, person:) }
+          let(:new_profile) { create(:profile, person:) }
+          let(:move_ids) do
+            JSON.parse(response.body, symbolize_names: true)
+                .dig(:content, 0, :data, :relationships, :moves)
+                .map { _1.dig(:data, :id) }
+          end
+
+          let!(:late_2024_move) { create(:move, profile: old_profile, date: Date.new(2024, 11, 1), date_from: nil, date_to: nil) }
+          let!(:before_range_move) { create(:move, profile: old_profile, date: Date.new(2023, 12, 31), date_from: nil, date_to: nil) }
+          let!(:mid_2024_move) { create(:move, profile: new_profile, date: Date.new(2024, 6, 1), date_from: nil, date_to: nil) }
+          let!(:after_range_move) { create(:move, profile: new_profile, date: Date.new(2025, 1, 1), date_from: nil, date_to: nil) }
+          let!(:last_day_move) { create(:move, profile: old_profile, date: Date.new(2024, 12, 31), date_from: nil, date_to: nil) }
+          let!(:proposed_move) { create(:move, :proposed, profile: new_profile, date: nil, date_from: Date.new(2024, 3, 1), date_to: nil) }
+          let!(:proposed_out_of_range_move) { create(:move, :proposed, profile: new_profile, date: nil, date_from: Date.new(2025, 3, 1), date_to: nil) }
+
+          before do
+            get_sar
+          end
+
+          it 'only returns moves whose date, or date_from when there is no date, is within the range' do
+            expect(move_ids).not_to include(before_range_move.id, after_range_move.id, proposed_out_of_range_move.id)
+          end
+
+          it 'returns the moves ordered by move date' do
+            expect(move_ids).to eq([proposed_move.id, mid_2024_move.id, late_2024_move.id, last_day_move.id])
           end
         end
       end
