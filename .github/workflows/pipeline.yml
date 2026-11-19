@@ -93,7 +93,7 @@ jobs:
       EXTERNAL_WIREMOCK: "true"
     services:
       postgres:
-        image: postgres:16.14-alpine
+        image: postgres:18
         env:
           POSTGRES_DB: hmpps-book-secure-move-api
           POSTGRES_USER: postgres
