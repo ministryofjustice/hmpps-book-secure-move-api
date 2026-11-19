@@ -36,7 +36,7 @@ class SubjectAccessRequestsController < HmppsAuthApiController
 private
 
   PERMITTED_SHOW_PARAMS = %i[
-    prn crn from_date to_date
+    prn crn fromDate toDate from_date to_date
   ].freeze
 
   # Overrides parent due to endpoint-specific roles
@@ -61,18 +61,33 @@ private
   end
 
   def show_params
-    @show_params ||= params.permit(PERMITTED_SHOW_PARAMS)
+    @show_params ||= params.permit(PERMITTED_SHOW_PARAMS).tap do |permitted|
+      # Normalize: camelCase takes precedence over snake_case
+      # This way the validator and date methods use the same final values
+      permitted[:from_date] = permitted[:fromDate] || permitted[:from_date]
+      permitted[:to_date] = permitted[:toDate] || permitted[:to_date]
+    end
   end
 
   def from_date
-    @from_date ||= show_params[:from_date].present? ? Date.parse(show_params[:from_date]) : Date.new(1000)
+    @from_date ||= begin
+      value = show_params[:from_date]
+      value.present? ? Date.parse(value) : Date.new(1000)
+    rescue ArgumentError
+      Date.new(1000)
+    end
   end
 
   def to_date
-    @to_date ||= show_params[:to_date].present? ? Date.parse(show_params[:to_date]) : Date.new(3000)
+    @to_date ||= begin
+      value = show_params[:to_date]
+      value.present? ? Date.parse(value) : Date.new(3000)
+    rescue ArgumentError
+      Date.new(3000)
+    end
   end
 
   def sar
-    @sar ||= SubjectAccessRequest.new(show_params[:prn], show_params[:from_date], show_params[:to_date])
+    @sar ||= SubjectAccessRequest.new(show_params[:prn], from_date, to_date)
   end
 end

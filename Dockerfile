@@ -1,4 +1,6 @@
-FROM ruby:3.4.5-alpine AS build-stage
+FROM ruby:3.4.12-alpine AS build-stage
+
+ENV DOCKER_CACHE_BUSTER=2
 
 ENV RAILS_ENV=production
 ENV RACK_ENV=production
@@ -20,7 +22,7 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:3.4.5-alpine AS swagger-build
+FROM ruby:3.4.12-alpine AS swagger-build
 
 WORKDIR /app
 
@@ -34,7 +36,7 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:3.4.5-alpine
+FROM ruby:3.4.12-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE=${APP_BUILD_DATE}
@@ -60,7 +62,9 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat libexpat libblkid libmount
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat libexpat libblkid libmount ca-certificates \
+    && sed -i '/^mozilla\/emSign_/s/^/!/' /etc/ca-certificates.conf \
+    && update-ca-certificates
 
 WORKDIR /app
 COPY --chown=appuser:appgroup --from=build-stage /usr/local/bundle /usr/local/bundle

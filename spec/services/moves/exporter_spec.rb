@@ -103,10 +103,46 @@ RSpec.describe Moves::Exporter do
     expect(row).to include('Foo: Yikes!')
   end
 
-  it 'includes multiple comment lines for multiple alerts for the same question' do
+  it 'joins comments for multiple alerts for the same question on a single line' do
     question.update!(key: 'violent')
     move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'Yikes!' }, { assessment_question_id: question.id, comments: 'Bam!' }])
-    expect(row).to include("Yikes!\n\nBam!")
+    expect(row).to include('Yikes!; Bam!')
+  end
+
+  it 'skips blank comments when joining but still sets the flag' do
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: "Yikes!\r" }, { assessment_question_id: question.id }, { assessment_question_id: question.id, comments: 'Bam!' }])
+    expect(row[21..22]).to eq(['true', 'Yikes!; Bam!'])
+  end
+
+  it 'includes TRUE flag and empty comments when the only answer has no comments' do
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ assessment_question_id: question.id }])
+    expect(row[21..22]).to eq(['true', ''])
+  end
+
+  it 'replaces line breaks in comments with spaces' do
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: "Yikes!\r\nBam!\rPow!\nZap!" }])
+    expect(row).to include('Yikes! Bam! Pow! Zap!')
+  end
+
+  it 'writes each move on a single line when free text contains line breaks' do
+    question.update!(key: 'health_issue')
+    move.update!(additional_information: "Line one\r\nLine two", cancellation_reason_comment: "Line one\rLine two")
+    move.profile.update!(assessment_answers: [
+      { nomis_alert_description: 'Mental Illness', assessment_question_id: question.id, comments: "Stated\r@FNCLewes" },
+      { nomis_alert_description: 'No Disability Recorded', assessment_question_id: question.id, comments: "None declared\n\n@ FNC HMP Lewes" },
+    ])
+
+    expect(content.lines.count).to eq(2)
+    expect(row).to include('Line one Line two', 'Mental Illness: Stated @FNCLewes; No Disability Recorded: None declared  @ FNC HMP Lewes')
+  end
+
+  it 'truncates very long comments to fit in an Excel cell' do
+    question.update!(key: 'violent')
+    move.profile.update!(assessment_answers: [{ assessment_question_id: question.id, comments: 'a' * 40_000 }])
+    expect(row[22].length).to eq(described_class::MAX_DETAILS_LENGTH)
   end
 
   context 'when feature flag enabled' do

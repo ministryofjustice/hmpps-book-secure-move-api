@@ -65,6 +65,9 @@ module Moves
       'Supplier',
     ].freeze
 
+    # Excel's cell limit is 32,767 characters; anything longer spills into following rows
+    MAX_DETAILS_LENGTH = 30_000
+
     def initialize(moves)
       @moves = moves
       @alert_columns = ENV.fetch('FEATURE_FLAG_CSV_ALERT_COLUMNS', 'false') == 'true'
@@ -161,7 +164,9 @@ module Moves
         row += flags_by_section.map { move_flags&.include?(_1) ? 'TRUE' : '' }
       end
 
-      row.flatten # Expand answer_details column pairs into individual columns
+      # Expand answer_details column pairs into individual columns, and replace line breaks (particularly in NOMIS
+      # text) which cause rows to split when the CSV is opened in Excel
+      row.flatten.map { |value| value.is_a?(String) ? value.gsub(/\r\n?|\n/, ' ').strip : value }
     end
 
     def answer_details(answers, key)
@@ -172,7 +177,7 @@ module Moves
       end
 
       # Return the flag and comments together so we only need a single pass through the assessment answers for each key
-      [comments.present?.to_s, comments&.join("\n\n")]
+      [comments.present?.to_s, comments&.map { _1.to_s.strip }&.compact_blank&.join('; ')&.truncate(MAX_DETAILS_LENGTH)]
     end
 
     def flags_by_section

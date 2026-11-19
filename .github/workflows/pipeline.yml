@@ -64,7 +64,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
     - name: Setup Ruby and install gems
-      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
+      uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
       with:
         bundler-cache: true
   helm_lint:
@@ -109,7 +109,7 @@ jobs:
         run: |
           curl --fail --retry 2 -o wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.2/wiremock-standalone-3.9.2.jar
       - name: Setup Ruby and install gems
-        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
           bundler-cache: true
       - name: Setup test database

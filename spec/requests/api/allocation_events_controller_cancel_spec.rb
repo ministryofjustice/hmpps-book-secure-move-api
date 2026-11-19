@@ -59,7 +59,7 @@ RSpec.describe Api::AllocationEventsController do
       end
 
       it 'updates the allocation moves cancellation reason' do
-        expect(allocation.reload.moves.pluck(:cancellation_reason).uniq).to contain_exactly('other')
+        expect(allocation.reload.moves.pluck(:cancellation_reason).uniq).to contain_exactly('allocation_cancelled')
       end
 
       it 'updates the allocation moves cancellation reason comment' do
