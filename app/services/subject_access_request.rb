@@ -1,4 +1,8 @@
 class SubjectAccessRequest
+  # Moves without a scheduled date fall back to date_from (proposed moves), then to the
+  # date the move was created (e.g. cancelled moves, which may have neither)
+  MOVE_DATE = Arel.sql('COALESCE(moves.date, moves.date_from, moves.created_at::date)')
+
   attr_reader :prison_number, :from_date, :to_date
 
   def initialize(prison_number, from_date, to_date)
@@ -14,23 +18,26 @@ class SubjectAccessRequest
   delegate :empty?, to: :people
 
   def fetch
-    { content: people.map { |p| serialize_person(p) } }
+    { content: people.order(:created_at).map { |p| serialize_person(p) } }
   end
 
 private
 
+  # Exclusive upper bound so records created at any time on to_date are included
   def before_to_date
-    @before_to_date ||= Date.new(1000)..to_date
+    @before_to_date ||= Date.new(1000)...(to_date + 1)
   end
 
-  def date_range
-    @date_range ||= from_date..to_date
+  def moves_for(person)
+    person.moves
+          .where("#{MOVE_DATE} BETWEEN ? AND ?", from_date, to_date)
+          .order(MOVE_DATE, 'moves.created_at')
   end
 
   def serialize_person(person)
     relationships = {
       profiles: person.profiles.where(created_at: before_to_date).map { |p| serialize_profile(p) },
-      moves: person.moves.where(created_at: before_to_date).map { |m| serialize_move(m) },
+      moves: moves_for(person).map { |m| serialize_move(m) },
       events: person.generic_events.map { |e| serialize_event(e) },
     }
 
@@ -48,7 +55,12 @@ private
       flags: framework_response.framework_flags.map { |f| FrameworkFlagSerializer.new(f).serializable_hash },
     }
 
-    FrameworkResponseSerializer.new(framework_response).serializable_hash.deep_merge(data: { relationships: })
+    FrameworkResponseSerializer.new(framework_response).serializable_hash.deep_merge(data: { relationships: }).tap do |hash|
+      # Empty object/array/string responses come through as {}, [] or "", which the report template
+      # may not treat as empty. Send nil instead so the template shows "No Data Held".
+      value = hash.dig(:data, :attributes, :value)
+      hash[:data][:attributes][:value] = nil if value.respond_to?(:empty?) && value.empty?
+    end
   end
 
   EXCLUDED_QUESTION_KEYS = %w[has-concealed-items concealed-items terrorism-offences hostage-taker escape-risk stalker-harasser-or-intimidator gang-member-or-organised-crime violent-or-dangerous].freeze
@@ -125,6 +137,6 @@ private
     relationships[:to_location] = serialize_location(move.to_location) if move.to_location.present?
     relationships[:prison_transfer_reason] = serialize_ptr(move.prison_transfer_reason) if move.prison_transfer_reason.present?
 
-    MoveSerializer.new(move).serializable_hash.deep_merge({ data: { relationships: } })
+    MoveSerializer.new(move).serializable_hash.deep_merge({ data: { attributes: { recall_date: move.recall_date }, relationships: } })
   end
 end
