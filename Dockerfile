@@ -1,4 +1,4 @@
-FROM ruby:3.4.12-alpine AS build-stage
+FROM ruby:3.4.13-alpine AS build-stage
 
 ENV DOCKER_CACHE_BUSTER=2
 
@@ -22,7 +22,7 @@ RUN bundle install --jobs 4 --retry 3 \
      && find /usr/local/bundle/gems/ -name "*.o" -delete
 
 ############### End of Build step ###############
-FROM ruby:3.4.12-alpine AS swagger-build
+FROM ruby:3.4.13-alpine AS swagger-build
 
 WORKDIR /app
 
@@ -36,7 +36,7 @@ COPY . /app
 RUN SKIP_MAINTAIN_TEST_SCHEMA=true rails rswag:specs:swaggerize
 
 ############### End of Build step ###############
-FROM ruby:3.4.12-alpine
+FROM ruby:3.4.13-alpine
 
 ARG APP_BUILD_DATE
 ENV APP_BUILD_DATE=${APP_BUILD_DATE}
