@@ -11,14 +11,18 @@ class SubjectAccessRequest
     @to_date = to_date
   end
 
+  # Only people with data in the requested range are reported. If there are none, no
+  # data is held for the range and the controller returns 204 rather than an empty report.
   def people
     @people ||= Person.where(prison_number:, created_at: before_to_date)
+                      .order(:created_at)
+                      .select { |person| data_in_range?(person) }
   end
 
   delegate :empty?, to: :people
 
   def fetch
-    { content: people.order(:created_at).map { |p| serialize_person(p) } }
+    { content: people.map { |p| serialize_person(p) } }
   end
 
 private
@@ -26,6 +30,14 @@ private
   # Exclusive upper bound so records created at any time on to_date are included
   def before_to_date
     @before_to_date ||= Date.new(1000)...(to_date + 1)
+  end
+
+  def in_range
+    @in_range ||= from_date...(to_date + 1)
+  end
+
+  def data_in_range?(person)
+    moves_for(person).exists? || person.profiles.exists?(created_at: in_range)
   end
 
   def moves_for(person)
