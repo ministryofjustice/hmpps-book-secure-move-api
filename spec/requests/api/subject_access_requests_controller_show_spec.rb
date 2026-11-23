@@ -504,6 +504,109 @@ RSpec.describe SubjectAccessRequestsController do
             expect(values[string_response.id]).to eq('Yes')
           end
         end
+
+        context 'when the person exists but has no data in the requested range' do
+          let(:content) { JSON.parse(response.body, symbolize_names: true)[:content] }
+
+          context 'when the person was created on the toDate but their profile and move are from the day after' do
+            let(:params) { { prn: 'test', toDate: '2023-04-10' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2023, 4, 10, 15)) }
+            let!(:profile) { create(:profile, person:, created_at: Time.zone.local(2023, 4, 11, 9)) }
+            let!(:move) { create(:move, profile:, date: Date.new(2023, 4, 11)) }
+
+            before { get_sar }
+
+            it 'returns a response object with status 204' do
+              expect(response.status).to eq 204
+            end
+          end
+
+          context 'when the person and their moves are all before the fromDate' do
+            let(:params) { { prn: 'test', fromDate: '2024-01-01', toDate: '2024-12-31' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2023, 1, 1)) }
+            let!(:profile) { create(:profile, person:, created_at: Time.zone.local(2023, 1, 1)) }
+            let!(:move) { create(:move, profile:, date: Date.new(2023, 6, 1)) }
+
+            before { get_sar }
+
+            it 'returns a response object with status 204' do
+              expect(response.status).to eq 204
+            end
+          end
+
+          context 'when the person has a profile created in the range but no moves in it' do
+            let(:params) { { prn: 'test', fromDate: '2024-01-01', toDate: '2024-12-31' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2023, 1, 1)) }
+            let!(:profile) { create(:profile, person:, created_at: Time.zone.local(2024, 6, 1)) }
+
+            before { get_sar }
+
+            it 'returns a response object with status 200 including the profile' do
+              expect(response.status).to eq 200
+              expect(content.dig(0, :data, :relationships, :profiles).map { _1.dig(:data, :id) }).to eq([profile.id])
+            end
+          end
+
+          context 'when a duplicate person record has no data in the range' do
+            let(:params) { { prn: 'test', fromDate: '2024-01-01', toDate: '2024-12-31' } }
+            let!(:person_with_data) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2023, 1, 1)) }
+            let!(:person_without_data) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2023, 1, 1)) }
+            let!(:move) { create(:move, profile: create(:profile, person: person_with_data, created_at: Time.zone.local(2023, 1, 1)), date: Date.new(2024, 6, 1)) }
+            let!(:old_move) { create(:move, profile: create(:profile, person: person_without_data, created_at: Time.zone.local(2023, 1, 1)), date: Date.new(2023, 6, 1)) }
+
+            before { get_sar }
+
+            it 'only returns the person record with data in the range' do
+              expect(response.status).to eq 200
+              expect(content.map { _1.dig(:data, :id) }).to eq([person_with_data.id])
+            end
+          end
+        end
+
+        context 'when records are created just after midnight during British Summer Time' do
+          # 00:30 BST on 1 July is 23:30 UTC on 30 June, but is 1 July in the UK
+          let(:just_after_midnight_bst) { Time.zone.local(2024, 7, 1, 0, 30) }
+          let(:content) { JSON.parse(response.body, symbolize_names: true)[:content] }
+
+          context 'with an undated cancelled move and a range starting that day' do
+            let(:params) { { prn: 'test', fromDate: '2024-07-01', toDate: '2024-07-31' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2024, 1, 1)) }
+            let!(:profile) { create(:profile, person:, created_at: Time.zone.local(2024, 1, 1)) }
+            let!(:move) { create(:move, :cancelled, profile:, date: nil, date_from: nil, date_to: nil, created_at: just_after_midnight_bst) }
+
+            before { get_sar }
+
+            it 'includes the move using its UK creation date' do
+              expect(response.status).to eq 200
+              expect(content.dig(0, :data, :relationships, :moves).map { _1.dig(:data, :id) }).to eq([move.id])
+            end
+          end
+
+          context 'with a range ending the day before' do
+            let(:params) { { prn: 'test', toDate: '2024-06-30' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: just_after_midnight_bst) }
+            let!(:profile) { create(:profile, person:, created_at: just_after_midnight_bst) }
+
+            before { get_sar }
+
+            it 'excludes the person and profile and returns 204' do
+              expect(response.status).to eq 204
+            end
+          end
+
+          context 'with a range starting that day' do
+            let(:params) { { prn: 'test', fromDate: '2024-07-01', toDate: '2024-07-31' } }
+            let!(:person) { create(:person_without_profiles, prison_number: 'test', created_at: Time.zone.local(2024, 1, 1)) }
+            let!(:profile) { create(:profile, person:, created_at: just_after_midnight_bst) }
+
+            before { get_sar }
+
+            it 'counts the profile as data held in the range' do
+              expect(response.status).to eq 200
+              expect(content.dig(0, :data, :relationships, :profiles).map { _1.dig(:data, :id) }).to eq([profile.id])
+            end
+          end
+        end
       end
     end
   end

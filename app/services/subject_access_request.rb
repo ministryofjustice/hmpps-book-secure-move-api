@@ -1,7 +1,12 @@
 class SubjectAccessRequest
+  # Timestamps are stored in UTC, but SAR date ranges are UK calendar days
+  APP_TIME_ZONE = ActiveSupport::TimeZone[Rails.application.config.time_zone].tzinfo.identifier
+
   # Moves without a scheduled date fall back to date_from (proposed moves), then to the
-  # date the move was created (e.g. cancelled moves, which may have neither)
-  MOVE_DATE = Arel.sql('COALESCE(moves.date, moves.date_from, moves.created_at::date)')
+  # UK date the move was created (e.g. cancelled moves, which may have neither)
+  MOVE_DATE = Arel.sql(
+    "COALESCE(moves.date, moves.date_from, (moves.created_at AT TIME ZONE 'UTC' AT TIME ZONE '#{APP_TIME_ZONE}')::date)",
+  )
 
   attr_reader :prison_number, :from_date, :to_date
 
@@ -11,21 +16,34 @@ class SubjectAccessRequest
     @to_date = to_date
   end
 
+  # Only people with data in the requested range are reported. If there are none, no
+  # data is held for the range and the controller returns 204 rather than an empty report.
   def people
     @people ||= Person.where(prison_number:, created_at: before_to_date)
+                      .order(:created_at)
+                      .select { |person| data_in_range?(person) }
   end
 
   delegate :empty?, to: :people
 
   def fetch
-    { content: people.order(:created_at).map { |p| serialize_person(p) } }
+    { content: people.map { |p| serialize_person(p) } }
   end
 
 private
 
-  # Exclusive upper bound so records created at any time on to_date are included
+  # Exclusive upper bound so records created at any time on to_date are included. Dates are
+  # converted to UK midnight, as plain dates would be compared against midnight UTC.
   def before_to_date
-    @before_to_date ||= Date.new(1000)...(to_date + 1)
+    @before_to_date ||= Date.new(1000).in_time_zone...(to_date + 1).in_time_zone
+  end
+
+  def in_range
+    @in_range ||= from_date.in_time_zone...(to_date + 1).in_time_zone
+  end
+
+  def data_in_range?(person)
+    moves_for(person).exists? || person.profiles.exists?(created_at: in_range)
   end
 
   def moves_for(person)
