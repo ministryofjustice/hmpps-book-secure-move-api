@@ -301,7 +301,16 @@ data:
     --
     commit;
     begin;
-    INSERT INTO person_escort_records SELECT * FROM person_escort_records_temp ON CONFLICT (id) DO UPDATE
+    INSERT INTO person_escort_records
+      SELECT source.*
+      FROM person_escort_records_temp AS source
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM person_escort_records AS dest
+        WHERE dest.profile_id = source.profile_id
+        AND dest.id <> source.id
+      )
+    ON CONFLICT (id) DO UPDATE
     SET
     framework_id = EXCLUDED.framework_id,
     profile_id = EXCLUDED.profile_id,
