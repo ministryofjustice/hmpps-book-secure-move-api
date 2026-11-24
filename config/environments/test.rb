@@ -68,6 +68,9 @@ Rails.application.configure do
 
   config.active_job.queue_adapter   = :test
 
+  # The runner's pg_dump client can lag the server version and the CI-built structure.sql is not used
+  config.active_record.dump_schema_after_migration = false if ENV['CI']
+
   require 'active_record/connection_adapters/postgresql_adapter'
 
   # Disable logs for test suite schema to speed up test suite (with slightly reduced resilience)
