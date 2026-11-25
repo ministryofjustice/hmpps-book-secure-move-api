@@ -310,6 +310,11 @@ data:
         WHERE dest.profile_id = source.profile_id
         AND dest.id <> source.id
       )
+    AND EXISTS (
+      SELECT 1
+      FROM profiles
+      WHERE profiles.id = source.profile_id
+    )
     ON CONFLICT (id) DO UPDATE
     SET
     framework_id = EXCLUDED.framework_id,
