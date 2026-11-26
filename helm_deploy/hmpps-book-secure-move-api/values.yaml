@@ -3,6 +3,9 @@ buildEnv: unknown_environment # override per environment
 
 generic-service:
   nameOverride: hmpps-book-secure-move-api
+  # Developer Portal product ID for "Book a secure move". The chart sets the
+  # PRODUCT_ID env var (shown on /info) and the hmpps product-id pod label
+  productId: "DPS003"
   serviceAccountName: book-a-secure-move-api
 
   replicaCount: 4
