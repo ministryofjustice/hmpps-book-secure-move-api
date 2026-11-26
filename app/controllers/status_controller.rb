@@ -5,25 +5,55 @@ class StatusController < ApplicationController
 
   def ping
     json = {
-      'build_date' => ENV['APP_BUILD_DATE'] || NOT_AVAILABLE,
-      'commit_id' => ENV['APP_GIT_COMMIT'] || NOT_AVAILABLE,
-      'build_tag' => ENV['APP_BUILD_TAG'] || NOT_AVAILABLE,
+      'build_date' => ENV['APP_BUILD_DATE'].presence || NOT_AVAILABLE,
+      'commit_id' => BuildInfo.git_ref || NOT_AVAILABLE,
+      'build_tag' => BuildInfo.build_number || NOT_AVAILABLE,
     }.to_json
 
     render json:
   end
 
+  # HMPPS standard health endpoint, read by the Developer Portal. Also keeps
+  # the original `checks` and `healthy` fields for anything still using them
   def health
     checks = {
       database: database_connected?,
     }
+    healthy = checks.values.all?
+    status = healthy ? 'UP' : 'DOWN'
 
-    status = checks.values.all? ? :ok : :bad_gateway
-    render status:,
+    render status: healthy ? :ok : :service_unavailable,
            json: {
+             status:,
+             components: {
+               db: { status: checks[:database] ? 'UP' : 'DOWN' },
+             },
+             build: {
+               buildNumber: BuildInfo.build_number,
+               gitRef: BuildInfo.git_ref,
+             },
+             version: BuildInfo.build_number,
+             uptime: BuildInfo.uptime,
              checks:,
-             healthy: checks.values.all? { |val| val == true },
+             healthy:,
            }
+  end
+
+  # HMPPS standard info endpoint, read by the Developer Portal drift radiator
+  def info
+    render json: {
+      git: {
+        branch: BuildInfo.git_branch,
+        commit: { id: BuildInfo.git_ref },
+      },
+      build: {
+        artifact: BuildInfo::APP_NAME,
+        name: BuildInfo::APP_NAME,
+        version: BuildInfo.build_number,
+      },
+      productId: BuildInfo.product_id,
+      uptime: BuildInfo.uptime,
+    }
   end
 
 private

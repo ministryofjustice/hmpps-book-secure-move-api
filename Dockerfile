@@ -48,6 +48,17 @@ ARG APP_GIT_COMMIT
 ENV APP_GIT_COMMIT=${APP_GIT_COMMIT}
 ENV SENTRY_RELEASE=${APP_GIT_COMMIT}
 
+# Passed by the shared hmpps-github-actions docker_build workflow and
+# shown on /health and /info for the Developer Portal drift radiator
+ARG BUILD_NUMBER
+ENV BUILD_NUMBER=${BUILD_NUMBER}
+
+ARG GIT_REF
+ENV GIT_REF=${GIT_REF}
+
+ARG GIT_BRANCH
+ENV GIT_BRANCH=${GIT_BRANCH}
+
 ENV APPUID=1000
 
 ENV RAILS_ENV=production
