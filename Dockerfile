@@ -73,7 +73,7 @@ EXPOSE $PUMA_PORT
 RUN addgroup -g $APPUID -S appgroup && \
     adduser -u $APPUID -S appuser -G appgroup -h /app
 
-RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat libexpat libblkid libmount ca-certificates \
+RUN apk add --update --no-cache git tzdata postgresql-dev shared-mime-info yaml-dev libffi-dev gcompat libexpat libblkid libmount libxml2 ca-certificates \
     && sed -i '/^mozilla\/emSign_/s/^/!/' /etc/ca-certificates.conf \
     && update-ca-certificates
 
